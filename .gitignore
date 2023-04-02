@@ -1,0 +1,6 @@
+*~
+modules/
+target/
+.classpath
+.project
+.settings/
