@@ -1,5 +1,5 @@
 /*
-Copyright 2023 Fausto Spoto
+	Copyright 2023 Fausto Spoto
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,16 +16,12 @@ limitations under the License.
 
 package io.hotmoka.websockets.beans;
 
-import com.google.gson.Gson;
-
-import jakarta.websocket.DecodeException;
-import jakarta.websocket.EncodeException;
-import jakarta.websocket.EndpointConfig;
+import io.hotmoka.websockets.beans.internal.AbstractDecoder;
+import io.hotmoka.websockets.beans.internal.AbstractEncoder;
 
 public class Message {
     private String from;
     private String content;
-   	private final static Gson gson = new Gson();
 
     public void setFrom(String from) {
 		this.from = from;
@@ -45,47 +41,15 @@ public class Message {
 
     @Override
     public String toString() {
-    	return new Gson().toJson(this);
+    	return "Message from " + from + " with content " + content;
     }
 
-    public static class Encoder implements jakarta.websocket.Encoder.Text<Message> {
+    public static class Encoder extends AbstractEncoder<Message> {}
 
-        @Override
-        public String encode(Message message) throws EncodeException {
-            return gson.toJson(message);
-        }
+    public static class Decoder extends AbstractDecoder<Message> {
 
-        @Override
-        public void init(EndpointConfig endpointConfig) {
-            // Custom initialization logic
-        }
-
-        @Override
-        public void destroy() {
-            // Close resources
-        }
-    }
-
-    public static class Decoder implements jakarta.websocket.Decoder.Text<Message> {
-
-    	@Override
-    	public Message decode(String s) throws DecodeException {
-    		return gson.fromJson(s, Message.class);
-    	}
-
-    	@Override
-    	public boolean willDecode(String s) {
-    		return s != null;
-    	}
-
-    	@Override
-    	public void init(EndpointConfig endpointConfig) {
-    		// Custom initialization logic
-    	}
-
-    	@Override
-    	public void destroy() {
-    		// Close resources
+    	public Decoder() {
+    		super(Message.class);
     	}
     }
 }
