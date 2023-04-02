@@ -14,20 +14,21 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package io.hotmoka.websockets.server;
+package io.hotmoka.websockets.server.internal;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import org.glassfish.tyrus.server.Server;
 
-import io.hotmoka.websockets.server.internal.ChatServer;
+import jakarta.websocket.DeploymentException;
 
-public class Main {
+public class ChatServer extends Server implements AutoCloseable {
+	
+	public ChatServer() throws DeploymentException {
+		super("localhost", 8025, "/websockets", null, ChatServerEndpoint.class);
+		start();
+	}
 
-	public static void main(String[] args) throws Exception {
-		try (var server = new ChatServer()) {
-			BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-			System.out.println("Please press a key to stop the server.");
-			reader.readLine();
-		}
+	@Override
+	public void close() throws Exception {
+		stop();
 	}
 }

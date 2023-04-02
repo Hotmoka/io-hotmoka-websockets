@@ -26,6 +26,7 @@ import org.glassfish.tyrus.client.ClientManager;
 
 import io.hotmoka.websockets.beans.Message;
 import jakarta.websocket.ClientEndpointConfig;
+import jakarta.websocket.DecodeException;
 import jakarta.websocket.EncodeException;
 import jakarta.websocket.Endpoint;
 import jakarta.websocket.EndpointConfig;
@@ -33,39 +34,39 @@ import jakarta.websocket.MessageHandler;
 import jakarta.websocket.Session;
 
 public class Main {
-	private static CountDownLatch messageLatch;
 
-	public static void main(String [] args){
-		try {
-			messageLatch = new CountDownLatch(1);
+	public static void main(String [] args) throws Exception {
+		var messageLatch = new CountDownLatch(1);
+		var config = ClientEndpointConfig.Builder.create().encoders(List.of(Message.Encoder.class)).build();
+		var client = ClientManager.createClient();
 
-			final ClientEndpointConfig cec = ClientEndpointConfig.Builder.create().encoders(List.of(Message.Encoder.class)).build();
+		client.connectToServer(new Endpoint() {
 
-			ClientManager client = ClientManager.createClient();
-			client.connectToServer(new Endpoint() {
+			@Override
+			public void onOpen(Session session, EndpointConfig config) {
+				try {
+					session.addMessageHandler(new MessageHandler.Whole<String>() {
 
-				@Override
-				public void onOpen(Session session, EndpointConfig config) {
-					try {
-						session.addMessageHandler(new MessageHandler.Whole<String>() {
-
-							@Override
-							public void onMessage(String message) {
-								System.out.println("Received message: " + message);
-								messageLatch.countDown();
+						@Override
+						public void onMessage(String s) {
+							try {
+								System.out.println("Received message: " + new Message.Decoder().decode(s));
 							}
-						});
-						Message message = new Message();
-						message.setContent("hello websocket!");
-						session.getBasicRemote().sendObject(message);
-					} catch (IOException | EncodeException e) {
-						e.printStackTrace();
-					}
+							catch (DecodeException e) {
+								e.printStackTrace();
+							}
+
+							messageLatch.countDown();
+						}
+					});
+					Message message = new Message();
+					message.setContent("hello websocket!");
+					session.getBasicRemote().sendObject(message);
+				} catch (IOException | EncodeException e) {
+					e.printStackTrace();
 				}
-			}, cec, new URI("ws://localhost:8025/websockets/chat/fausto"));
-			messageLatch.await(100, TimeUnit.SECONDS);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+			}
+		}, config, new URI("ws://localhost:8025/websockets/chat/fausto"));
+		messageLatch.await(100, TimeUnit.SECONDS);
 	}
 }

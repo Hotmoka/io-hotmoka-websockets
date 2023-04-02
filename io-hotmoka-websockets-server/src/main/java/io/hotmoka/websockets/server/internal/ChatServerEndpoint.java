@@ -32,19 +32,20 @@ import jakarta.websocket.server.PathParam;
 import jakarta.websocket.server.ServerEndpoint;
 
 @ServerEndpoint(value = "/chat/{username}", decoders = Message.Decoder.class, encoders = Message.Encoder.class)
-public class ChatEndpoint {
+public class ChatServerEndpoint {
 	private Session session;
-    private static Set<ChatEndpoint> chatEndpoints = new CopyOnWriteArraySet<>();
+    private static Set<ChatServerEndpoint> chatEndpoints = new CopyOnWriteArraySet<>();
     private static HashMap<String, String> users = new HashMap<>();
 
-    public ChatEndpoint() {
+    public ChatServerEndpoint() {
     	System.out.println("initialized");
     }
 
     @OnOpen
-	public void onOpen(Session session, @PathParam("username") String username) throws IOException {
+	public void onOpen(Session session, @PathParam("username") String username) {
     	System.out.println("onOpen");
     	this.session = session;
+    	System.out.println(session.getContainer());
         chatEndpoints.add(this);
         users.put(session.getId(), username);
 
@@ -55,14 +56,14 @@ public class ChatEndpoint {
 	}
 
     @OnMessage
-    public void onMessage(Session session, Message message) throws IOException {
+    public void onMessage(Session session, Message message) {
     	message.setFrom(users.get(session.getId()));
     	System.out.println("onMessage: " + message);
         broadcast(message);
     }
 
     @OnClose
-    public void onClose(Session session) throws IOException {
+    public void onClose(Session session) {
     	System.out.println("onClose");
     	chatEndpoints.remove(this);
         Message message = new Message();
