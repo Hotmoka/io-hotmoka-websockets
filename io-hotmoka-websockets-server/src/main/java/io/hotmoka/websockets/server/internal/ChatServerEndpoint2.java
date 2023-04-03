@@ -22,48 +22,56 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import io.hotmoka.websockets.beans.Message;
+import jakarta.websocket.CloseReason;
 import jakarta.websocket.EncodeException;
-import jakarta.websocket.OnClose;
-import jakarta.websocket.OnError;
-import jakarta.websocket.OnMessage;
-import jakarta.websocket.OnOpen;
+import jakarta.websocket.Endpoint;
+import jakarta.websocket.EndpointConfig;
+import jakarta.websocket.MessageHandler;
 import jakarta.websocket.Session;
-import jakarta.websocket.server.PathParam;
-import jakarta.websocket.server.ServerEndpoint;
 
-@ServerEndpoint(value = "/chat/{username}", decoders = Message.Decoder.class, encoders = Message.Encoder.class)
-public class ChatServerEndpoint {
+public class ChatServerEndpoint2 extends Endpoint {
+	private ChatServer2 server;
 	private Session session;
-    private static Set<ChatServerEndpoint> chatEndpoints = new CopyOnWriteArraySet<>();
+    private static Set<ChatServerEndpoint2> chatEndpoints = new CopyOnWriteArraySet<>();
     private static HashMap<String, String> users = new HashMap<>();
 
-    public ChatServerEndpoint() {
+    public ChatServerEndpoint2() {
     	System.out.println("initialized");
     }
 
-    @OnOpen
-	public void onOpen(Session session, @PathParam("username") String username) {
-    	System.out.println("onOpen");
-    	this.session = session;
-        chatEndpoints.add(this);
-        users.put(session.getId(), username);
-
-        Message message = new Message();
-        message.setFrom(username);
-        message.setContent("Connected!");
-        broadcast(message);
-	}
-
-    @OnMessage
-    public void onMessage(Session session, Message message) {
-    	message.setFrom(users.get(session.getId()));
-    	System.out.println("onMessage: " + message);
-        broadcast(message);
+    void setServer(ChatServer2 server) {
+    	this.server = server;
     }
 
-    @OnClose
-    public void onClose(Session session) {
-    	System.out.println("onClose");
+    @Override
+    public void onOpen(Session session, EndpointConfig config) {
+    	System.out.println("onOpen. Endpoint: " + this.hashCode() +
+    			", session: " + session.hashCode() +
+    			", server: " + server.hashCode());
+    	this.session = session;
+    	chatEndpoints.add(this);
+    	String username = session.getPathParameters().get("username");
+    	users.put(session.getId(), username);
+
+    	session.addMessageHandler(new MessageHandler.Whole<Message>() {
+
+    		@Override
+    		public void onMessage(Message message) {
+    			message.setFrom(username);
+    			System.out.println("onMessage " + message);
+    			broadcast(message);
+    		}
+    	});
+
+    	Message message = new Message();
+    	message.setFrom(username);
+    	message.setContent("Connected!");
+    	broadcast(message);
+    }
+
+	@Override
+	public void onClose(Session session, CloseReason closeReason) {
+    	System.out.println("onClose. Endpoint: " + this.hashCode() + ", session: " + session.hashCode());
     	chatEndpoints.remove(this);
         Message message = new Message();
         message.setFrom(users.get(session.getId()));
@@ -71,7 +79,7 @@ public class ChatServerEndpoint {
         broadcast(message);
     }
 
-    @OnError
+	@Override
     public void onError(Session session, Throwable throwable) {
     	System.out.println("onError");
     	throwable.printStackTrace();

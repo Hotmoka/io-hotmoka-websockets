@@ -26,7 +26,6 @@ import org.glassfish.tyrus.client.ClientManager;
 
 import io.hotmoka.websockets.beans.Message;
 import jakarta.websocket.ClientEndpointConfig;
-import jakarta.websocket.DecodeException;
 import jakarta.websocket.EncodeException;
 import jakarta.websocket.Endpoint;
 import jakarta.websocket.EndpointConfig;
@@ -37,7 +36,11 @@ public class Main {
 
 	public static void main(String [] args) throws Exception {
 		var messageLatch = new CountDownLatch(1);
-		var config = ClientEndpointConfig.Builder.create().encoders(List.of(Message.Encoder.class)).build();
+		var config = ClientEndpointConfig.Builder.create()
+			.encoders(List.of(Message.Encoder.class))
+			.decoders(List.of(Message.Decoder.class))
+			.build();
+		config.getUserProperties().put("ciao", messageLatch);
 		var client = ClientManager.createClient();
 
 		client.connectToServer(new Endpoint() {
@@ -45,24 +48,15 @@ public class Main {
 			@Override
 			public void onOpen(Session session, EndpointConfig config) {
 				try {
-					session.addMessageHandler(new MessageHandler.Whole<String>() {
-
-						@Override
-						public void onMessage(String s) {
-							try {
-								System.out.println("Received message: " + new Message.Decoder().decode(s));
-							}
-							catch (DecodeException e) {
-								e.printStackTrace();
-							}
-
-							messageLatch.countDown();
-						}
-					});
+					session.addMessageHandler((MessageHandler.Whole<Message>) (message -> {
+						System.out.println("Received message: " + message);
+						messageLatch.countDown();
+					}));
 					Message message = new Message();
 					message.setContent("hello websocket!");
 					session.getBasicRemote().sendObject(message);
-				} catch (IOException | EncodeException e) {
+				}
+				catch (IOException | EncodeException e) {
 					e.printStackTrace();
 				}
 			}

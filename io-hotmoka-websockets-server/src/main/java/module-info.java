@@ -23,4 +23,6 @@ module io.hotmoka.websockets.server {
 	requires io.hotmoka.websockets.beans;
 	requires jakarta.websocket;
 	requires org.glassfish.tyrus.server;
+	requires java.logging;
+	requires org.glassfish.tyrus.spi;
 }
