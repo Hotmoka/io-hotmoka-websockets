@@ -17,76 +17,59 @@ limitations under the License.
 package io.hotmoka.websockets.server.internal;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Set;
-import java.util.concurrent.CopyOnWriteArraySet;
 
 import io.hotmoka.websockets.beans.Message;
+import jakarta.websocket.CloseReason;
 import jakarta.websocket.EncodeException;
-import jakarta.websocket.OnClose;
-import jakarta.websocket.OnError;
-import jakarta.websocket.OnMessage;
-import jakarta.websocket.OnOpen;
+import jakarta.websocket.EndpointConfig;
+import jakarta.websocket.MessageHandler;
 import jakarta.websocket.Session;
-import jakarta.websocket.server.PathParam;
-import jakarta.websocket.server.ServerEndpoint;
 
-@ServerEndpoint(value = "/chat/{username}", decoders = Message.Decoder.class, encoders = Message.Encoder.class)
-public class ChatServerEndpoint {
-	private Session session;
-    private static Set<ChatServerEndpoint> chatEndpoints = new CopyOnWriteArraySet<>();
-    private static HashMap<String, String> users = new HashMap<>();
+public class ChatServerEndpoint extends ServerEndpoint<ChatServer> {
 
-    public ChatServerEndpoint() {
-    	System.out.println("initialized");
-    }
-
-    @OnOpen
-	public void onOpen(Session session, @PathParam("username") String username) {
-    	System.out.println("onOpen");
-    	this.session = session;
-        chatEndpoints.add(this);
-        users.put(session.getId(), username);
-
-        Message message = new Message();
-        message.setFrom(username);
-        message.setContent("Connected!");
-        broadcast(message);
+	public ChatServerEndpoint() {
+		System.out.println("endpoint initialization");
 	}
 
-    @OnMessage
-    public void onMessage(Session session, Message message) {
-    	message.setFrom(users.get(session.getId()));
-    	System.out.println("onMessage: " + message);
-        broadcast(message);
+    @Override
+    public void onOpen(Session session, EndpointConfig config) {
+    	System.out.println("onOpen " + Thread.currentThread().getId());
+    	String username = session.getPathParameters().get("username"); // + "[" + session.getId() + "]";
+    	getServer().setUsername(session.getId(), username);
+
+    	session.addMessageHandler((MessageHandler.Whole<Message>) (message -> {
+    		message.setFrom(username); // fill in info about the user
+    		System.out.println("Received message: " + message + " " + Thread.currentThread().getId());
+    		broadcast(message, session);
+    	}));
+
+    	broadcast(new Message(username, "Connected!"), session);
     }
 
-    @OnClose
-    public void onClose(Session session) {
-    	System.out.println("onClose");
-    	chatEndpoints.remove(this);
-        Message message = new Message();
-        message.setFrom(users.get(session.getId()));
-        message.setContent("Disconnected!");
-        broadcast(message);
+    @Override
+	public void onClose(Session session, CloseReason closeReason) {
+		System.out.println("onClose " + Thread.currentThread().getId());
+        broadcast(new Message(getServer().getUsername(session.getId()), "Disconnected!"), session);
     }
 
-    @OnError
+	@Override
     public void onError(Session session, Throwable throwable) {
-    	System.out.println("onError");
     	throwable.printStackTrace();
     }
 
-    private static void broadcast(Message message) {
-    	chatEndpoints.forEach(endpoint -> {
-    		synchronized (endpoint) {
+    private void broadcast(Message message, Session session) {
+    	System.out.println("Broadcasting message: " + message);
+    	session.getOpenSessions()
+    		.stream()
+    		.filter(Session::isOpen)
+    		.map(Session::getBasicRemote)
+    		.forEach(remote -> {
     			try {
-    				endpoint.session.getBasicRemote().sendObject(message);
+    				remote.sendObject(message);
     			}
     			catch (IOException | EncodeException e) {
     				e.printStackTrace();
     			}
-    		}
-    	});
+    		});
     }
 }

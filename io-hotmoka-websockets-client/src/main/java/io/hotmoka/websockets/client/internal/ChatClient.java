@@ -16,39 +16,41 @@ limitations under the License.
 
 package io.hotmoka.websockets.client.internal;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
 
 import org.glassfish.tyrus.client.ClientManager;
 
 import io.hotmoka.websockets.beans.Message;
 import jakarta.websocket.ClientEndpointConfig;
 import jakarta.websocket.DeploymentException;
+import jakarta.websocket.EncodeException;
+import jakarta.websocket.Session;
 
-public class ChatClient extends Client {
-	private final CountDownLatch latch;
+public class ChatClient extends SimpleWebSocketClient {
+	private final Session session;
 
-	public ChatClient(CountDownLatch latch) throws DeploymentException {
-		this.latch = latch;
-
+	public ChatClient(String username) throws DeploymentException {
 		var config = ClientEndpointConfig.Builder.create()
 			.encoders(List.of(Message.Encoder.class))
 			.decoders(List.of(Message.Decoder.class))
 			.build();
 
 		try {
-			ClientManager.createClient().connectToServer(
+			this.session = ClientManager.createClient().connectToServer(
 				new ChatClientEndpoint(this),
 				config,
-				new URI("ws://localhost:8025/websockets/chat/fausto"));
+				new URI("ws://localhost:8025/websockets/chat/" + username));
 		}
 		catch (Exception e) {
-			throw new DeploymentException("client couldn't be deployed", e);
+			throw new DeploymentException("the client couldn't be deployed", e);
 		}
 	}
 
-	void stop() {
-		latch.countDown();
+	public void sendMessage(String s) throws IOException, EncodeException {
+		// the server will fill in the username
+		if (session.isOpen())
+			session.getBasicRemote().sendObject(new Message(null, s));
 	}
 }

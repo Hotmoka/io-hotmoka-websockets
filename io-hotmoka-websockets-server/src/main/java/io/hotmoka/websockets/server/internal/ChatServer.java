@@ -16,19 +16,62 @@ limitations under the License.
 
 package io.hotmoka.websockets.server.internal;
 
-import org.glassfish.tyrus.server.Server;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
+import io.hotmoka.websockets.beans.Message;
 import jakarta.websocket.DeploymentException;
+import jakarta.websocket.server.ServerEndpointConfig;
+import jakarta.websocket.server.ServerEndpointConfig.Configurator;
 
-public class ChatServer extends Server implements AutoCloseable {
-	
-	public ChatServer() throws DeploymentException {
-		super("localhost", 8025, "/websockets", null, ChatServerEndpoint.class);
-		start();
-	}
+public class ChatServer extends SimpleWebSocketServer {
 
-	@Override
-	public void close() throws Exception {
-		stop();
-	}
+	/**
+	 * State shared among different threads executing the endpoints handlers:
+	 * it must be thread-safe.
+	 */
+	private final Map<String, String> usernames = new ConcurrentHashMap<>();
+
+	/**
+     * Construct a new server.
+     * 
+     * @throws DeploymentException 
+     */
+    public ChatServer() throws DeploymentException {
+    	int port = 8025;
+    	var sec = ServerEndpointConfig.Builder.create(ChatServerEndpoint.class, "/chat/{username}")
+    			.encoders(List.of(Message.Encoder.class))
+    			.decoders(List.of(Message.Decoder.class))
+    			.configurator(new MyConfigurator())
+    			.build();
+
+    	getContainer().addEndpoint(sec);
+    	try {
+    		getContainer().start("/websockets", port);
+    	}
+    	catch (Exception e) {
+            throw new DeploymentException("the server couldn't be deployed", e);
+        }
+    }
+
+    String getUsername(String sessionId) {
+    	return usernames.get(sessionId);
+    }
+
+    void setUsername(String sessionId, String username) {
+    	usernames.put(sessionId, username);
+    }
+
+    private class MyConfigurator extends Configurator {
+
+    	@Override
+    	public <T> T getEndpointInstance(Class<T> endpointClass) throws InstantiationException {
+            var result = super.getEndpointInstance(endpointClass);
+            if (result instanceof ChatServerEndpoint)
+            	((ChatServerEndpoint) result).setServer(ChatServer.this); // we inject the server
+
+            return result;
+        }
+    }
 }

@@ -19,6 +19,7 @@ package io.hotmoka.websockets.client.internal;
 import java.io.IOException;
 
 import io.hotmoka.websockets.beans.Message;
+import jakarta.websocket.CloseReason;
 import jakarta.websocket.EncodeException;
 import jakarta.websocket.EndpointConfig;
 import jakarta.websocket.MessageHandler;
@@ -32,17 +33,24 @@ public class ChatClientEndpoint extends ClientEndpoint<ChatClient> {
 
 	@Override
 	public void onOpen(Session session, EndpointConfig config) {
+		System.out.println("onOpen");
+		session.addMessageHandler((MessageHandler.Whole<Message>) this::messageHandler);
+
 		try {
-			session.addMessageHandler((MessageHandler.Whole<Message>) (message -> {
-				System.out.println("Received message: " + message);
-				getClient().stop();
-			}));
-			Message message = new Message();
-			message.setContent("hello websocket!");
-			session.getBasicRemote().sendObject(message);
+			// the server will fill in the username
+			session.getBasicRemote().sendObject(new Message(null, "hello websocket!"));
 		}
 		catch (IOException | EncodeException e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public void onClose(Session session, CloseReason closeReason) {
+		System.out.println("onClose");
+	}
+
+	private void messageHandler(Message message) {
+		System.out.println("Received message: " + message);
 	}
 }

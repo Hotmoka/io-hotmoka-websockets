@@ -18,7 +18,7 @@ package io.hotmoka.websockets.client.internal;
 
 import jakarta.websocket.Endpoint;
 
-public abstract class ClientEndpoint<C extends Client> extends Endpoint {
+public abstract class ClientEndpoint<C extends SimpleWebSocketClient> extends Endpoint {
 	private final C client;
 
 	protected ClientEndpoint(C client) {

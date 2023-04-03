@@ -17,24 +17,14 @@ limitations under the License.
 package io.hotmoka.websockets.server;
 
 import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.logging.LogManager;
 
-import io.hotmoka.websockets.server.internal.ChatServer2;
 import io.hotmoka.websockets.server.internal.ChatServer;
 
 public class Main {
 
 	public static void main(String[] args) throws Exception {
-		/*try {
-            LogManager.getLogManager().readConfiguration(new FileInputStream("./mylogging.properties"));
-        } catch (SecurityException | IOException e1) {
-            e1.printStackTrace();
-        }*/
-
-		try (var server = new ChatServer2()) {
+		try (var server = new ChatServer()) {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 			System.out.println("Please press a key to stop the server.");
 			reader.readLine();

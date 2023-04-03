@@ -14,25 +14,16 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package io.hotmoka.websockets.client;
+package io.hotmoka.websockets.client.internal;
 
-import io.hotmoka.websockets.client.internal.ChatClient;
+import jakarta.websocket.DeploymentException;
 
-public class Main {
+public abstract class SimpleWebSocketClient implements AutoCloseable {
 
-	public static void main(String[] args) throws Exception {
-		if (args.length != 1) {
-			System.out.println("You need to specify exactly one username");
-			System.exit(-1);
-		}
+	protected SimpleWebSocketClient() throws DeploymentException {
+	}
 
-		try (var client = new ChatClient(args[0])) {
-			client.sendMessage("hello (1/3)");
-			Thread.sleep(5000);
-			client.sendMessage("hello (2/3)");
-			Thread.sleep(5000);
-			client.sendMessage("hello (3/3)");
-			Thread.sleep(5000);
-		}
+	@Override
+	public void close() throws Exception {
 	}
 }
