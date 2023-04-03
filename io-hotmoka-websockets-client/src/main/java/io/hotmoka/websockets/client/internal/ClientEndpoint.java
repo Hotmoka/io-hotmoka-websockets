@@ -14,20 +14,18 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package io.hotmoka.websockets.client;
+package io.hotmoka.websockets.client.internal;
 
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
+import jakarta.websocket.Endpoint;
 
-import io.hotmoka.websockets.client.internal.ChatClient;
+public abstract class ClientEndpoint<C extends Client> extends Endpoint {
+	private final C client;
 
-public class Main {
+	protected ClientEndpoint(C client) {
+		this.client = client;
+	}
 
-	public static void main(String [] args) throws Exception {
-		var latch = new CountDownLatch(1);
-
-		try (var client = new ChatClient(latch)) {
-			latch.await(100, TimeUnit.SECONDS);
-		}
+	protected C getClient() {
+		return client;
 	}
 }

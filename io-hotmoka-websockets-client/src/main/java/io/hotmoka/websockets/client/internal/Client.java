@@ -14,20 +14,16 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package io.hotmoka.websockets.client;
+package io.hotmoka.websockets.client.internal;
 
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
+import jakarta.websocket.DeploymentException;
 
-import io.hotmoka.websockets.client.internal.ChatClient;
+public abstract class Client implements AutoCloseable {
 
-public class Main {
+	protected Client() throws DeploymentException {
+	}
 
-	public static void main(String [] args) throws Exception {
-		var latch = new CountDownLatch(1);
-
-		try (var client = new ChatClient(latch)) {
-			latch.await(100, TimeUnit.SECONDS);
-		}
+	@Override
+	public void close() {
 	}
 }

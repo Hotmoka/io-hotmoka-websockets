@@ -14,41 +14,41 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package io.hotmoka.websockets.client;
+package io.hotmoka.websockets.client.internal;
 
 import java.net.URI;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 
 import org.glassfish.tyrus.client.ClientManager;
 
 import io.hotmoka.websockets.beans.Message;
-import io.hotmoka.websockets.client.internal.ChatClientEndpoint;
 import jakarta.websocket.ClientEndpointConfig;
+import jakarta.websocket.DeploymentException;
 
-public class Client implements AutoCloseable {
-	private final CountDownLatch latch = new CountDownLatch(1);
+public class ChatClient extends Client {
+	private final CountDownLatch latch;
 
-	public Client() throws Exception {
+	public ChatClient(CountDownLatch latch) throws DeploymentException {
+		this.latch = latch;
+
 		var config = ClientEndpointConfig.Builder.create()
 			.encoders(List.of(Message.Encoder.class))
 			.decoders(List.of(Message.Decoder.class))
 			.build();
 
-		ClientManager.createClient().connectToServer(
-			new ChatClientEndpoint(this),
-			config,
-			new URI("ws://localhost:8025/websockets/chat/fausto"));
-
-		latch.await(100, TimeUnit.SECONDS);
+		try {
+			ClientManager.createClient().connectToServer(
+				new ChatClientEndpoint(this),
+				config,
+				new URI("ws://localhost:8025/websockets/chat/fausto"));
+		}
+		catch (Exception e) {
+			throw new DeploymentException("client couldn't be deployed", e);
+		}
 	}
 
-	public void stop() {
+	void stop() {
 		latch.countDown();
-	}
-
-	@Override
-	public void close() throws Exception {
 	}
 }

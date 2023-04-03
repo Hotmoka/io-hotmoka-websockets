@@ -19,23 +19,15 @@ package io.hotmoka.websockets.client.internal;
 import java.io.IOException;
 
 import io.hotmoka.websockets.beans.Message;
-import io.hotmoka.websockets.client.Client;
 import jakarta.websocket.EncodeException;
-import jakarta.websocket.Endpoint;
 import jakarta.websocket.EndpointConfig;
 import jakarta.websocket.MessageHandler;
 import jakarta.websocket.Session;
 
-public class ChatClientEndpoint extends Endpoint {
+public class ChatClientEndpoint extends ClientEndpoint<ChatClient> {
 
-	private final Client client;
-
-	public ChatClientEndpoint(Client client) {
-		this.client = client;
-	}
-
-	protected Client getClient() {
-		return client;
+	ChatClientEndpoint(ChatClient client) {
+		super(client);
 	}
 
 	@Override
