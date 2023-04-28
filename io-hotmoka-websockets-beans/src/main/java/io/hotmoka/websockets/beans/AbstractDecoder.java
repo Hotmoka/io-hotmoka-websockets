@@ -7,7 +7,7 @@ import jakarta.websocket.Decoder;
 import jakarta.websocket.EndpointConfig;
 
 public abstract class AbstractDecoder<T> implements Decoder.Text<T> {
-	private final static Gson gson = new Gson();
+	protected final static Gson gson = new Gson();
 
 	private final Class<T> beanClass;
 
@@ -18,7 +18,7 @@ public abstract class AbstractDecoder<T> implements Decoder.Text<T> {
 	@Override
 	public T decode(String s) throws DecodeException {
 		try {
-			System.out.println(s + " -> Message");
+			System.out.println(s + " -> " + beanClass);
 			return gson.fromJson(s, beanClass);
 		}
 		catch (Exception e) {

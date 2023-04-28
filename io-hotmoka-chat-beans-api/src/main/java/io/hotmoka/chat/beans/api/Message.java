@@ -17,14 +17,7 @@ limitations under the License.
 package io.hotmoka.chat.beans.api;
 
 public interface Message {
-
-	void setFrom(String from);
-
-	String getFrom();
-
 	String getContent();
-
 	void setContent(String content);
-
 	String toString();
 }

@@ -19,7 +19,9 @@ package io.hotmoka.chat.server.internal;
 import java.io.IOException;
 
 import io.hotmoka.chat.beans.Messages;
+import io.hotmoka.chat.beans.api.FullMessage;
 import io.hotmoka.chat.beans.api.Message;
+import io.hotmoka.chat.beans.api.PartialMessage;
 import io.hotmoka.websockets.server.AbstractServerEndpoint;
 import jakarta.websocket.CloseReason;
 import jakarta.websocket.EncodeException;
@@ -39,19 +41,19 @@ public class ChatServerEndpoint extends AbstractServerEndpoint<ChatServer> {
     	String username = session.getPathParameters().get("username"); // + "[" + session.getId() + "]";
     	getServer().setUsername(session.getId(), username);
 
-    	session.addMessageHandler((MessageHandler.Whole<Message>) (message -> {
-    		message.setFrom(username); // fill in info about the user
+    	session.addMessageHandler((MessageHandler.Whole<PartialMessage>) (message -> {
+    		FullMessage full = message.setFrom(username); // fill in info about the user
     		System.out.println("Received message: " + message + " " + Thread.currentThread().getId());
-    		broadcast(message, session);
+    		broadcast(full, session);
     	}));
 
-    	broadcast(Messages.of(username, "Connected!"), session);
+    	broadcast(Messages.full(username, "Connected!"), session);
     }
 
     @Override
 	public void onClose(Session session, CloseReason closeReason) {
 		System.out.println("onClose " + Thread.currentThread().getId());
-        broadcast(Messages.of(getServer().getUsername(session.getId()), "Disconnected!"), session);
+        broadcast(Messages.full(getServer().getUsername(session.getId()), "Disconnected!"), session);
     }
 
 	@Override

@@ -8,14 +8,12 @@ import jakarta.websocket.EndpointConfig;
 
 public abstract class AbstractEncoder<T> implements Encoder.Text<T> {
 
-	private final static Gson gson = new Gson();
+	protected final static Gson gson = new Gson();
 
 	@Override
     public String encode(T value) throws EncodeException {
     	try {
-    		String result = gson.toJson(value);
-    		System.out.println("Message -> " + result);
-    		return result;
+    		return gson.toJson(value);
     	}
     	catch (Exception e) {
     		throw new EncodeException(value, "could not encode bean", e);

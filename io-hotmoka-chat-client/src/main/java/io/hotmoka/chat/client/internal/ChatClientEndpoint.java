@@ -40,7 +40,7 @@ public class ChatClientEndpoint extends AbstractClientEndpoint<ChatClient> {
 
 		try {
 			// the server will fill in the username
-			session.getBasicRemote().sendObject(Messages.of("hello websocket!"));
+			session.getBasicRemote().sendObject(Messages.partial("hello websocket!"));
 		}
 		catch (IOException | EncodeException e) {
 			e.printStackTrace();

@@ -52,6 +52,6 @@ public class ChatClient extends AbstractWebSocketClient {
 	public void sendMessage(String s) throws IOException, EncodeException {
 		// the server will fill in the username
 		if (session.isOpen())
-			session.getBasicRemote().sendObject(Messages.of(s));
+			session.getBasicRemote().sendObject(Messages.partial(s));
 	}
 }

@@ -16,30 +16,50 @@ limitations under the License.
 
 package io.hotmoka.chat.beans;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+
 import io.hotmoka.chat.beans.api.Message;
-import io.hotmoka.chat.beans.internal.MessageImpl;
+import io.hotmoka.chat.beans.internal.FullMessageImpl;
+import io.hotmoka.chat.beans.internal.PartialMessageImpl;
 import io.hotmoka.websockets.beans.AbstractDecoder;
 import io.hotmoka.websockets.beans.AbstractEncoder;
+import jakarta.websocket.DecodeException;
 
 /**
  * A provider of messages.
  */
 public interface Messages {
 
-	static Message of(String from, String content) {
-		return new MessageImpl(from, content);
+	static Message partial(String content) {
+		return new PartialMessageImpl(content);
 	}
 
-	static Message of(String content) {
-		return new MessageImpl(null, content);
+	static Message full(String from, String content) {
+		return new FullMessageImpl(from, content);
 	}
 
-	static class Encoder extends AbstractEncoder<MessageImpl> {}
+	static class Encoder extends AbstractEncoder<Message> {}
 
-    static class Decoder extends AbstractDecoder<MessageImpl> {
+    static class Decoder extends AbstractDecoder<Message> {
 
     	public Decoder() {
-    		super(MessageImpl.class);
+    		super(Message.class);
+    	}
+
+    	@Override
+    	public Message decode(String s) throws DecodeException {
+    		try {
+    			JsonElement element = JsonParser.parseString(s);
+    			// any politics able to distinguish full from partial is fine here
+    			if (element.getAsJsonObject().has("from"))
+    				return gson.fromJson(element, FullMessageImpl.class);
+    			else
+    				return gson.fromJson(element, PartialMessageImpl.class);
+    		}
+    		catch (Exception e) {
+    			throw new DecodeException(s, "could not decode a Message", e);
+    		}
     	}
     }
 }

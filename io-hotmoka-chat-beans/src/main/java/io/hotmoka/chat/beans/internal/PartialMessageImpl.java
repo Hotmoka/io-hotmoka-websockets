@@ -16,30 +16,22 @@ limitations under the License.
 
 package io.hotmoka.chat.beans.internal;
 
-import io.hotmoka.chat.beans.api.Message;
-import io.hotmoka.websockets.beans.AbstractDecoder;
-import io.hotmoka.websockets.beans.AbstractEncoder;
+import io.hotmoka.chat.beans.api.FullMessage;
+import io.hotmoka.chat.beans.api.PartialMessage;
 
-public class MessageImpl implements Message {
-    private String from;
+public class PartialMessageImpl implements PartialMessage {
     private String content;
 
     @SuppressWarnings("unused")
-	private MessageImpl() {}
+	private PartialMessageImpl() {}
 
-    public MessageImpl(String from, String content) {
-    	this.from = from;
+    public PartialMessageImpl(String content) {
     	this.content = content;
     }
 
     @Override
-    public void setFrom(String from) {
-		this.from = from;
-	}
-
-    @Override
-    public String getFrom() {
-    	return from;
+    public FullMessage setFrom(String from) {
+    	return new FullMessageImpl(from, content);
     }
 
     @Override
@@ -54,15 +46,6 @@ public class MessageImpl implements Message {
 
     @Override
     public String toString() {
-    	return "MessageImpl from " + from + " with content " + content;
-    }
-
-    public static class Encoder extends AbstractEncoder<MessageImpl> {}
-
-    public static class Decoder extends AbstractDecoder<MessageImpl> {
-
-    	public Decoder() {
-    		super(MessageImpl.class);
-    	}
+    	return "PartialMessageImpl with content " + content;
     }
 }

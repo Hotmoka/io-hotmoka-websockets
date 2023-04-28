@@ -14,12 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-module io.hotmoka.websockets.beans {
-	exports io.hotmoka.websockets.beans;
-	
-	// beans must be encoded and decoded by reflection through Gson
-	opens io.hotmoka.websockets.beans to com.google.gson;
+package io.hotmoka.chat.beans.api;
 
-	requires transitive com.google.gson;
-	requires transitive jakarta.websocket.client;
+public interface PartialMessage extends Message {
+	FullMessage setFrom(String from);
 }
