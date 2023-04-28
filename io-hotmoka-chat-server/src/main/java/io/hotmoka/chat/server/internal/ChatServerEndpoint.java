@@ -18,7 +18,8 @@ package io.hotmoka.chat.server.internal;
 
 import java.io.IOException;
 
-import io.hotmoka.chat.beans.Message;
+import io.hotmoka.chat.beans.Messages;
+import io.hotmoka.chat.beans.api.Message;
 import io.hotmoka.websockets.server.AbstractServerEndpoint;
 import jakarta.websocket.CloseReason;
 import jakarta.websocket.EncodeException;
@@ -44,13 +45,13 @@ public class ChatServerEndpoint extends AbstractServerEndpoint<ChatServer> {
     		broadcast(message, session);
     	}));
 
-    	broadcast(new Message(username, "Connected!"), session);
+    	broadcast(Messages.of(username, "Connected!"), session);
     }
 
     @Override
 	public void onClose(Session session, CloseReason closeReason) {
 		System.out.println("onClose " + Thread.currentThread().getId());
-        broadcast(new Message(getServer().getUsername(session.getId()), "Disconnected!"), session);
+        broadcast(Messages.of(getServer().getUsername(session.getId()), "Disconnected!"), session);
     }
 
 	@Override

@@ -22,7 +22,8 @@ import java.util.List;
 
 import org.glassfish.tyrus.client.ClientManager;
 
-import io.hotmoka.chat.beans.Message;
+import io.hotmoka.chat.beans.MessageImpl;
+import io.hotmoka.chat.beans.Messages;
 import io.hotmoka.websockets.client.AbstractWebSocketClient;
 import jakarta.websocket.ClientEndpointConfig;
 import jakarta.websocket.DeploymentException;
@@ -34,8 +35,8 @@ public class ChatClient extends AbstractWebSocketClient {
 
 	public ChatClient(String username) throws DeploymentException {
 		var config = ClientEndpointConfig.Builder.create()
-			.encoders(List.of(Message.Encoder.class))
-			.decoders(List.of(Message.Decoder.class))
+			.encoders(List.of(MessageImpl.Encoder.class))
+			.decoders(List.of(MessageImpl.Decoder.class))
 			.build();
 
 		try {
@@ -52,6 +53,6 @@ public class ChatClient extends AbstractWebSocketClient {
 	public void sendMessage(String s) throws IOException, EncodeException {
 		// the server will fill in the username
 		if (session.isOpen())
-			session.getBasicRemote().sendObject(new Message(null, s));
+			session.getBasicRemote().sendObject(Messages.of(s));
 	}
 }

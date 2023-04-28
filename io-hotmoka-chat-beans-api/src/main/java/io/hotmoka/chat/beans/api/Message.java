@@ -1,5 +1,5 @@
 /*
-Copyright 2023 Fausto Spoto
+	Copyright 2023 Fausto Spoto
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -14,12 +14,17 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-module io.hotmoka.chat.beans {
-	exports io.hotmoka.chat.beans;
-	
-	// beans must be encoded and decoded by reflection through Gson
-	opens io.hotmoka.chat.beans to com.google.gson;
+package io.hotmoka.chat.beans.api;
 
-	requires transitive io.hotmoka.chat.beans.api;
-	requires io.hotmoka.websockets.beans;
+public interface Message {
+
+	void setFrom(String from);
+
+	String getFrom();
+
+	String getContent();
+
+	void setContent(String content);
+
+	String toString();
 }

@@ -14,12 +14,20 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-module io.hotmoka.chat.beans {
-	exports io.hotmoka.chat.beans;
-	
-	// beans must be encoded and decoded by reflection through Gson
-	opens io.hotmoka.chat.beans to com.google.gson;
+package io.hotmoka.chat.beans;
 
-	requires transitive io.hotmoka.chat.beans.api;
-	requires io.hotmoka.websockets.beans;
+import io.hotmoka.chat.beans.api.Message;
+
+/**
+ * A provider of messages.
+ */
+public interface Messages {
+
+	static Message of(String from, String content) {
+		return new MessageImpl(from, content);
+	}
+
+	static Message of(String content) {
+		return new MessageImpl(null, content);
+	}
 }

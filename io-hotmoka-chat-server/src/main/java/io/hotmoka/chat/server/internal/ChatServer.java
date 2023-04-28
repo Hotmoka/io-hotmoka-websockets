@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import io.hotmoka.chat.beans.Message;
+import io.hotmoka.chat.beans.MessageImpl;
 import io.hotmoka.websockets.server.AbstractWebSocketServer;
 import jakarta.websocket.DeploymentException;
 import jakarta.websocket.server.ServerEndpointConfig;
@@ -42,8 +42,8 @@ public class ChatServer extends AbstractWebSocketServer {
     public ChatServer() throws DeploymentException {
     	int port = 8025;
     	var sec = ServerEndpointConfig.Builder.create(ChatServerEndpoint.class, "/chat/{username}")
-    			.encoders(List.of(Message.Encoder.class))
-    			.decoders(List.of(Message.Decoder.class))
+    			.encoders(List.of(MessageImpl.Encoder.class))
+    			.decoders(List.of(MessageImpl.Decoder.class))
     			.configurator(new MyConfigurator())
     			.build();
 

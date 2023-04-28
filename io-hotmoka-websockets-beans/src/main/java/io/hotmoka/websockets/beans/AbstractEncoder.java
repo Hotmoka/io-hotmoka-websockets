@@ -13,7 +13,9 @@ public abstract class AbstractEncoder<T> implements Encoder.Text<T> {
 	@Override
     public String encode(T value) throws EncodeException {
     	try {
-    		return gson.toJson(value);
+    		String result = gson.toJson(value);
+    		System.out.println("Message -> " + result);
+    		return result;
     	}
     	catch (Exception e) {
     		throw new EncodeException(value, "could not encode bean", e);

@@ -8,21 +8,11 @@
     <version>1.0.0</version>
   </parent>
 
-  <artifactId>io-hotmoka-chat-beans</artifactId>
-  <name>io-hotmoka-chat-beans</name>
-  <description>Bean objects for a chat</description>
+  <artifactId>io-hotmoka-chat-beans-api</artifactId>
+  <name>io-hotmoka-chat-beans-api</name>
+  <description>Bean interfaces for a chat</description>
 
   <dependencies>
-    <dependency>
-      <groupId>io.hotmoka</groupId>
-      <artifactId>io-hotmoka-chat-beans-api</artifactId>
-      <version>1.0.0</version>
-    </dependency>
-    <dependency>
-      <groupId>io.hotmoka</groupId>
-      <artifactId>io-hotmoka-websockets-beans</artifactId>
-      <version>1.0.0</version>
-    </dependency>
   </dependencies>
 
   <build>

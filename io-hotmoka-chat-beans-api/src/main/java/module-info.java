@@ -14,12 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-module io.hotmoka.chat.beans {
-	exports io.hotmoka.chat.beans;
-	
-	// beans must be encoded and decoded by reflection through Gson
-	opens io.hotmoka.chat.beans to com.google.gson;
-
-	requires transitive io.hotmoka.chat.beans.api;
-	requires io.hotmoka.websockets.beans;
+module io.hotmoka.chat.beans.api {
+	exports io.hotmoka.chat.beans.api;
 }

@@ -18,7 +18,8 @@ package io.hotmoka.chat.client.internal;
 
 import java.io.IOException;
 
-import io.hotmoka.chat.beans.Message;
+import io.hotmoka.chat.beans.Messages;
+import io.hotmoka.chat.beans.api.Message;
 import io.hotmoka.websockets.client.AbstractClientEndpoint;
 import jakarta.websocket.CloseReason;
 import jakarta.websocket.EncodeException;
@@ -39,7 +40,7 @@ public class ChatClientEndpoint extends AbstractClientEndpoint<ChatClient> {
 
 		try {
 			// the server will fill in the username
-			session.getBasicRemote().sendObject(new Message(null, "hello websocket!"));
+			session.getBasicRemote().sendObject(Messages.of("hello websocket!"));
 		}
 		catch (IOException | EncodeException e) {
 			e.printStackTrace();

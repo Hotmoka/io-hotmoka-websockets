@@ -46,6 +46,7 @@
 	<module>io-hotmoka-websockets-beans</module>
 	<module>io-hotmoka-websockets-client</module>
     <module>io-hotmoka-websockets-server</module>
+    <module>io-hotmoka-chat-beans-api</module>
     <module>io-hotmoka-chat-beans</module>
     <module>io-hotmoka-chat-client</module>
     <module>io-hotmoka-chat-server</module>
@@ -108,6 +109,7 @@
                 io-hotmoka-websockets-beans,
                 io-hotmoka-chat-beans,
                 io-hotmoka-chat-client,
+                io-hotmoka-chat-beans-api,
                 <!-- we exclude all modules that go into the explicit folder -->
                 gson,
                 jakarta.activation-api,

@@ -16,48 +16,53 @@ limitations under the License.
 
 package io.hotmoka.chat.beans;
 
+import io.hotmoka.chat.beans.api.Message;
 import io.hotmoka.websockets.beans.AbstractDecoder;
 import io.hotmoka.websockets.beans.AbstractEncoder;
 
-public class Message {
+public class MessageImpl implements Message {
     private String from;
     private String content;
 
     @SuppressWarnings("unused")
-	private Message() {}
+	private MessageImpl() {}
 
-    public Message(String from, String content) {
+    public MessageImpl(String from, String content) {
     	this.from = from;
     	this.content = content;
     }
 
+    @Override
     public void setFrom(String from) {
 		this.from = from;
 	}
 
+    @Override
     public String getFrom() {
     	return from;
     }
 
+    @Override
     public String getContent() {
     	return content;
     }
 
+    @Override
     public void setContent(String content) {
 		this.content = content;
 	}
 
     @Override
     public String toString() {
-    	return "Message from " + from + " with content " + content;
+    	return "MessageImpl from " + from + " with content " + content;
     }
 
-    public static class Encoder extends AbstractEncoder<Message> {}
+    public static class Encoder extends AbstractEncoder<MessageImpl> {}
 
-    public static class Decoder extends AbstractDecoder<Message> {
+    public static class Decoder extends AbstractDecoder<MessageImpl> {
 
     	public Decoder() {
-    		super(Message.class);
+    		super(MessageImpl.class);
     	}
     }
 }
