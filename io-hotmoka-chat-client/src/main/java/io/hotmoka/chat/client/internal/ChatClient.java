@@ -22,7 +22,6 @@ import java.util.List;
 
 import org.glassfish.tyrus.client.ClientManager;
 
-import io.hotmoka.chat.beans.MessageImpl;
 import io.hotmoka.chat.beans.Messages;
 import io.hotmoka.websockets.client.AbstractWebSocketClient;
 import jakarta.websocket.ClientEndpointConfig;
@@ -35,8 +34,8 @@ public class ChatClient extends AbstractWebSocketClient {
 
 	public ChatClient(String username) throws DeploymentException {
 		var config = ClientEndpointConfig.Builder.create()
-			.encoders(List.of(MessageImpl.Encoder.class))
-			.decoders(List.of(MessageImpl.Decoder.class))
+			.encoders(List.of(Messages.Encoder.class))
+			.decoders(List.of(Messages.Decoder.class))
 			.build();
 
 		try {

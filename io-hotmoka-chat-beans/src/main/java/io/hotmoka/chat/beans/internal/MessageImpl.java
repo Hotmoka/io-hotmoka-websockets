@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package io.hotmoka.chat.beans;
+package io.hotmoka.chat.beans.internal;
 
 import io.hotmoka.chat.beans.api.Message;
 import io.hotmoka.websockets.beans.AbstractDecoder;
