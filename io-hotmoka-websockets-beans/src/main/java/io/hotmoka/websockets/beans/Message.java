@@ -23,7 +23,8 @@ public class Message {
     private String from;
     private String content;
 
-    public Message() {}
+    @SuppressWarnings("unused")
+	private Message() {}
 
     public Message(String from, String content) {
     	this.from = from;

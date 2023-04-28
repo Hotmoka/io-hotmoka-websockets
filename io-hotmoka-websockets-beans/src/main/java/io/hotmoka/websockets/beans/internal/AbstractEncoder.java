@@ -3,9 +3,10 @@ package io.hotmoka.websockets.beans.internal;
 import com.google.gson.Gson;
 
 import jakarta.websocket.EncodeException;
+import jakarta.websocket.Encoder;
 import jakarta.websocket.EndpointConfig;
 
-public abstract class AbstractEncoder<T> implements jakarta.websocket.Encoder.Text<T> {
+public abstract class AbstractEncoder<T> implements Encoder.Text<T> {
 
 	private final static Gson gson = new Gson();
 
