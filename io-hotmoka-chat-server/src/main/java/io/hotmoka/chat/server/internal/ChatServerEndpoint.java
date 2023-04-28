@@ -14,18 +14,19 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package io.hotmoka.websockets.server.internal;
+package io.hotmoka.chat.server.internal;
 
 import java.io.IOException;
 
-import io.hotmoka.websockets.beans.Message;
+import io.hotmoka.chat.beans.Message;
+import io.hotmoka.websockets.server.AbstractServerEndpoint;
 import jakarta.websocket.CloseReason;
 import jakarta.websocket.EncodeException;
 import jakarta.websocket.EndpointConfig;
 import jakarta.websocket.MessageHandler;
 import jakarta.websocket.Session;
 
-public class ChatServerEndpoint extends ServerEndpoint<ChatServer> {
+public class ChatServerEndpoint extends AbstractServerEndpoint<ChatServer> {
 
 	public ChatServerEndpoint() {
 		System.out.println("endpoint initialization");
@@ -57,7 +58,12 @@ public class ChatServerEndpoint extends ServerEndpoint<ChatServer> {
     	throwable.printStackTrace();
     }
 
-    private void broadcast(Message message, Session session) {
+	@Override
+	protected void setServer(ChatServer server) {
+		super.setServer(server);
+	}
+
+	private void broadcast(Message message, Session session) {
     	System.out.println("Broadcasting message: " + message);
     	session.getOpenSessions()
     		.stream()

@@ -14,9 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package io.hotmoka.websockets.client;
+package io.hotmoka.chat.client;
 
-import io.hotmoka.websockets.client.internal.ChatClient;
+import io.hotmoka.chat.client.internal.ChatClient;
 
 public class Main {
 

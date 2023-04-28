@@ -14,18 +14,19 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package io.hotmoka.websockets.client.internal;
+package io.hotmoka.chat.client.internal;
 
 import java.io.IOException;
 
-import io.hotmoka.websockets.beans.Message;
+import io.hotmoka.chat.beans.Message;
+import io.hotmoka.websockets.client.AbstractClientEndpoint;
 import jakarta.websocket.CloseReason;
 import jakarta.websocket.EncodeException;
 import jakarta.websocket.EndpointConfig;
 import jakarta.websocket.MessageHandler;
 import jakarta.websocket.Session;
 
-public class ChatClientEndpoint extends ClientEndpoint<ChatClient> {
+public class ChatClientEndpoint extends AbstractClientEndpoint<ChatClient> {
 
 	ChatClientEndpoint(ChatClient client) {
 		super(client);

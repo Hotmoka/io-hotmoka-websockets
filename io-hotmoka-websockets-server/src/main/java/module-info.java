@@ -16,11 +16,7 @@ limitations under the License.
 
 module io.hotmoka.websockets.server {
 	exports io.hotmoka.websockets.server;
-	
-	// needed to allow the end point to be seen by reflection although it is not exported
-	opens io.hotmoka.websockets.server.internal to org.glassfish.tyrus.core;
 
-	requires io.hotmoka.websockets.beans;
 	requires jakarta.websocket;
 	requires org.glassfish.tyrus.server;
 	requires org.glassfish.tyrus.spi;

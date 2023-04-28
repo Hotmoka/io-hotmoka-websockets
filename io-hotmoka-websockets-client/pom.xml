@@ -9,15 +9,10 @@
   </parent>
 
   <artifactId>io-hotmoka-websockets-client</artifactId>
-  <name>Websockets Client</name>
+  <name>io-hotmoka-websockets-client</name>
   <description>Project minimal configuration for a websockets client</description>
 
   <dependencies>
-    <dependency>
-      <groupId>io.hotmoka</groupId>
-      <artifactId>io-hotmoka-websockets-beans</artifactId>
-      <version>1.0.0</version>
-    </dependency>
     <dependency>
       <groupId>jakarta.websocket</groupId>
       <artifactId>jakarta.websocket-client-api</artifactId>

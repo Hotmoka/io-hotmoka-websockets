@@ -2,26 +2,26 @@
 
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>io-hotmoka-websockets-beans</artifactId>
-  <name>io-hotmoka-websockets-beans</name>
-  <packaging>jar</packaging>
-
   <parent>
     <groupId>io.hotmoka</groupId>
     <artifactId>io-hotmoka-websockets</artifactId>
     <version>1.0.0</version>
   </parent>
 
+  <artifactId>io-hotmoka-chat-client</artifactId>
+  <name>io-hotmoka-chat-client</name>
+  <description>A chat client over websockets</description>
+
   <dependencies>
     <dependency>
-      <groupId>com.google.code.gson</groupId>
-      <artifactId>gson</artifactId>
-      <version>2.10.1</version>
+      <groupId>io.hotmoka</groupId>
+      <artifactId>io-hotmoka-chat-beans</artifactId>
+      <version>1.0.0</version>
     </dependency>
     <dependency>
-      <groupId>jakarta.websocket</groupId>
-      <artifactId>jakarta.websocket-client-api</artifactId>
-      <version>2.1.0</version>
+      <groupId>io.hotmoka</groupId>
+      <artifactId>io-hotmoka-websockets-client</artifactId>
+      <version>1.0.0</version>
     </dependency>
   </dependencies>
 

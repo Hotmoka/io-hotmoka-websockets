@@ -14,28 +14,16 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package io.hotmoka.websockets.server.internal;
-
-import java.util.HashMap;
-
-import org.glassfish.tyrus.spi.ServerContainer;
-import org.glassfish.tyrus.spi.ServerContainerFactory;
+package io.hotmoka.websockets.client;
 
 import jakarta.websocket.DeploymentException;
 
-public abstract class SimpleWebSocketServer implements AutoCloseable {
-	private final ServerContainer container;
+public abstract class AbstractWebSocketClient implements AutoCloseable {
 
-	protected SimpleWebSocketServer() throws DeploymentException {
-		container = ServerContainerFactory.createServerContainer(new HashMap<>());
-	}
-
-	protected ServerContainer getContainer() {
-		return container;
+	protected AbstractWebSocketClient() throws DeploymentException {
 	}
 
 	@Override
 	public void close() throws Exception {
-		container.stop();
 	}
 }

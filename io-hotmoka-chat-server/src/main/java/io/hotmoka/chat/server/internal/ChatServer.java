@@ -14,18 +14,19 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package io.hotmoka.websockets.server.internal;
+package io.hotmoka.chat.server.internal;
 
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import io.hotmoka.websockets.beans.Message;
+import io.hotmoka.chat.beans.Message;
+import io.hotmoka.websockets.server.AbstractWebSocketServer;
 import jakarta.websocket.DeploymentException;
 import jakarta.websocket.server.ServerEndpointConfig;
 import jakarta.websocket.server.ServerEndpointConfig.Configurator;
 
-public class ChatServer extends SimpleWebSocketServer {
+public class ChatServer extends AbstractWebSocketServer {
 
 	/**
 	 * State shared among different threads executing the endpoints handlers:

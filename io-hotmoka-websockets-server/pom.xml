@@ -15,7 +15,7 @@
   <dependencies>
     <dependency>
       <groupId>io.hotmoka</groupId>
-      <artifactId>io-hotmoka-websockets-beans</artifactId>
+      <artifactId>io-hotmoka-chat-beans</artifactId>
       <version>1.0.0</version>
     </dependency>
     <dependency>

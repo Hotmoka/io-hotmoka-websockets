@@ -14,16 +14,18 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package io.hotmoka.websockets.client.internal;
+package io.hotmoka.websockets.client;
 
-import jakarta.websocket.DeploymentException;
+import jakarta.websocket.Endpoint;
 
-public abstract class SimpleWebSocketClient implements AutoCloseable {
+public abstract class AbstractClientEndpoint<C extends AbstractWebSocketClient> extends Endpoint {
+	private final C client;
 
-	protected SimpleWebSocketClient() throws DeploymentException {
+	protected AbstractClientEndpoint(C client) {
+		this.client = client;
 	}
 
-	@Override
-	public void close() throws Exception {
+	protected C getClient() {
+		return client;
 	}
 }

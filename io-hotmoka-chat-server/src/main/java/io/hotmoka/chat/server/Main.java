@@ -14,18 +14,20 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package io.hotmoka.websockets.server.internal;
+package io.hotmoka.chat.server;
 
-import jakarta.websocket.Endpoint;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 
-public abstract class ServerEndpoint<S extends SimpleWebSocketServer> extends Endpoint {
-	private volatile S server;
+import io.hotmoka.chat.server.internal.ChatServer;
 
-	protected void setServer(S server) {
-		this.server = server;
-	}
+public class Main {
 
-	protected S getServer() {
-		return server;
+	public static void main(String[] args) throws Exception {
+		try (var server = new ChatServer()) {
+			BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+			System.out.println("Please press a key to stop the server.");
+			reader.readLine();
+		}
 	}
 }

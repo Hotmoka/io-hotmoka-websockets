@@ -8,13 +8,14 @@
     <maven.compiler.source>11</maven.compiler.source>
     <maven.compiler.target>11</maven.compiler.target>
     <failOnMissingWebXml>false</failOnMissingWebXml>
+    <hotmoka.version>1.1.0</hotmoka.version>
   </properties>
 
   <groupId>io.hotmoka</groupId>
   <artifactId>io-hotmoka-websockets</artifactId>
   <packaging>pom</packaging>
   <version>1.0.0</version>
-  <name>WebServers</name>
+  <name>Web Sockets</name>
   <description>Project minimal configuration for websockets</description>
   <url>https://github.com/Hotmoka/websockets</url>
 
@@ -43,9 +44,12 @@
   </developers>
 
   <modules>
+	<module>io-hotmoka-websockets-beans</module>
     <module>io-hotmoka-websockets-server</module>
-    <module>io-hotmoka-websockets-beans</module>
     <module>io-hotmoka-websockets-client</module>
+    <module>io-hotmoka-chat-beans</module>
+    <module>io-hotmoka-chat-client</module>
+    <module>io-hotmoka-chat-server</module>
   </modules>
 
   <scm>
@@ -103,6 +107,8 @@
                 io-hotmoka-websockets-server,
                 io-hotmoka-websockets-client,
                 io-hotmoka-websockets-beans,
+                io-hotmoka-chat-beans,
+                io-hotmoka-chat-client,
                 <!-- we exclude all modules that go into the explicit folder -->
                 gson,
                 jakarta.activation-api,

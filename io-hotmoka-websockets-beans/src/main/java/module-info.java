@@ -21,5 +21,5 @@ module io.hotmoka.websockets.beans {
 	opens io.hotmoka.websockets.beans to com.google.gson;
 
 	requires com.google.gson;
-	requires jakarta.websocket.client;
+	requires transitive jakarta.websocket.client;
 }

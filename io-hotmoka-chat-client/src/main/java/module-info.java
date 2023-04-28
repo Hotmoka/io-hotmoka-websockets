@@ -14,9 +14,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-module io.hotmoka.websockets.client {
-	exports io.hotmoka.websockets.client;
+module io.hotmoka.chat.client {
+	exports io.hotmoka.chat.client;
 
+	requires io.hotmoka.chat.beans;
+	requires io.hotmoka.websockets.client;
 	requires jakarta.websocket.client;
 	requires org.glassfish.tyrus.client;
 }

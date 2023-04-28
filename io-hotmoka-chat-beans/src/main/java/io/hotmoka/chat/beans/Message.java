@@ -14,10 +14,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package io.hotmoka.websockets.beans;
+package io.hotmoka.chat.beans;
 
-import io.hotmoka.websockets.beans.internal.AbstractDecoder;
-import io.hotmoka.websockets.beans.internal.AbstractEncoder;
+import io.hotmoka.websockets.beans.AbstractDecoder;
+import io.hotmoka.websockets.beans.AbstractEncoder;
 
 public class Message {
     private String from;

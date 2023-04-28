@@ -1,4 +1,4 @@
-package io.hotmoka.websockets.beans.internal;
+package io.hotmoka.websockets.beans;
 
 import com.google.gson.Gson;
 

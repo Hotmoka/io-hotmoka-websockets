@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package io.hotmoka.websockets.client.internal;
+package io.hotmoka.chat.client.internal;
 
 import java.io.IOException;
 import java.net.URI;
@@ -22,13 +22,14 @@ import java.util.List;
 
 import org.glassfish.tyrus.client.ClientManager;
 
-import io.hotmoka.websockets.beans.Message;
+import io.hotmoka.chat.beans.Message;
+import io.hotmoka.websockets.client.AbstractWebSocketClient;
 import jakarta.websocket.ClientEndpointConfig;
 import jakarta.websocket.DeploymentException;
 import jakarta.websocket.EncodeException;
 import jakarta.websocket.Session;
 
-public class ChatClient extends SimpleWebSocketClient {
+public class ChatClient extends AbstractWebSocketClient {
 	private final Session session;
 
 	public ChatClient(String username) throws DeploymentException {

@@ -14,18 +14,18 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package io.hotmoka.websockets.client.internal;
+package io.hotmoka.websockets.server;
 
 import jakarta.websocket.Endpoint;
 
-public abstract class ClientEndpoint<C extends SimpleWebSocketClient> extends Endpoint {
-	private final C client;
+public abstract class AbstractServerEndpoint<S extends AbstractWebSocketServer> extends Endpoint {
+	private volatile S server;
 
-	protected ClientEndpoint(C client) {
-		this.client = client;
+	protected void setServer(S server) {
+		this.server = server;
 	}
 
-	protected C getClient() {
-		return client;
+	protected S getServer() {
+		return server;
 	}
 }

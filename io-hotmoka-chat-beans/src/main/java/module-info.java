@@ -14,20 +14,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package io.hotmoka.websockets.server;
+module io.hotmoka.chat.beans {
+	exports io.hotmoka.chat.beans;
+	
+	// beans must be encoded and decoded by reflection through Gson
+	opens io.hotmoka.chat.beans to com.google.gson;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-
-import io.hotmoka.websockets.server.internal.ChatServer;
-
-public class Main {
-
-	public static void main(String[] args) throws Exception {
-		try (var server = new ChatServer()) {
-			BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-			System.out.println("Please press a key to stop the server.");
-			reader.readLine();
-		}
-	}
+	requires io.hotmoka.websockets.beans;
 }
