@@ -4,6 +4,7 @@
 
   <artifactId>io-hotmoka-websockets-beans</artifactId>
   <name>io-hotmoka-websockets-beans</name>
+  <description>Minimal classes for websockets beans</description>
   <packaging>jar</packaging>
 
   <parent>
@@ -30,7 +31,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
-        <version>3.2.0</version>
+        <version>3.3.0</version>
         <configuration>
           <outputDirectory>
             ../modules/explicit

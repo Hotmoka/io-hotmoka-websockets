@@ -9,8 +9,8 @@
   </parent>
 
   <artifactId>io-hotmoka-chat-server</artifactId>
-  <name>Websockets Server</name>
-  <description>Project minimal configuration for a websockets server</description>
+  <name>io-hotmoka-chat-server</name>
+  <description>A chat server over websockets</description>
 
   <dependencies>
     <dependency>
@@ -30,7 +30,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
-        <version>3.2.0</version>
+        <version>3.3.0</version>
         <configuration>
           <outputDirectory>
             ../modules/explicit

@@ -16,7 +16,7 @@
   <packaging>pom</packaging>
   <version>1.0.0</version>
   <name>Web Sockets</name>
-  <description>Project minimal configuration for websockets</description>
+  <description>Project minimal configuration for websockets with a chat example</description>
   <url>https://github.com/Hotmoka/websockets</url>
 
   <organization>
@@ -45,8 +45,8 @@
 
   <modules>
 	<module>io-hotmoka-websockets-beans</module>
+	<module>io-hotmoka-websockets-client</module>
     <module>io-hotmoka-websockets-server</module>
-    <module>io-hotmoka-websockets-client</module>
     <module>io-hotmoka-chat-beans</module>
     <module>io-hotmoka-chat-client</module>
     <module>io-hotmoka-chat-server</module>
@@ -65,7 +65,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-clean-plugin</artifactId>
-        <version>3.1.0</version>
+        <version>3.2.0</version>
 	    <configuration>
 	      <failOnError>false</failOnError>
 	      <filesets>
@@ -83,7 +83,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.8.1</version>
+        <version>3.11.0</version>
 	    <configuration>
 	      <release>11</release>
 	    </configuration>
@@ -92,7 +92,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
-        <version>3.1.2</version>
+        <version>3.5.0</version>
         <executions>
           <execution>
             <id>copy-unnamed-module</id>

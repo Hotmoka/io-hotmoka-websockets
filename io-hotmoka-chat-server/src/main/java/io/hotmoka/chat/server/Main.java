@@ -24,8 +24,7 @@ import io.hotmoka.chat.server.internal.ChatServer;
 public class Main {
 
 	public static void main(String[] args) throws Exception {
-		try (var server = new ChatServer()) {
-			BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+		try (var server = new ChatServer(); var reader = new BufferedReader(new InputStreamReader(System.in))) {
 			System.out.println("Please press a key to stop the server.");
 			reader.readLine();
 		}

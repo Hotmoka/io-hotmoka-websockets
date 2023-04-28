@@ -10,7 +10,7 @@
 
   <artifactId>io-hotmoka-chat-beans</artifactId>
   <name>io-hotmoka-chat-beans</name>
-  <description>Bean objects transmitted over websockets</description>
+  <description>Bean objects for a chat</description>
 
   <dependencies>
     <dependency>
@@ -25,7 +25,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
-        <version>3.2.0</version>
+        <version>3.3.0</version>
         <configuration>
           <outputDirectory>
             ../modules/explicit
