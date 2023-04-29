@@ -18,7 +18,6 @@ public abstract class AbstractDecoder<T> implements Decoder.Text<T> {
 	@Override
 	public T decode(String s) throws DecodeException {
 		try {
-			System.out.println(s + " -> " + beanClass);
 			return gson.fromJson(s, beanClass);
 		}
 		catch (Exception e) {

@@ -17,9 +17,10 @@ limitations under the License.
 package io.hotmoka.chat.server.internal;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.util.List;
 
 import io.hotmoka.chat.beans.Messages;
-import io.hotmoka.chat.beans.api.FullMessage;
 import io.hotmoka.chat.beans.api.Message;
 import io.hotmoka.chat.beans.api.PartialMessage;
 import io.hotmoka.websockets.server.AbstractServerEndpoint;
@@ -27,33 +28,29 @@ import jakarta.websocket.CloseReason;
 import jakarta.websocket.EncodeException;
 import jakarta.websocket.EndpointConfig;
 import jakarta.websocket.MessageHandler;
+import jakarta.websocket.RemoteEndpoint.Basic;
 import jakarta.websocket.Session;
+import jakarta.websocket.server.ServerEndpointConfig;
+import jakarta.websocket.server.ServerEndpointConfig.Configurator;
 
 public class ChatServerEndpoint extends AbstractServerEndpoint<ChatServer> {
 
-	public ChatServerEndpoint() {
-		System.out.println("endpoint initialization");
-	}
-
     @Override
     public void onOpen(Session session, EndpointConfig config) {
-    	System.out.println("onOpen " + Thread.currentThread().getId());
-    	String username = session.getPathParameters().get("username"); // + "[" + session.getId() + "]";
+    	String username = session.getPathParameters().get("username");
     	getServer().setUsername(session.getId(), username);
 
     	session.addMessageHandler((MessageHandler.Whole<PartialMessage>) (message -> {
-    		FullMessage full = message.setFrom(username); // fill in info about the user
-    		System.out.println("Received message: " + message + " " + Thread.currentThread().getId());
-    		broadcast(full, session);
+    		System.out.println("Received message: " + message);
+    		broadcast(message.setFrom(username), session); // fill in info about the user
     	}));
 
-    	broadcast(Messages.full(username, "Connected!"), session);
+    	broadcast(Messages.full(username, "connected!"), session);
     }
 
     @Override
 	public void onClose(Session session, CloseReason closeReason) {
-		System.out.println("onClose " + Thread.currentThread().getId());
-        broadcast(Messages.full(getServer().getUsername(session.getId()), "Disconnected!"), session);
+        broadcast(Messages.full(getServer().getUsername(session.getId()), "disconnected!"), session);
     }
 
 	@Override
@@ -66,19 +63,32 @@ public class ChatServerEndpoint extends AbstractServerEndpoint<ChatServer> {
 		super.setServer(server);
 	}
 
+	static ServerEndpointConfig config(Configurator configurator) {
+		return ServerEndpointConfig.Builder.create(ChatServerEndpoint.class, "/chat/{username}")
+				.encoders(List.of(Messages.Encoder.class))
+				.decoders(List.of(Messages.Decoder.class))
+				.configurator(configurator)
+				.build();
+	}
+
 	private void broadcast(Message message, Session session) {
-    	System.out.println("Broadcasting message: " + message);
+    	System.out.println("Broadcasting: " + message);
     	session.getOpenSessions()
-    		.stream()
+    		.parallelStream()
     		.filter(Session::isOpen)
     		.map(Session::getBasicRemote)
-    		.forEach(remote -> {
-    			try {
-    				remote.sendObject(message);
-    			}
-    			catch (IOException | EncodeException e) {
-    				e.printStackTrace();
-    			}
-    		});
+    		.forEach(remote -> sendMessage(remote, message));
     }
+
+	private static void sendMessage(Basic remote, Message message) {
+		try {
+			remote.sendObject(message);
+		}
+		catch (IOException e) {
+			throw new UncheckedIOException(e);
+		}
+		catch (EncodeException e) {
+			throw new RuntimeException(e); // unexpected
+		}
+	}
 }

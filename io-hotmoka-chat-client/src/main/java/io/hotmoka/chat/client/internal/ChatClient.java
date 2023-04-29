@@ -18,13 +18,11 @@ package io.hotmoka.chat.client.internal;
 
 import java.io.IOException;
 import java.net.URI;
-import java.util.List;
 
 import org.glassfish.tyrus.client.ClientManager;
 
 import io.hotmoka.chat.beans.Messages;
 import io.hotmoka.websockets.client.AbstractWebSocketClient;
-import jakarta.websocket.ClientEndpointConfig;
 import jakarta.websocket.DeploymentException;
 import jakarta.websocket.EncodeException;
 import jakarta.websocket.Session;
@@ -33,15 +31,10 @@ public class ChatClient extends AbstractWebSocketClient {
 	private final Session session;
 
 	public ChatClient(String username) throws DeploymentException {
-		var config = ClientEndpointConfig.Builder.create()
-			.encoders(List.of(Messages.Encoder.class))
-			.decoders(List.of(Messages.Decoder.class))
-			.build();
-
 		try {
 			this.session = ClientManager.createClient().connectToServer(
 				new ChatClientEndpoint(this),
-				config,
+				ChatClientEndpoint.config(),
 				new URI("ws://localhost:8025/websockets/chat/" + username));
 		}
 		catch (Exception e) {
@@ -50,8 +43,10 @@ public class ChatClient extends AbstractWebSocketClient {
 	}
 
 	public void sendMessage(String s) throws IOException, EncodeException {
-		// the server will fill in the username
-		if (session.isOpen())
-			session.getBasicRemote().sendObject(Messages.partial(s));
+		if (session.isOpen()) {
+			var message = Messages.partial(s); // the server will fill in the username
+			System.out.println("sending " + message);
+			session.getBasicRemote().sendObject(message);
+		}
 	}
 }

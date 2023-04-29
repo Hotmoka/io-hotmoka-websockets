@@ -17,10 +17,12 @@ limitations under the License.
 package io.hotmoka.chat.client.internal;
 
 import java.io.IOException;
+import java.util.List;
 
 import io.hotmoka.chat.beans.Messages;
 import io.hotmoka.chat.beans.api.Message;
 import io.hotmoka.websockets.client.AbstractClientEndpoint;
+import jakarta.websocket.ClientEndpointConfig;
 import jakarta.websocket.CloseReason;
 import jakarta.websocket.EncodeException;
 import jakarta.websocket.EndpointConfig;
@@ -33,9 +35,15 @@ public class ChatClientEndpoint extends AbstractClientEndpoint<ChatClient> {
 		super(client);
 	}
 
+	static ClientEndpointConfig config() {
+		return ClientEndpointConfig.Builder.create()
+			.encoders(List.of(Messages.Encoder.class))
+			.decoders(List.of(Messages.Decoder.class))
+			.build();
+	}
+
 	@Override
 	public void onOpen(Session session, EndpointConfig config) {
-		System.out.println("onOpen");
 		session.addMessageHandler((MessageHandler.Whole<Message>) this::messageHandler);
 
 		try {
@@ -49,7 +57,6 @@ public class ChatClientEndpoint extends AbstractClientEndpoint<ChatClient> {
 
 	@Override
 	public void onClose(Session session, CloseReason closeReason) {
-		System.out.println("onClose");
 	}
 
 	private void messageHandler(Message message) {

@@ -19,13 +19,13 @@ package io.hotmoka.chat.beans.internal;
 import io.hotmoka.chat.beans.api.FullMessage;
 
 public class FullMessageImpl implements FullMessage {
-    private String from;
-    private String content;
-
-    @SuppressWarnings("unused")
-	private FullMessageImpl() {}
+    private final String from;
+    private final String content;
 
     public FullMessageImpl(String from, String content) {
+    	if (from == null || content == null)
+    		throw new NullPointerException();
+
     	this.from = from;
     	this.content = content;
     }
@@ -41,12 +41,16 @@ public class FullMessageImpl implements FullMessage {
     }
 
     @Override
-    public void setContent(String content) {
-		this.content = content;
-	}
-
-    @Override
     public String toString() {
     	return "FullMessageImpl from " + from + " with content " + content;
+    }
+
+    public static class GsonHelper {
+    	private String from;
+        private String content;
+
+        public FullMessageImpl toBean() {
+        	return new FullMessageImpl(from, content);
+        }
     }
 }

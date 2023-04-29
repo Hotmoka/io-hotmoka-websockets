@@ -17,7 +17,10 @@ limitations under the License.
 package io.hotmoka.chat.server;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URL;
+import java.util.logging.LogManager;
 
 import io.hotmoka.chat.server.internal.ChatServer;
 
@@ -27,6 +30,21 @@ public class Main {
 		try (var server = new ChatServer(); var reader = new BufferedReader(new InputStreamReader(System.in))) {
 			System.out.println("Please press a key to stop the server.");
 			reader.readLine();
+		}
+	}
+
+	static {
+		String current = System.getProperty("java.util.logging.config.file");
+		if (current == null) {
+			// if the property is not set, we provide a default (if it exists)
+			URL resource = Main.class.getClassLoader().getResource("logging.properties");
+			if (resource != null)
+				try (var is = resource.openStream()) {
+					LogManager.getLogManager().readConfiguration(is);
+				}
+				catch (SecurityException | IOException e) {
+					throw new RuntimeException("Cannot load the logging.properties file", e);
+				}
 		}
 	}
 }

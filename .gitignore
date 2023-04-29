@@ -1,4 +1,5 @@
 *~
+*.log*
 modules/
 target/
 .classpath

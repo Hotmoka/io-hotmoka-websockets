@@ -16,14 +16,11 @@ limitations under the License.
 
 package io.hotmoka.chat.server.internal;
 
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import io.hotmoka.chat.beans.Messages;
 import io.hotmoka.websockets.server.AbstractWebSocketServer;
 import jakarta.websocket.DeploymentException;
-import jakarta.websocket.server.ServerEndpointConfig;
 import jakarta.websocket.server.ServerEndpointConfig.Configurator;
 
 public class ChatServer extends AbstractWebSocketServer {
@@ -41,13 +38,9 @@ public class ChatServer extends AbstractWebSocketServer {
      */
     public ChatServer() throws DeploymentException {
     	int port = 8025;
-    	var sec = ServerEndpointConfig.Builder.create(ChatServerEndpoint.class, "/chat/{username}")
-    			.encoders(List.of(Messages.Encoder.class))
-    			.decoders(List.of(Messages.Decoder.class))
-    			.configurator(new MyConfigurator())
-    			.build();
+    	var configurator = new MyConfigurator();
+    	getContainer().addEndpoint(ChatServerEndpoint.config(configurator));
 
-    	getContainer().addEndpoint(sec);
     	try {
     		getContainer().start("/websockets", port);
     	}

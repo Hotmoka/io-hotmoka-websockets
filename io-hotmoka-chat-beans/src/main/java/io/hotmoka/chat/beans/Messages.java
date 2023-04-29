@@ -53,9 +53,9 @@ public interface Messages {
     			JsonElement element = JsonParser.parseString(s);
     			// any politics able to distinguish full from partial is fine here
     			if (element.getAsJsonObject().has("from"))
-    				return gson.fromJson(element, FullMessageImpl.class);
+    				return gson.fromJson(element, FullMessageImpl.GsonHelper.class).toBean();
     			else
-    				return gson.fromJson(element, PartialMessageImpl.class);
+    				return gson.fromJson(element, PartialMessageImpl.GsonHelper.class).toBean();
     		}
     		catch (Exception e) {
     			throw new DecodeException(s, "could not decode a Message", e);

@@ -16,6 +16,10 @@ limitations under the License.
 
 package io.hotmoka.chat.client;
 
+import java.io.IOException;
+import java.net.URL;
+import java.util.logging.LogManager;
+
 import io.hotmoka.chat.client.internal.ChatClient;
 
 public class Main {
@@ -33,6 +37,21 @@ public class Main {
 			Thread.sleep(5000);
 			client.sendMessage("hello (3/3)");
 			Thread.sleep(5000);
+		}
+	}
+
+	static {
+		String current = System.getProperty("java.util.logging.config.file");
+		if (current == null) {
+			// if the property is not set, we provide a default (if it exists)
+			URL resource = Main.class.getClassLoader().getResource("logging.properties");
+			if (resource != null)
+				try (var is = resource.openStream()) {
+					LogManager.getLogManager().readConfiguration(is);
+				}
+				catch (SecurityException | IOException e) {
+					throw new RuntimeException("Cannot load the logging.properties file", e);
+				}
 		}
 	}
 }

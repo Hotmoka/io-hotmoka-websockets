@@ -20,12 +20,12 @@ import io.hotmoka.chat.beans.api.FullMessage;
 import io.hotmoka.chat.beans.api.PartialMessage;
 
 public class PartialMessageImpl implements PartialMessage {
-    private String content;
-
-    @SuppressWarnings("unused")
-	private PartialMessageImpl() {}
+    private final String content;
 
     public PartialMessageImpl(String content) {
+    	if (content == null)
+    		throw new NullPointerException();
+
     	this.content = content;
     }
 
@@ -40,12 +40,15 @@ public class PartialMessageImpl implements PartialMessage {
     }
 
     @Override
-    public void setContent(String content) {
-		this.content = content;
-	}
-
-    @Override
     public String toString() {
     	return "PartialMessageImpl with content " + content;
+    }
+
+    public static class GsonHelper {
+        private String content;
+
+        public PartialMessageImpl toBean() {
+        	return new PartialMessageImpl(content);
+        }
     }
 }

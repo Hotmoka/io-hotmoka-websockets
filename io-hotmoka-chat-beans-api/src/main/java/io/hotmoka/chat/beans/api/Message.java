@@ -18,6 +18,5 @@ package io.hotmoka.chat.beans.api;
 
 public interface Message {
 	String getContent();
-	void setContent(String content);
 	String toString();
 }
