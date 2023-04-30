@@ -16,7 +16,9 @@ limitations under the License.
 
 package io.hotmoka.websockets.client;
 
-public abstract class AbstractWebSocketClient implements AutoCloseable {
+import io.hotmoka.websockets.client.api.WebSocketClient;
+
+public abstract class AbstractWebSocketClient implements WebSocketClient {
 
 	protected AbstractWebSocketClient() {
 	}

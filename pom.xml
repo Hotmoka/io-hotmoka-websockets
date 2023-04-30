@@ -8,6 +8,7 @@
     <maven.compiler.source>11</maven.compiler.source>
     <maven.compiler.target>11</maven.compiler.target>
     <failOnMissingWebXml>false</failOnMissingWebXml>
+    <io.hotmoka.websockets.version>1.0.0</io.hotmoka.websockets.version>
   </properties>
 
   <groupId>io.hotmoka</groupId>
@@ -44,6 +45,7 @@
 
   <modules>
 	<module>io-hotmoka-websockets-beans</module>
+	<module>io-hotmoka-websockets-client-api</module>
 	<module>io-hotmoka-websockets-client</module>
     <module>io-hotmoka-websockets-server</module>
     <module>io-hotmoka-chat-beans-api</module>
@@ -105,6 +107,7 @@
               <excludeArtifactIds>
                 <!-- we exclude all modules built by Maven: their build will put them at the right place -->
                 io-hotmoka-websockets-server,
+                io-hotmoka-websockets-client-api,
                 io-hotmoka-websockets-client,
                 io-hotmoka-websockets-beans,
                 io-hotmoka-chat-beans,

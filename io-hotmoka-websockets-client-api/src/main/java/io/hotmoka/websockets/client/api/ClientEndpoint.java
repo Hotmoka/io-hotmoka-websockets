@@ -14,21 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package io.hotmoka.websockets.client;
+package io.hotmoka.websockets.client.api;
 
-import io.hotmoka.websockets.client.api.ClientEndpoint;
-import io.hotmoka.websockets.client.api.WebSocketClient;
-import jakarta.websocket.Endpoint;
-
-public abstract class AbstractClientEndpoint<C extends WebSocketClient> extends Endpoint implements ClientEndpoint<C> {
-	private final C client;
-
-	protected AbstractClientEndpoint(C client) {
-		this.client = client;
-	}
-
-	@Override
-	public C getClient() {
-		return client;
-	}
+public interface ClientEndpoint<C extends WebSocketClient> {
+	C getClient();
 }
