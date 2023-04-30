@@ -16,10 +16,6 @@ limitations under the License.
 
 module io.hotmoka.websockets.beans {
 	exports io.hotmoka.websockets.beans;
-	
-	// beans must be encoded and decoded by reflection through Gson
-	opens io.hotmoka.websockets.beans to com.google.gson;
-
 	requires transitive com.google.gson;
 	requires transitive jakarta.websocket.client;
 }

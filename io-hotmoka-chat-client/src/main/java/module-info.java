@@ -19,7 +19,5 @@ module io.hotmoka.chat.client {
 
 	requires io.hotmoka.chat.beans;
 	requires io.hotmoka.websockets.client;
-	requires jakarta.websocket.client;
-	requires org.glassfish.tyrus.client;
 	requires java.logging;
 }

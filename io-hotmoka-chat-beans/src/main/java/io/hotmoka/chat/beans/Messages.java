@@ -16,15 +16,11 @@ limitations under the License.
 
 package io.hotmoka.chat.beans;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
-
 import io.hotmoka.chat.beans.api.Message;
 import io.hotmoka.chat.beans.internal.FullMessageImpl;
+import io.hotmoka.chat.beans.internal.MessageDecoder;
 import io.hotmoka.chat.beans.internal.PartialMessageImpl;
-import io.hotmoka.websockets.beans.AbstractDecoder;
 import io.hotmoka.websockets.beans.AbstractEncoder;
-import jakarta.websocket.DecodeException;
 
 /**
  * A provider of messages.
@@ -41,25 +37,5 @@ public interface Messages {
 
 	static class Encoder extends AbstractEncoder<Message> {}
 
-    static class Decoder extends AbstractDecoder<Message> {
-
-    	public Decoder() {
-    		super(Message.class);
-    	}
-
-    	@Override
-    	public Message decode(String s) throws DecodeException {
-    		try {
-    			JsonElement element = JsonParser.parseString(s);
-    			// any politics able to distinguish full from partial is fine here
-    			if (element.getAsJsonObject().has("from"))
-    				return gson.fromJson(element, FullMessageImpl.GsonHelper.class).toBean();
-    			else
-    				return gson.fromJson(element, PartialMessageImpl.GsonHelper.class).toBean();
-    		}
-    		catch (Exception e) {
-    			throw new DecodeException(s, "could not decode a Message", e);
-    		}
-    	}
-    }
+    static class Decoder extends MessageDecoder {}
 }

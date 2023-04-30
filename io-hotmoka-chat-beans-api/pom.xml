@@ -12,9 +12,6 @@
   <name>io-hotmoka-chat-beans-api</name>
   <description>Bean interfaces for a chat</description>
 
-  <dependencies>
-  </dependencies>
-
   <build>
     <plugins>
       <plugin>
