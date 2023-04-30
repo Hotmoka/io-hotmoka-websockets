@@ -14,9 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-module io.hotmoka.websockets.beans {
-	exports io.hotmoka.websockets.beans;
-	requires transitive io.hotmoka.websockets.beans.api;
-	requires transitive com.google.gson;
-	requires transitive jakarta.websocket.client;
+module io.hotmoka.websockets.beans.api {
+	// currently empty
 }

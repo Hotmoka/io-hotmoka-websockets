@@ -2,9 +2,9 @@
 
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>io-hotmoka-websockets-beans</artifactId>
-  <name>io-hotmoka-websockets-beans</name>
-  <description>Minimal classes for websockets beans</description>
+  <artifactId>io-hotmoka-websockets-beans-api</artifactId>
+  <name>io-hotmoka-websockets-beans-api</name>
+  <description>API for minimal classes for websockets beans</description>
   <packaging>jar</packaging>
 
   <parent>
@@ -14,21 +14,6 @@
   </parent>
 
   <dependencies>
-    <dependency>
-      <groupId>io.hotmoka</groupId>
-      <artifactId>io-hotmoka-websockets-beans-api</artifactId>
-      <version>1.0.0</version>
-    </dependency>
-    <dependency>
-      <groupId>com.google.code.gson</groupId>
-      <artifactId>gson</artifactId>
-      <version>2.10.1</version>
-    </dependency>
-    <dependency>
-      <groupId>jakarta.websocket</groupId>
-      <artifactId>jakarta.websocket-client-api</artifactId>
-      <version>2.1.0</version>
-    </dependency>
   </dependencies>
 
   <build>

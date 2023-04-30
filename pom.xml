@@ -44,6 +44,7 @@
   </developers>
 
   <modules>
+	<module>io-hotmoka-websockets-beans-api</module>
 	<module>io-hotmoka-websockets-beans</module>
 	<module>io-hotmoka-websockets-client-api</module>
 	<module>io-hotmoka-websockets-client</module>
@@ -113,6 +114,7 @@
                 io-hotmoka-websockets-server,
                 io-hotmoka-websockets-client-api,
                 io-hotmoka-websockets-client,
+                io-hotmoka-websockets-beans-api,
                 io-hotmoka-websockets-beans,
                 io-hotmoka-chat-beans-api,
                 io-hotmoka-chat-beans,
