@@ -9,12 +9,13 @@
     <maven.compiler.target>11</maven.compiler.target>
     <failOnMissingWebXml>false</failOnMissingWebXml>
     <io.hotmoka.websockets.version>1.0.0</io.hotmoka.websockets.version>
+    <io.hotmoka.chat.version>1.0.0</io.hotmoka.chat.version>
   </properties>
 
   <groupId>io.hotmoka</groupId>
   <artifactId>io-hotmoka-websockets</artifactId>
   <packaging>pom</packaging>
-  <version>1.0.0</version>
+  <version>parent</version>
   <name>Web Sockets</name>
   <description>Project minimal configuration for websockets with a chat example</description>
   <url>https://github.com/Hotmoka/websockets</url>

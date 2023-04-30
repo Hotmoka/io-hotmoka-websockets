@@ -6,11 +6,12 @@
   <name>io-hotmoka-websockets-beans</name>
   <description>Minimal classes for websockets beans</description>
   <packaging>jar</packaging>
+  <version>${io.hotmoka.websockets.version}</version>
 
   <parent>
     <groupId>io.hotmoka</groupId>
     <artifactId>io-hotmoka-websockets</artifactId>
-    <version>1.0.0</version>
+    <version>parent</version>
   </parent>
 
   <dependencies>

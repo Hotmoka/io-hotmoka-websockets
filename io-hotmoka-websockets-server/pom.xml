@@ -5,11 +5,13 @@
   <parent>
     <groupId>io.hotmoka</groupId>
     <artifactId>io-hotmoka-websockets</artifactId>
-    <version>1.0.0</version>
+    <version>parent</version>
   </parent>
 
   <artifactId>io-hotmoka-websockets-server</artifactId>
   <name>io-hotmoka-websockets-server</name>
+  <version>${io.hotmoka.websockets.version}</version>
+  <packaging>jar</packaging>
   <description>Project minimal configuration for a websockets server</description>
 
   <dependencies>

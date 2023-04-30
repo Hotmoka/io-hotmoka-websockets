@@ -5,11 +5,13 @@
   <parent>
     <groupId>io.hotmoka</groupId>
     <artifactId>io-hotmoka-websockets</artifactId>
-    <version>1.0.0</version>
+    <version>parent</version>
   </parent>
 
   <artifactId>io-hotmoka-chat-client</artifactId>
   <name>io-hotmoka-chat-client</name>
+  <version>${io.hotmoka.chat.version}</version>
+  <packaging>jar</packaging>
   <description>A chat client over websockets</description>
 
   <dependencies>
