@@ -60,22 +60,21 @@ public class ChatServerEndpoint extends AbstractServerEndpoint<ChatServer> {
 
 	static ServerEndpointConfig config(Configurator configurator) {
 		return ServerEndpointConfig.Builder.create(ChatServerEndpoint.class, "/chat/{username}")
-				.encoders(List.of(Messages.Encoder.class))
-				.decoders(List.of(Messages.Decoder.class))
-				.configurator(configurator)
-				.build();
+			.encoders(List.of(Messages.Encoder.class))
+			.decoders(List.of(Messages.Decoder.class))
+			.configurator(configurator)
+			.build();
 	}
 
-	private void broadcast(Message message, Session session) {
+	private static void broadcast(Message message, Session session) {
     	System.out.println("Broadcasting: " + message);
-    	session.getOpenSessions()
-    		.parallelStream()
+    	session.getOpenSessions().stream()
     		.filter(Session::isOpen)
     		.map(Session::getBasicRemote)
-    		.forEach(remote -> sendMessage(remote, message));
+    		.forEach(remote -> send(message, remote));
     }
 
-	private static void sendMessage(Basic remote, Message message) {
+	private static void send(Message message, Basic remote) {
 		try {
 			remote.sendObject(message);
 		}

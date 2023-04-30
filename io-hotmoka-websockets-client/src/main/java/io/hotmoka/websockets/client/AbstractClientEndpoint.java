@@ -27,8 +27,7 @@ public abstract class AbstractClientEndpoint<C extends WebSocketClient> extends 
 		this.client = client;
 	}
 
-	@Override
-	public C getClient() {
+	protected final C getClient() {
 		return client;
 	}
 }

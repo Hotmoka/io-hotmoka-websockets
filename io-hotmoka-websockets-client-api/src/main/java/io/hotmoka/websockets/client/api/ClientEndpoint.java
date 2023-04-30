@@ -17,5 +17,4 @@ limitations under the License.
 package io.hotmoka.websockets.client.api;
 
 public interface ClientEndpoint<C extends WebSocketClient> {
-	C getClient();
 }
