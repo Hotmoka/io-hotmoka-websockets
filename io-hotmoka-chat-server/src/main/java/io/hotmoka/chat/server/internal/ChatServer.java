@@ -16,6 +16,7 @@ limitations under the License.
 
 package io.hotmoka.chat.server.internal;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -34,19 +35,14 @@ public class ChatServer extends AbstractWebSocketServer {
 	/**
      * Construct a new server.
      * 
-     * @throws DeploymentException 
+ 	 * @throws IOException if something goes wrong
+     * @throws DeploymentException when there is any issue with endpoints or other, non-specific issues
      */
-    public ChatServer() throws DeploymentException {
-    	int port = 8025;
+    public ChatServer() throws DeploymentException, IOException {
     	var configurator = new MyConfigurator();
-    	getContainer().addEndpoint(ChatServerEndpoint.config(configurator));
-
-    	try {
-    		getContainer().start("/websockets", port);
-    	}
-    	catch (Exception e) {
-            throw new DeploymentException("the server couldn't be deployed", e);
-        }
+    	var container = getContainer();
+    	container.addEndpoint(ChatServerEndpoint.config(configurator));
+    	container.start("/websockets", 8025);
     }
 
     String getUsername(String sessionId) {

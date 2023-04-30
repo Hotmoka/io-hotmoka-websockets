@@ -18,8 +18,7 @@ package io.hotmoka.chat.client.internal;
 
 import java.io.IOException;
 import java.net.URI;
-
-import org.glassfish.tyrus.client.ClientManager;
+import java.net.URISyntaxException;
 
 import io.hotmoka.chat.beans.Messages;
 import io.hotmoka.websockets.client.AbstractWebSocketClient;
@@ -30,16 +29,9 @@ import jakarta.websocket.Session;
 public class ChatClient extends AbstractWebSocketClient {
 	private final Session session;
 
-	public ChatClient(String username) throws DeploymentException {
-		try {
-			this.session = ClientManager.createClient().connectToServer(
-				new ChatClientEndpoint(this),
-				ChatClientEndpoint.config(),
-				new URI("ws://localhost:8025/websockets/chat/" + username));
-		}
-		catch (Exception e) {
-			throw new DeploymentException("the client couldn't be deployed", e);
-		}
+	public ChatClient(String username) throws DeploymentException, IOException, URISyntaxException {
+		var endpoint = new ChatClientEndpoint(this);
+		this.session = endpoint.deployAt(new URI("ws://localhost:8025/websockets/chat/" + username));
 	}
 
 	public void sendMessage(String s) throws IOException, EncodeException {

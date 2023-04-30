@@ -35,7 +35,7 @@ public abstract class AbstractWebSocketServer implements AutoCloseable {
 	}
 
 	@Override
-	public void close() throws Exception {
+	public void close() {
 		container.stop();
 	}
 }

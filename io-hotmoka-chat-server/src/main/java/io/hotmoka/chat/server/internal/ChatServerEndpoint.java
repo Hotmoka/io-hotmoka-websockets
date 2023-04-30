@@ -58,11 +58,6 @@ public class ChatServerEndpoint extends AbstractServerEndpoint<ChatServer> {
     	throwable.printStackTrace();
     }
 
-	@Override
-	protected void setServer(ChatServer server) {
-		super.setServer(server);
-	}
-
 	static ServerEndpointConfig config(Configurator configurator) {
 		return ServerEndpointConfig.Builder.create(ChatServerEndpoint.class, "/chat/{username}")
 				.encoders(List.of(Messages.Encoder.class))

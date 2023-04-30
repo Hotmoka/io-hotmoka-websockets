@@ -16,14 +16,12 @@ limitations under the License.
 
 package io.hotmoka.websockets.client;
 
-import jakarta.websocket.DeploymentException;
-
 public abstract class AbstractWebSocketClient implements AutoCloseable {
 
-	protected AbstractWebSocketClient() throws DeploymentException {
+	protected AbstractWebSocketClient() {
 	}
 
 	@Override
-	public void close() throws Exception {
+	public void close() {
 	}
 }

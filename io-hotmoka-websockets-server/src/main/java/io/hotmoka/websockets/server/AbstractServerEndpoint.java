@@ -21,7 +21,7 @@ import jakarta.websocket.Endpoint;
 public abstract class AbstractServerEndpoint<S extends AbstractWebSocketServer> extends Endpoint {
 	private volatile S server;
 
-	protected void setServer(S server) {
+	public void setServer(S server) {
 		this.server = server;
 	}
 
