@@ -22,12 +22,10 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.logging.LogManager;
 
-import io.hotmoka.chat.server.internal.ChatServer;
-
 public class Main {
 
 	public static void main(String[] args) throws Exception {
-		try (var server = new ChatServer(); var reader = new BufferedReader(new InputStreamReader(System.in))) {
+		try (var server = ChatServers.mk(); var reader = new BufferedReader(new InputStreamReader(System.in))) {
 			System.out.println("Please press a key to stop the server.");
 			reader.readLine();
 		}

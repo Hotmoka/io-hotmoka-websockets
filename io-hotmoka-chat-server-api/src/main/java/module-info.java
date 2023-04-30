@@ -14,14 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-module io.hotmoka.chat.server {
-	exports io.hotmoka.chat.server;
-
-	// needed to allow the endpoint to be created by reflection although it is not exported
-	opens io.hotmoka.chat.server.internal to org.glassfish.tyrus.core;
-
-	requires transitive io.hotmoka.chat.server.api;
-	requires io.hotmoka.chat.beans;
-	requires io.hotmoka.websockets.server;
-	requires java.logging;
+module io.hotmoka.chat.server.api {
+	exports io.hotmoka.chat.server.api;
+	requires io.hotmoka.websockets.server.api;
 }

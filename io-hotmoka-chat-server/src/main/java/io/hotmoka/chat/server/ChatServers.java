@@ -14,14 +14,16 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-module io.hotmoka.chat.server {
-	exports io.hotmoka.chat.server;
+package io.hotmoka.chat.server;
 
-	// needed to allow the endpoint to be created by reflection although it is not exported
-	opens io.hotmoka.chat.server.internal to org.glassfish.tyrus.core;
+import java.io.IOException;
 
-	requires transitive io.hotmoka.chat.server.api;
-	requires io.hotmoka.chat.beans;
-	requires io.hotmoka.websockets.server;
-	requires java.logging;
+import io.hotmoka.chat.server.api.ChatServer;
+import io.hotmoka.chat.server.internal.ChatServerImpl;
+import jakarta.websocket.DeploymentException;
+
+public interface ChatServers {
+	static ChatServer mk() throws DeploymentException, IOException {
+		return new ChatServerImpl();
+	}
 }

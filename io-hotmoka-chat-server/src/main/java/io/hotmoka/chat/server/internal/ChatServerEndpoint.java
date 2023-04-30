@@ -33,7 +33,7 @@ import jakarta.websocket.Session;
 import jakarta.websocket.server.ServerEndpointConfig;
 import jakarta.websocket.server.ServerEndpointConfig.Configurator;
 
-public class ChatServerEndpoint extends AbstractServerEndpoint<ChatServer> {
+public class ChatServerEndpoint extends AbstractServerEndpoint<ChatServerImpl> {
 
     @Override
     public void onOpen(Session session, EndpointConfig config) {
@@ -75,7 +75,7 @@ public class ChatServerEndpoint extends AbstractServerEndpoint<ChatServer> {
     }
 
 	@Override
-	protected void setServer(ChatServer server) {
+	protected void setServer(ChatServerImpl server) {
 		super.setServer(server);
 	}
 

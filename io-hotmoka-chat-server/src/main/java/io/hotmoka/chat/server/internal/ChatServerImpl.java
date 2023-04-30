@@ -20,11 +20,12 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import io.hotmoka.chat.server.api.ChatServer;
 import io.hotmoka.websockets.server.AbstractWebSocketServer;
 import jakarta.websocket.DeploymentException;
 import jakarta.websocket.server.ServerEndpointConfig.Configurator;
 
-public class ChatServer extends AbstractWebSocketServer {
+public class ChatServerImpl extends AbstractWebSocketServer implements ChatServer {
 
 	/**
 	 * State shared among different threads executing the endpoints handlers:
@@ -38,7 +39,7 @@ public class ChatServer extends AbstractWebSocketServer {
  	 * @throws IOException if something goes wrong
      * @throws DeploymentException when there is any issue with endpoints or other, non-specific issues
      */
-    public ChatServer() throws DeploymentException, IOException {
+    public ChatServerImpl() throws DeploymentException, IOException {
     	var configurator = new MyConfigurator();
     	var container = getContainer();
     	container.addEndpoint(ChatServerEndpoint.config(configurator));
@@ -59,7 +60,7 @@ public class ChatServer extends AbstractWebSocketServer {
     	public <T> T getEndpointInstance(Class<T> endpointClass) throws InstantiationException {
             var result = super.getEndpointInstance(endpointClass);
             if (result instanceof ChatServerEndpoint)
-            	((ChatServerEndpoint) result).setServer(ChatServer.this); // we inject the server
+            	((ChatServerEndpoint) result).setServer(ChatServerImpl.this); // we inject the server
 
             return result;
         }
