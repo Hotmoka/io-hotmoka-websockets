@@ -27,7 +27,7 @@ ional License"></p><p align="center">This document is licensed under a Creative 
 The `io-hotmoka-websockets-*` modules are a minimal library for websockets,
 split into `server`, `client` and `beans`
 (objects marshalled and unmarshalled between clients and servers).
-The `io-hotmoka-chat-*` modules are a minimal exemple using the library
+The `io-hotmoka-chat-*` modules are a minimal example that uses the library
 to implement a chat: messages are exchanged between a client and a server.
 
 ## How to run it
