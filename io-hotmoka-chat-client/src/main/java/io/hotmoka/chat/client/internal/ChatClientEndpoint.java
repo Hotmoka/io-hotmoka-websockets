@@ -33,13 +33,13 @@ import jakarta.websocket.EndpointConfig;
 import jakarta.websocket.MessageHandler;
 import jakarta.websocket.Session;
 
-public class ChatClientEndpoint extends AbstractClientEndpoint<ChatClient> {
+class ChatClientEndpoint extends AbstractClientEndpoint<ChatClientImpl> {
 
-	public ChatClientEndpoint(ChatClient client) {
+	ChatClientEndpoint(ChatClientImpl client) {
 		super(client);
 	}
 
-	public Session deployAt(URI uri) throws DeploymentException, IOException {
+	Session deployAt(URI uri) throws DeploymentException, IOException {
 		var config = ClientEndpointConfig.Builder.create()
 				.encoders(List.of(Messages.Encoder.class))
 				.decoders(List.of(Messages.Decoder.class))

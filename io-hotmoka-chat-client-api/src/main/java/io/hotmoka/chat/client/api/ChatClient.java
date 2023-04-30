@@ -14,11 +14,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-module io.hotmoka.chat.client {
-	exports io.hotmoka.chat.client;
+package io.hotmoka.chat.client.api;
 
-	requires transitive io.hotmoka.chat.client.api;
-	requires io.hotmoka.chat.beans;
-	requires io.hotmoka.websockets.client;
-	requires java.logging;
+import java.io.IOException;
+
+import io.hotmoka.websockets.client.api.WebSocketClient;
+import jakarta.websocket.EncodeException;
+
+public interface ChatClient extends WebSocketClient {
+	void sendMessage(String s) throws IOException, EncodeException;
 }

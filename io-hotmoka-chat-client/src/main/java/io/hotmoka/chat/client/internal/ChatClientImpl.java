@@ -21,19 +21,21 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import io.hotmoka.chat.beans.Messages;
+import io.hotmoka.chat.client.api.ChatClient;
 import io.hotmoka.websockets.client.AbstractWebSocketClient;
 import jakarta.websocket.DeploymentException;
 import jakarta.websocket.EncodeException;
 import jakarta.websocket.Session;
 
-public class ChatClient extends AbstractWebSocketClient {
+public class ChatClientImpl extends AbstractWebSocketClient implements ChatClient {
 	private final Session session;
 
-	public ChatClient(String username) throws DeploymentException, IOException, URISyntaxException {
+	public ChatClientImpl(String username) throws DeploymentException, IOException, URISyntaxException {
 		var endpoint = new ChatClientEndpoint(this);
 		this.session = endpoint.deployAt(new URI("ws://localhost:8025/websockets/chat/" + username));
 	}
 
+	@Override
 	public void sendMessage(String s) throws IOException, EncodeException {
 		if (session.isOpen()) {
 			var message = Messages.partial(s); // the server will fill in the username

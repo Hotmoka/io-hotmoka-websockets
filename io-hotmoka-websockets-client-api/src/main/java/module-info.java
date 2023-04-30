@@ -16,4 +16,5 @@ limitations under the License.
 
 module io.hotmoka.websockets.client.api {
 	exports io.hotmoka.websockets.client.api;
+	requires transitive jakarta.websocket.client;
 }

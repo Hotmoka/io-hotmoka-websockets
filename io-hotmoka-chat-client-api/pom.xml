@@ -8,16 +8,21 @@
     <version>1.0.0</version>
   </parent>
 
-  <artifactId>io-hotmoka-websockets-client-api</artifactId>
-  <name>io-hotmoka-websockets-client-api</name>
-  <description>API for project minimal configuration for a websockets client</description>
+  <artifactId>io-hotmoka-chat-client-api</artifactId>
+  <name>io-hotmoka-chat-client-api</name>
+  <description>API of a chat client over websockets</description>
 
   <dependencies>
     <dependency>
-      <groupId>jakarta.websocket</groupId>
-	  <artifactId>jakarta.websocket-client-api</artifactId>
-	  <version>2.1.0</version>
-	</dependency>
+      <groupId>io.hotmoka</groupId>
+      <artifactId>io-hotmoka-chat-beans-api</artifactId>
+      <version>1.0.0</version>
+    </dependency>
+    <dependency>
+      <groupId>io.hotmoka</groupId>
+      <artifactId>io-hotmoka-websockets-client-api</artifactId>
+      <version>1.0.0</version>
+    </dependency>
   </dependencies>
 
   <build>

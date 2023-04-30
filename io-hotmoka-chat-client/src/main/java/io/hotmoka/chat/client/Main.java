@@ -20,8 +20,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.logging.LogManager;
 
-import io.hotmoka.chat.client.internal.ChatClient;
-
 public class Main {
 
 	public static void main(String[] args) throws Exception {
@@ -30,7 +28,7 @@ public class Main {
 			System.exit(-1);
 		}
 
-		try (var client = new ChatClient(args[0])) {
+		try (var client = ChatClients.withUsername(args[0])) {
 			client.sendMessage("hello (1/3)");
 			Thread.sleep(5000);
 			client.sendMessage("hello (2/3)");

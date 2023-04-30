@@ -14,11 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-module io.hotmoka.chat.client {
-	exports io.hotmoka.chat.client;
-
-	requires transitive io.hotmoka.chat.client.api;
-	requires io.hotmoka.chat.beans;
-	requires io.hotmoka.websockets.client;
-	requires java.logging;
+module io.hotmoka.chat.client.api {
+	exports io.hotmoka.chat.client.api;
+	requires io.hotmoka.websockets.client.api;
 }

@@ -14,11 +14,18 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-module io.hotmoka.chat.client {
-	exports io.hotmoka.chat.client;
+package io.hotmoka.chat.client;
 
-	requires transitive io.hotmoka.chat.client.api;
-	requires io.hotmoka.chat.beans;
-	requires io.hotmoka.websockets.client;
-	requires java.logging;
+import java.io.IOException;
+import java.net.URISyntaxException;
+
+import io.hotmoka.chat.client.api.ChatClient;
+import io.hotmoka.chat.client.internal.ChatClientImpl;
+import jakarta.websocket.DeploymentException;
+
+public interface ChatClients {
+
+	static ChatClient withUsername(String username) throws DeploymentException, IOException, URISyntaxException {
+		return new ChatClientImpl(username);
+	}
 }
