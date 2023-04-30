@@ -18,7 +18,7 @@
     <dependency>
       <groupId>io.hotmoka</groupId>
       <artifactId>io-hotmoka-websockets-beans-api</artifactId>
-      <version>1.0.0</version>
+      <version>${io.hotmoka.websockets.version}</version>
     </dependency>
     <dependency>
       <groupId>com.google.code.gson</groupId>

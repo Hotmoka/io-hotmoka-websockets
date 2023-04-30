@@ -41,7 +41,7 @@ public class ChatServerEndpoint extends AbstractServerEndpoint<ChatServerImpl> {
     	getServer().setUsername(session.getId(), username);
 
     	session.addMessageHandler((MessageHandler.Whole<PartialMessage>) (message -> {
-    		System.out.println("Received message: " + message);
+    		System.out.println("Received " + message);
     		broadcast(message.setFrom(username), session); // fill in info about the user
     	}));
 
@@ -67,7 +67,7 @@ public class ChatServerEndpoint extends AbstractServerEndpoint<ChatServerImpl> {
 	}
 
 	private static void broadcast(Message message, Session session) {
-    	System.out.println("Broadcasting: " + message);
+    	System.out.println("Broadcasting " + message);
     	session.getOpenSessions().stream()
     		.filter(Session::isOpen)
     		.map(Session::getBasicRemote)

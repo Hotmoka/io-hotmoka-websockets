@@ -66,6 +66,6 @@ class ChatClientEndpoint extends AbstractClientEndpoint<ChatClientImpl> {
 	}
 
 	private void messageHandler(Message message) {
-		System.out.println("Received message: " + message);
+		System.out.println("Received " + message);
 	}
 }

@@ -39,7 +39,7 @@ public class ChatClientImpl extends AbstractWebSocketClient implements ChatClien
 	public void sendMessage(String s) throws IOException, EncodeException {
 		if (session.isOpen()) {
 			var message = Messages.partial(s); // the server will fill in the username
-			System.out.println("sending " + message);
+			System.out.println("Sending " + message);
 			session.getBasicRemote().sendObject(message);
 		}
 	}

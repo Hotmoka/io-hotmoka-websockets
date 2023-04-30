@@ -18,17 +18,17 @@
     <dependency>
       <groupId>io.hotmoka</groupId>
       <artifactId>io-hotmoka-chat-beans</artifactId>
-      <version>1.0.0</version>
+      <version>${io.hotmoka.chat.version}</version>
     </dependency>
     <dependency>
       <groupId>io.hotmoka</groupId>
       <artifactId>io-hotmoka-chat-client-api</artifactId>
-      <version>1.0.0</version>
+      <version>${io.hotmoka.chat.version}</version>
     </dependency>
     <dependency>
       <groupId>io.hotmoka</groupId>
       <artifactId>io-hotmoka-websockets-client</artifactId>
-      <version>1.0.0</version>
+      <version>${io.hotmoka.websockets.version}</version>
     </dependency>
   </dependencies>
 
