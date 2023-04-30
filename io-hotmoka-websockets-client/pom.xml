@@ -14,9 +14,9 @@
 
   <dependencies>
 	<dependency>
-		<groupId>io.hotmoka</groupId>
-		<artifactId>io-hotmoka-websockets-client-api</artifactId>
-		<version>${io.hotmoka.websockets.version}</version>
+	  <groupId>io.hotmoka</groupId>
+	  <artifactId>io-hotmoka-websockets-client-api</artifactId>
+	  <version>${io.hotmoka.websockets.version}</version>
 	</dependency>
     <dependency>
       <groupId>org.glassfish.tyrus</groupId>

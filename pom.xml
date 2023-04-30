@@ -47,6 +47,7 @@
 	<module>io-hotmoka-websockets-beans</module>
 	<module>io-hotmoka-websockets-client-api</module>
 	<module>io-hotmoka-websockets-client</module>
+	<module>io-hotmoka-websockets-server-api</module>
     <module>io-hotmoka-websockets-server</module>
     <module>io-hotmoka-chat-beans-api</module>
     <module>io-hotmoka-chat-beans</module>
@@ -106,6 +107,7 @@
               <outputDirectory>${project.parent.basedir}/modules/unnamed</outputDirectory>
               <excludeArtifactIds>
                 <!-- we exclude all modules built by Maven: their build will put them at the right place -->
+                io-hotmoka-websockets-server-api,
                 io-hotmoka-websockets-server,
                 io-hotmoka-websockets-client-api,
                 io-hotmoka-websockets-client,

@@ -14,20 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package io.hotmoka.websockets.server;
+package io.hotmoka.websockets.server.api;
 
-import io.hotmoka.websockets.server.api.ServerEndpoint;
-import io.hotmoka.websockets.server.api.WebSocketServer;
-import jakarta.websocket.Endpoint;
-
-public abstract class AbstractServerEndpoint<S extends WebSocketServer> extends Endpoint implements ServerEndpoint<S> {
-	private volatile S server;
-
-	protected void setServer(S server) {
-		this.server = server;
-	}
-
-	protected final S getServer() {
-		return server;
-	}
+public interface ServerEndpoint<S extends WebSocketServer> {
 }

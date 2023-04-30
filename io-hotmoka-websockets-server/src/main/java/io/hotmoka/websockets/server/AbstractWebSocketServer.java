@@ -21,16 +21,17 @@ import java.util.HashMap;
 import org.glassfish.tyrus.spi.ServerContainer;
 import org.glassfish.tyrus.spi.ServerContainerFactory;
 
+import io.hotmoka.websockets.server.api.WebSocketServer;
 import jakarta.websocket.DeploymentException;
 
-public abstract class AbstractWebSocketServer implements AutoCloseable {
+public abstract class AbstractWebSocketServer implements WebSocketServer {
 	private final ServerContainer container;
 
 	protected AbstractWebSocketServer() throws DeploymentException {
 		container = ServerContainerFactory.createServerContainer(new HashMap<>());
 	}
 
-	protected ServerContainer getContainer() {
+	protected final ServerContainer getContainer() {
 		return container;
 	}
 

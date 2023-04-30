@@ -8,22 +8,9 @@
     <version>1.0.0</version>
   </parent>
 
-  <artifactId>io-hotmoka-websockets-server</artifactId>
-  <name>io-hotmoka-websockets-server</name>
-  <description>Project minimal configuration for a websockets server</description>
-
-  <dependencies>
-	<dependency>
-      <groupId>io.hotmoka</groupId>
-	  <artifactId>io-hotmoka-websockets-server-api</artifactId>
-	  <version>${io.hotmoka.websockets.version}</version>
-	</dependency>
-    <dependency>
-      <groupId>org.glassfish.tyrus</groupId>
-      <artifactId>tyrus-container-grizzly-server</artifactId>
-      <version>2.1.3</version>
-    </dependency>
-  </dependencies>
+  <artifactId>io-hotmoka-websockets-server-api</artifactId>
+  <name>io-hotmoka-websockets-server-api</name>
+  <description>API for project minimal configuration for a websockets server</description>
 
   <build>
     <plugins>

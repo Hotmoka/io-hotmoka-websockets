@@ -74,6 +74,11 @@ public class ChatServerEndpoint extends AbstractServerEndpoint<ChatServer> {
     		.forEach(remote -> send(message, remote));
     }
 
+	@Override
+	protected void setServer(ChatServer server) {
+		super.setServer(server);
+	}
+
 	private static void send(Message message, Basic remote) {
 		try {
 			remote.sendObject(message);
