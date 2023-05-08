@@ -8,7 +8,15 @@ import jakarta.websocket.EndpointConfig;
 
 public abstract class AbstractEncoder<T> implements Encoder.Text<T> {
 
-	protected final static Gson gson = new Gson();
+	protected final Gson gson;
+	
+	protected AbstractEncoder() {
+		this(new Gson());
+	}
+
+	protected AbstractEncoder(Gson gson) {
+		this.gson = gson;
+	}
 
 	@Override
     public String encode(T value) throws EncodeException {
