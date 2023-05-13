@@ -23,8 +23,20 @@ import io.hotmoka.chat.client.api.ChatClient;
 import io.hotmoka.chat.client.internal.ChatClientImpl;
 import jakarta.websocket.DeploymentException;
 
+/**
+ * Suppliers of chat clients.
+ */
 public interface ChatClients {
 
+	/**
+	 * Yields a new chat client for a user with the given name.
+	 * 
+	 * @param username the name of the user
+	 * @return the chat client
+	 * @throws DeploymentException if the client could no be deployed
+	 * @throws IOException if there was an I/O error
+	 * @throws URISyntaxException if the syntax of the URI contacted by the client is incorrect (this depends on {@code username})
+	 */
 	static ChatClient withUsername(String username) throws DeploymentException, IOException, URISyntaxException {
 		return new ChatClientImpl(username);
 	}

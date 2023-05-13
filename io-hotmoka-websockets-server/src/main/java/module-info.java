@@ -14,6 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+/**
+ * This module implements a websocket server.
+ */
 module io.hotmoka.websockets.server {
 	exports io.hotmoka.websockets.server;
 

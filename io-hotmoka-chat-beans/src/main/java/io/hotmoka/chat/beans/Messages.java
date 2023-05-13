@@ -16,26 +16,47 @@ limitations under the License.
 
 package io.hotmoka.chat.beans;
 
+import io.hotmoka.chat.beans.api.FullMessage;
 import io.hotmoka.chat.beans.api.Message;
+import io.hotmoka.chat.beans.api.PartialMessage;
 import io.hotmoka.chat.beans.internal.FullMessageImpl;
 import io.hotmoka.chat.beans.internal.MessageDecoder;
 import io.hotmoka.chat.beans.internal.PartialMessageImpl;
 import io.hotmoka.websockets.beans.AbstractEncoder;
 
 /**
- * A provider of messages.
+ * Providers of messages.
  */
 public interface Messages {
 
-	static Message partial(String content) {
+	/**
+	 * Yields a partial message with the given content.
+	 * 
+	 * @param content the content
+	 * @return the partial message
+	 */
+	static PartialMessage partial(String content) {
 		return new PartialMessageImpl(content);
 	}
 
-	static Message full(String from, String content) {
+	/**
+	 * Yields a full message from the given sender and with the given content.
+	 * 
+	 * @param from the sender
+	 * @param content the content
+	 * @return the full message
+	 */
+	static FullMessage full(String from, String content) {
 		return new FullMessageImpl(from, content);
 	}
 
+	/**
+	 * The encoder of messages.
+	 */
 	static class Encoder extends AbstractEncoder<Message> {}
 
+	/**
+	 * The decoder of messages.
+	 */
     static class Decoder extends MessageDecoder {}
 }

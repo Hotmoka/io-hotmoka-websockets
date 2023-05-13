@@ -16,5 +16,10 @@ limitations under the License.
 
 package io.hotmoka.websockets.client.api;
 
+/**
+ * A websocket client endpoint.
+ * 
+ * @param <C> the type of the client this endpoint works for
+ */
 public interface ClientEndpoint<C extends WebSocketClient> {
 }

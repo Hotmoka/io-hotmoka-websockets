@@ -12,7 +12,7 @@
   <name>io-hotmoka-websockets-client</name>
   <version>${io.hotmoka.websockets.version}</version>
   <packaging>jar</packaging>
-  <description>Project minimal configuration for a websockets client</description>
+  <description>This module implements a websocket client</description>
 
   <dependencies>
 	<dependency>
@@ -26,20 +26,5 @@
       <version>2.1.3</version>
     </dependency>
   </dependencies>
-
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-        <version>3.3.0</version>
-        <configuration>
-          <outputDirectory>
-            ../modules/explicit
-          </outputDirectory>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
 
 </project>

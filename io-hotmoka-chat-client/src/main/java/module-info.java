@@ -14,6 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+/**
+ * This module implements a chat client.
+ */
 module io.hotmoka.chat.client {
 	exports io.hotmoka.chat.client;
 

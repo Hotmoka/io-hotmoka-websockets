@@ -16,5 +16,10 @@ limitations under the License.
 
 package io.hotmoka.websockets.server.api;
 
+/**
+ * An endpoint of a websockets server.
+ *
+ * @param <S> the type of the server
+ */
 public interface ServerEndpoint<S extends WebSocketServer> {
 }

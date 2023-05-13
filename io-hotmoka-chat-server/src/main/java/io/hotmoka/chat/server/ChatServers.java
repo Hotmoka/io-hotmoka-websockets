@@ -22,7 +22,18 @@ import io.hotmoka.chat.server.api.ChatServer;
 import io.hotmoka.chat.server.internal.ChatServerImpl;
 import jakarta.websocket.DeploymentException;
 
+/**
+ * Providers of chat servers.
+ */
 public interface ChatServers {
+
+	/**
+	 * Yields a new chat server.
+	 * 
+	 * @return the chat server
+	 * @throws DeploymentException if the server cannot be deployed
+	 * @throws IOException if an I/O error occurs
+	 */
 	static ChatServer mk() throws DeploymentException, IOException {
 		return new ChatServerImpl();
 	}

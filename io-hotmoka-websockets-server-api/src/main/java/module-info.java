@@ -14,6 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+/**
+ * This module defines the API of a websocket server.
+ */
 module io.hotmoka.websockets.server.api {
 	exports io.hotmoka.websockets.server.api;
 }

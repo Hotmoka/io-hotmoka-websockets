@@ -25,6 +25,9 @@ import io.hotmoka.websockets.server.AbstractWebSocketServer;
 import jakarta.websocket.DeploymentException;
 import jakarta.websocket.server.ServerEndpointConfig.Configurator;
 
+/**
+ * Implementation of a chat server.
+ */
 public class ChatServerImpl extends AbstractWebSocketServer implements ChatServer {
 
 	/**
@@ -34,11 +37,11 @@ public class ChatServerImpl extends AbstractWebSocketServer implements ChatServe
 	private final Map<String, String> usernames = new ConcurrentHashMap<>();
 
 	/**
-     * Construct a new server.
-     * 
- 	 * @throws IOException if something goes wrong
-     * @throws DeploymentException when there is any issue with endpoints or other, non-specific issues
-     */
+	 * Creates a new chat server.
+	 * 
+	 * @throws DeploymentException if the server cannot be deployed
+	 * @throws IOException if an I/O error occurs
+	 */
     public ChatServerImpl() throws DeploymentException, IOException {
     	var configurator = new MyConfigurator();
     	var container = getContainer();

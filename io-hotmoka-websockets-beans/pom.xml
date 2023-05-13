@@ -4,9 +4,9 @@
 
   <artifactId>io-hotmoka-websockets-beans</artifactId>
   <name>io-hotmoka-websockets-beans</name>
-  <description>Minimal classes for websockets beans</description>
   <packaging>jar</packaging>
   <version>${io.hotmoka.websockets.version}</version>
+  <description>This module defines shared classes for the beans exchanged among websocket clients and servers</description>
 
   <parent>
     <groupId>io.hotmoka</groupId>
@@ -23,7 +23,7 @@
     <dependency>
       <groupId>com.google.code.gson</groupId>
       <artifactId>gson</artifactId>
-      <version>2.10.1</version>
+      <version>2.8.9</version>
     </dependency>
     <dependency>
       <groupId>jakarta.websocket</groupId>
@@ -31,20 +31,5 @@
       <version>2.1.0</version>
     </dependency>
   </dependencies>
-
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-        <version>3.3.0</version>
-        <configuration>
-          <outputDirectory>
-            ../modules/explicit
-          </outputDirectory>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
 
 </project>

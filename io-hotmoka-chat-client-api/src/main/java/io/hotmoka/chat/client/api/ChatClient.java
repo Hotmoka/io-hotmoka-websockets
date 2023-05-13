@@ -21,6 +21,17 @@ import java.io.IOException;
 import io.hotmoka.websockets.client.api.WebSocketClient;
 import jakarta.websocket.EncodeException;
 
+/**
+ * A chat client over websockets.
+ */
 public interface ChatClient extends WebSocketClient {
+	
+	/**
+	 * Sends the given message to the server.
+	 * 
+	 * @param s the string of the message
+	 * @throws IOException if an I/O error occurs
+	 * @throws EncodeException if the message could not be encoded
+	 */
 	void sendMessage(String s) throws IOException, EncodeException;
 }

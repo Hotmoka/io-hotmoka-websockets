@@ -16,6 +16,9 @@ limitations under the License.
 
 package io.hotmoka.websockets.client.api;
 
+/**
+ * A websocket client.
+ */
 public interface WebSocketClient extends AutoCloseable {
 
 	@Override

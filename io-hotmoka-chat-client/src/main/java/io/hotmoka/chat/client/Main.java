@@ -17,12 +17,30 @@ limitations under the License.
 package io.hotmoka.chat.client;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.logging.LogManager;
 
+import jakarta.websocket.DeploymentException;
+import jakarta.websocket.EncodeException;
+
+/**
+ * Start class of a chat client.
+ */
 public class Main {
 
-	public static void main(String[] args) throws Exception {
+	private Main() {}
+
+	/**
+	 * Entry point of a chat client.
+	 * 
+	 * @param args the command-line arguments
+	 * @throws URISyntaxException if the contacted URI is not correct (this depends on the username in {@code args[0]}
+	 * @throws DeploymentException if the server cannot be deployed
+	 * @throws IOException if an I/O error occurs
+	 * @throws InterruptedException if the current thread is interrupted while waiting
+	 */
+	public static void main(String[] args) throws DeploymentException, IOException, URISyntaxException, InterruptedException {
 		if (args.length != 1) {
 			System.out.println("You need to specify exactly one username");
 			System.exit(-1);
@@ -36,6 +54,11 @@ public class Main {
 			client.sendMessage("hello (3/3)");
 			Thread.sleep(5000);
 		}
+		catch (EncodeException e) {
+			// the strings we send can be encoded into Message's
+			System.out.println("unexpected exception: " + e.getMessage());
+		}
+		
 	}
 
 	static {

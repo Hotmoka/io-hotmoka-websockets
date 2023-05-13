@@ -16,6 +16,15 @@ limitations under the License.
 
 package io.hotmoka.chat.beans.api;
 
+/**
+ * A full message, that is, a message including its sender.
+ */
 public interface FullMessage extends Message {
+	
+	/**
+	 * Yields the sender of the message.
+	 * 
+	 * @return the sender
+	 */
 	String getFrom();
 }

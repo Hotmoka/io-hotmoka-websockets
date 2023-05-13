@@ -12,7 +12,11 @@
   <name>io-hotmoka-chat-beans</name>
   <version>${io.hotmoka.chat.version}</version>
   <packaging>jar</packaging>
-  <description>Bean objects for a chat</description>
+  <description>This module implements the beans exchanged among chat clients and servers</description>
+
+  <properties>
+    <maven.deploy.skip>true</maven.deploy.skip>
+  </properties>
 
   <dependencies>
     <dependency>
@@ -26,20 +30,5 @@
       <version>${io.hotmoka.websockets.version}</version>
     </dependency>
   </dependencies>
-
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-        <version>3.3.0</version>
-        <configuration>
-          <outputDirectory>
-            ../modules/explicit
-          </outputDirectory>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
 
 </project>

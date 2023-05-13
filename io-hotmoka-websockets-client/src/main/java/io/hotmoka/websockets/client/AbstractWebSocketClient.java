@@ -18,8 +18,14 @@ package io.hotmoka.websockets.client;
 
 import io.hotmoka.websockets.client.api.WebSocketClient;
 
+/**
+ * A partial implementation of a websocket client.
+ */
 public abstract class AbstractWebSocketClient implements WebSocketClient {
 
+	/**
+	 * Creates a websocket client.
+	 */
 	protected AbstractWebSocketClient() {
 	}
 

@@ -14,6 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+/**
+ * This module implements a chat server.
+ */
 module io.hotmoka.chat.server {
 	exports io.hotmoka.chat.server;
 
@@ -23,5 +26,6 @@ module io.hotmoka.chat.server {
 	requires transitive io.hotmoka.chat.server.api;
 	requires io.hotmoka.chat.beans;
 	requires io.hotmoka.websockets.server;
+	requires org.glassfish.tyrus.core;
 	requires java.logging;
 }

@@ -20,13 +20,28 @@ import io.hotmoka.websockets.client.api.ClientEndpoint;
 import io.hotmoka.websockets.client.api.WebSocketClient;
 import jakarta.websocket.Endpoint;
 
+/**
+ * Partial implementation of a websocket client endpoint.
+ *
+ * @param <C> the type of the client this endpoint works for
+ */
 public abstract class AbstractClientEndpoint<C extends WebSocketClient> extends Endpoint implements ClientEndpoint<C> {
 	private final C client;
 
+	/**
+	 * Creates a new client endpoint for the given client.
+	 * 
+	 * @param client the client
+	 */
 	protected AbstractClientEndpoint(C client) {
 		this.client = client;
 	}
 
+	/**
+	 * Yields the client of this endpoint.
+	 * 
+	 * @return the client
+	 */
 	protected final C getClient() {
 		return client;
 	}

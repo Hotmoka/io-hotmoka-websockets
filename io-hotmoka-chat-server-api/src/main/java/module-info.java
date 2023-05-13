@@ -14,6 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+/**
+ * This modules defines the API of a chat server.
+ */
 module io.hotmoka.chat.server.api {
 	exports io.hotmoka.chat.server.api;
 	requires io.hotmoka.websockets.server.api;

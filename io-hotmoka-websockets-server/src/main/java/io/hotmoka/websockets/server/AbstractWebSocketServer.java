@@ -24,13 +24,26 @@ import org.glassfish.tyrus.spi.ServerContainerFactory;
 import io.hotmoka.websockets.server.api.WebSocketServer;
 import jakarta.websocket.DeploymentException;
 
+/**
+ * Partial implementation of a websocket server.
+ */
 public abstract class AbstractWebSocketServer implements WebSocketServer {
 	private final ServerContainer container;
 
+	/**
+	 * Deploys a new websocket server.
+	 * 
+	 * @throws DeploymentException if the websocket server could not be deployed
+	 */
 	protected AbstractWebSocketServer() throws DeploymentException {
 		container = ServerContainerFactory.createServerContainer(new HashMap<>());
 	}
 
+	/**
+	 * Yields the container of this server.
+	 * 
+	 * @return the container
+	 */
 	protected final ServerContainer getContainer() {
 		return container;
 	}

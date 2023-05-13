@@ -16,6 +16,17 @@ limitations under the License.
 
 package io.hotmoka.chat.beans.api;
 
+/**
+ * A partial message, that is, a message without the specification of its sender.
+ */
 public interface PartialMessage extends Message {
+
+	/**
+	 * Yields a full message with the same content as this partial message
+	 * and with the given sender.
+	 * 
+	 * @param from the sender
+	 * @return the full message
+	 */
 	FullMessage setFrom(String from);
 }

@@ -14,11 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+package io.hotmoka.websockets.beans.api;
+
 /**
- * This module defines the API of the beans transmitted among
- * websocket servers and clients.
+ * A encoder of a type {@code T} into a string.
+ *
+ * @param <T> the type of the values encoded
  */
-module io.hotmoka.websockets.beans.api {
-	exports io.hotmoka.websockets.beans.api;
-	requires transitive jakarta.websocket.client;
+public interface EncoderText<T> extends jakarta.websocket.Encoder.Text<T> {
 }

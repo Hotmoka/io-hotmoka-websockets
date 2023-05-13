@@ -14,6 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+/**
+ * This module implements the beans exchanged among chat clients and servers.
+ */
 module io.hotmoka.chat.beans {
 	exports io.hotmoka.chat.beans;
 	

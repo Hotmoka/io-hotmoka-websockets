@@ -14,9 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+/**
+ * This module defines shared classes for the beans exchanged
+ * among websocket clients and servers.
+ */
 module io.hotmoka.websockets.beans {
 	exports io.hotmoka.websockets.beans;
 	requires transitive io.hotmoka.websockets.beans.api;
 	requires transitive com.google.gson;
-	requires transitive jakarta.websocket.client;
 }

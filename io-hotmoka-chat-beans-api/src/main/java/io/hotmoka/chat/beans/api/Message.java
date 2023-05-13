@@ -16,7 +16,22 @@ limitations under the License.
 
 package io.hotmoka.chat.beans.api;
 
+/**
+ * A message exchanged among chat clients and servers.
+ */
 public interface Message {
+
+	/**
+	 * Yields the content of the message.
+	 * 
+	 * @return the content
+	 */
 	String getContent();
+
+	/**
+	 * Yields a string representation of the message.
+	 * 
+	 * @return the string representation
+	 */
 	String toString();
 }

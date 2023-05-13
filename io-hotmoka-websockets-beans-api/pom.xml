@@ -4,7 +4,7 @@
 
   <artifactId>io-hotmoka-websockets-beans-api</artifactId>
   <name>io-hotmoka-websockets-beans-api</name>
-  <description>API for minimal classes for websockets beans</description>
+  <description>This module defines the API of the beans transmitted among websocket servers and clients</description>
   <packaging>jar</packaging>
   <version>${io.hotmoka.websockets.version}</version>
 
@@ -15,21 +15,11 @@
   </parent>
 
   <dependencies>
+    <dependency>
+      <groupId>jakarta.websocket</groupId>
+      <artifactId>jakarta.websocket-client-api</artifactId>
+      <version>2.1.0</version>
+    </dependency>
   </dependencies>
-
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-        <version>3.3.0</version>
-        <configuration>
-          <outputDirectory>
-            ../modules/explicit
-          </outputDirectory>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
 
 </project>

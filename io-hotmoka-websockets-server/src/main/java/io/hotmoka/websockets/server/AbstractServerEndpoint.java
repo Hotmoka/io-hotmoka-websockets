@@ -20,13 +20,33 @@ import io.hotmoka.websockets.server.api.ServerEndpoint;
 import io.hotmoka.websockets.server.api.WebSocketServer;
 import jakarta.websocket.Endpoint;
 
+/**
+ * Partial implementation of a websocket endpoint.
+ *
+ * @param <S> the type of the server this endpoint works for
+ */
 public abstract class AbstractServerEndpoint<S extends WebSocketServer> extends Endpoint implements ServerEndpoint<S> {
 	private volatile S server;
 
+	/**
+	 * Creates the endpoint.
+	 */
+	protected AbstractServerEndpoint() {}
+
+	/**
+	 * Sets the server of this endpoint.
+	 * 
+	 * @param server the server
+	 */
 	protected void setServer(S server) {
 		this.server = server;
 	}
 
+	/**
+	 * Yields the server of this endpoint.
+	 * 
+	 * @return the server
+	 */
 	protected final S getServer() {
 		return server;
 	}
