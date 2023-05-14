@@ -17,7 +17,7 @@
 
   <dependencies>
     <dependency>
-      <groupId>io.hotmoka</groupId>
+      <groupId>io.hotmoka.websockets</groupId>
       <artifactId>io-hotmoka-websockets-server-api</artifactId>
       <version>${io.hotmoka.websockets.version}</version>
     </dependency>
