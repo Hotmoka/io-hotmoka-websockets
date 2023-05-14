@@ -27,7 +27,6 @@ Note: submodules whose artifact must be deployed on Maven Central must activate 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>11</maven.compiler.source>
     <maven.compiler.target>11</maven.compiler.target>
-    <failOnMissingWebXml>false</failOnMissingWebXml>
     <io.hotmoka.websockets.version>1.0.0</io.hotmoka.websockets.version>
     <io.hotmoka.chat.version>1.0.0</io.hotmoka.chat.version>
   </properties>
@@ -92,6 +91,28 @@ Note: submodules whose artifact must be deployed on Maven Central must activate 
     <module>io-hotmoka-websockets-server</module>
   </modules>
 
+  <!-- typical dependencies if submodules use JUnit 5 -->
+  <dependencies>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
+      <version>5.9.2</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>5.9.2</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <version>5.3.0</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
   <build>
     <plugins>
       <plugin>
@@ -116,8 +137,8 @@ Note: submodules whose artifact must be deployed on Maven Central must activate 
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.11.0</version>
         <configuration>
-          <source>11</source>
-          <target>11</target>
+          <source>${maven.compiler.source}</source>
+          <target>${maven.compiler.target}</target>
         </configuration>
       </plugin>
       <plugin>
@@ -125,9 +146,7 @@ Note: submodules whose artifact must be deployed on Maven Central must activate 
         <artifactId>maven-jar-plugin</artifactId>
         <version>3.3.0</version>
         <configuration>
-          <outputDirectory>
-            ../modules/explicit
-          </outputDirectory>
+          <outputDirectory>../modules/explicit</outputDirectory>
         </configuration>
       </plugin>
       <plugin>
@@ -140,8 +159,7 @@ Note: submodules whose artifact must be deployed on Maven Central must activate 
         <artifactId>maven-deploy-plugin</artifactId>
         <version>3.1.1</version>
         <configuration>
-		  <!-- skip, since we are using nexus -->
-          <skip>true</skip>
+          <skip>true</skip>   <!-- skip, since we are using nexus -->
         </configuration>
       </plugin>
       <plugin>
@@ -249,7 +267,20 @@ Note: submodules whose artifact must be deployed on Maven Central must activate 
                 <!-- we exclude all modules that go into the automatic folder -->
                 grizzly-framework,
                 grizzly-http,
-                grizzly-http-server
+                grizzly-http-server,
+                <!-- we exclude all modules that are only used for testing -->
+                apiguardian-api,
+                byte-buddy,
+                byte-buddy-agent,
+                junit-jupiter,
+                junit-jupiter-api,
+                junit-jupiter-engine,
+                junit-jupiter-params,
+                junit-platform-commons,
+                junit-platform-engine,
+                mockito-core,
+                objenesis,
+                opentest4j
               </excludeArtifactIds>
             </configuration>
           </execution>
