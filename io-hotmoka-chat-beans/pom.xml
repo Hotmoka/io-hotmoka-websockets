@@ -8,15 +8,12 @@
     <version>parent</version>
   </parent>
 
+  <groupId>io.hotmoka.chat</groupId>
   <artifactId>io-hotmoka-chat-beans</artifactId>
   <name>io-hotmoka-chat-beans</name>
   <version>${io.hotmoka.chat.version}</version>
   <packaging>jar</packaging>
   <description>This module implements the beans exchanged among chat clients and servers</description>
-
-  <properties>
-    <maven.deploy.skip>true</maven.deploy.skip>
-  </properties>
 
   <dependencies>
     <dependency>

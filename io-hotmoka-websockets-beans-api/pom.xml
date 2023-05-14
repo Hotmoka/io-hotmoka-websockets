@@ -2,6 +2,7 @@
 
   <modelVersion>4.0.0</modelVersion>
 
+  <groupId>io.hotmoka.websockets</groupId>
   <artifactId>io-hotmoka-websockets-beans-api</artifactId>
   <name>io-hotmoka-websockets-beans-api</name>
   <description>This module defines the API of the beans transmitted among websocket servers and clients</description>
@@ -21,5 +22,17 @@
       <version>2.1.0</version>
     </dependency>
   </dependencies>
+
+  <build>
+    <plugins>
+	  <plugin>
+	    <artifactId>maven-deploy-plugin</artifactId>
+        <version>3.1.1</version>
+        <configuration>
+          <skip>false</skip>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 
 </project>

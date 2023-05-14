@@ -2,6 +2,7 @@
 
   <modelVersion>4.0.0</modelVersion>
 
+  <groupId>io.hotmoka.websockets</groupId>
   <artifactId>io-hotmoka-websockets-beans</artifactId>
   <name>io-hotmoka-websockets-beans</name>
   <packaging>jar</packaging>
@@ -31,5 +32,17 @@
       <version>2.1.0</version>
     </dependency>
   </dependencies>
+
+  <build>
+    <plugins>
+	  <plugin>
+	    <artifactId>maven-deploy-plugin</artifactId>
+        <version>3.1.1</version>
+        <configuration>
+          <skip>false</skip>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 
 </project>
