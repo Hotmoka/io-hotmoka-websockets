@@ -5,13 +5,10 @@
 Compilation and installation of all modules in the local repository:
   mvn clean install
 
-Compilation and installation of all modules in the local repository, without running the tests:
-  mvn clean install -DskipTests
+Compilation and installation of all modules in the local repository, without running the tests nor generating Javadocs:
+  mvn clean install -DskipTests -Dmaven.javadoc.skip
 
-Compilation of all modules, generation of Javadocs, installation in the local repository:
-  mvn clean install -Pjavadocs
- 
-Compilation of selected modules, generation of Javadocs, sign with the given key and deploy to Maven Central:
+Compilation of selected modules, sign with the given key and deploy to Maven Central:
   mvn clean deploy -Prelease -Dgpg.keyname=5DA0DA74CADE10E6DDE646611983F53632921972
 
 By using the maven-flatten-plugin, this pom.xml allows us to use properties to define
@@ -199,6 +196,19 @@ Note: submodules whose artifact must be deployed on Maven Central must activate 
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>3.5.0</version>
+        <executions>
+          <execution>
+            <id>attach-javadocs</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
         <version>3.5.0</version>
         <executions>
@@ -291,20 +301,6 @@ Note: submodules whose artifact must be deployed on Maven Central must activate 
 	  <id>release</id>
       <build>
         <plugins>
-          <!-- javadocs get generated -->
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-javadoc-plugin</artifactId>
-            <version>3.5.0</version>
-            <executions>
-              <execution>
-                <id>attach-javadocs</id>
-                <goals>
-                  <goal>jar</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
           <!-- the artifacts get signed -->
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
@@ -349,35 +345,6 @@ Note: submodules whose artifact must be deployed on Maven Central must activate 
         <module>io-hotmoka-chat-server-api</module>
         <module>io-hotmoka-chat-server</module>
       </modules>
-    </profile>
-    <profile>
-      <id>javadocs</id>
-      <modules>
-        <module>io-hotmoka-chat-beans-api</module>
-        <module>io-hotmoka-chat-beans</module>
-        <module>io-hotmoka-chat-client-api</module>
-        <module>io-hotmoka-chat-client</module>
-        <module>io-hotmoka-chat-server-api</module>
-        <module>io-hotmoka-chat-server</module>
-      </modules>
-      <build>
-        <plugins>
-          <!-- javadocs get generated -->
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-javadoc-plugin</artifactId>
-            <version>3.5.0</version>
-            <executions>
-              <execution>
-                <id>attach-javadocs</id>
-                <goals>
-                  <goal>jar</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
     </profile>
   </profiles>
 
