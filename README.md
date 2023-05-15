@@ -1,5 +1,5 @@
 [![Java-Build Action Status](https://github.com/Hotmoka/websockets/workflows/Java-Build/badge.svg)](https://github.com/Hotmoka/websockets/actions)
-[![Maven Central](https://img.shields.io/maven-central/v/io.hotmoka.websockets/parent.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22io.hotmoka.websockets%22)
+[![Maven Central](https://img.shields.io/maven-central/v/io.hotmoka.websockets/io-hotmoka-websockets-server.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22io.hotmoka.websockets%22)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
 
 # Websockets in Java
