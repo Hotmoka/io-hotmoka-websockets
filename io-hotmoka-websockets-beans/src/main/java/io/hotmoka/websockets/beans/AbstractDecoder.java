@@ -16,16 +16,30 @@ public abstract class AbstractDecoder<T> implements DecoderText<T> {
 	/**
 	 * The gson utility used for decoding.
 	 */
-	protected final static Gson gson = new Gson();
+	protected final Gson gson;
 
+	/**
+	 * The class whose objects are decoded by this decoder.
+	 */
 	private final Class<T> beanClass;
 
 	/**
-	 * Creates a decoder for objects of the given class.
+	 * Creates a decoder for the given class, using a brand new gson utility.
 	 * 
 	 * @param beanClass the class
 	 */
 	protected AbstractDecoder(Class<T> beanClass) {
+		this(new Gson(), beanClass);
+	}
+
+	/**
+	 * Creates a decoder for the given class, using the given gson utility.
+	 * 
+	 * @param gson the gson utility
+	 * @param beanClass the class
+	 */
+	protected AbstractDecoder(Gson gson, Class<T> beanClass) {
+		this.gson = gson;
 		this.beanClass = beanClass;
 	}
 

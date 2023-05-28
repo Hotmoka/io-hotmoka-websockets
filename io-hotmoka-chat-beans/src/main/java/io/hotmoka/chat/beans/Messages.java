@@ -17,12 +17,11 @@ limitations under the License.
 package io.hotmoka.chat.beans;
 
 import io.hotmoka.chat.beans.api.FullMessage;
-import io.hotmoka.chat.beans.api.Message;
 import io.hotmoka.chat.beans.api.PartialMessage;
 import io.hotmoka.chat.beans.internal.FullMessageImpl;
 import io.hotmoka.chat.beans.internal.MessageDecoder;
+import io.hotmoka.chat.beans.internal.MessageEncoder;
 import io.hotmoka.chat.beans.internal.PartialMessageImpl;
-import io.hotmoka.websockets.beans.AbstractEncoder;
 
 /**
  * Providers of messages.
@@ -53,7 +52,7 @@ public interface Messages {
 	/**
 	 * The encoder of messages.
 	 */
-	static class Encoder extends AbstractEncoder<Message> {}
+	static class Encoder extends MessageEncoder {}
 
 	/**
 	 * The decoder of messages.
