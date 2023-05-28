@@ -22,4 +22,5 @@ module io.hotmoka.websockets.beans {
 	exports io.hotmoka.websockets.beans;
 	requires transitive io.hotmoka.websockets.beans.api;
 	requires transitive com.google.gson;
+	requires java.logging;
 }

@@ -1,5 +1,9 @@
 package io.hotmoka.websockets.beans;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import io.hotmoka.websockets.beans.api.EncoderText;
@@ -12,6 +16,8 @@ import jakarta.websocket.EndpointConfig;
  * @param <T> the type of the object
  */
 public class BaseEncoder<T> implements EncoderText<T> {
+
+	private final static Logger LOGGER = Logger.getLogger(BaseEncoder.class.getName());
 
 	/**
 	 * The serializer to use for the encoding.
@@ -30,10 +36,19 @@ public class BaseEncoder<T> implements EncoderText<T> {
 	/**
 	 * Creates an encoder using a default serializer.
 	 * 
-	 * @param beanClass the type of the objects encoder by this encoder
+	 * @param beanClass the type of the objects encoded by this encoder
 	 */
 	protected BaseEncoder(Class<T> beanClass) {
 		this(new BaseSerializer<>(beanClass));
+	}
+
+	/**
+	 * Yields the utility to use for serialization.
+	 * 
+	 * @return the Gson utility
+	 */
+	protected final Gson getGson() {
+		return serializer.gson;
 	}
 
 	@Override
@@ -42,7 +57,8 @@ public class BaseEncoder<T> implements EncoderText<T> {
     		return serializer.gson.toJson(value);
     	}
     	catch (Exception e) {
-    		throw new EncodeException(value, "could not encode bean", e);
+    		LOGGER.log(Level.SEVERE, "could not decode a " + serializer.beanClass.getName(), e);
+    		throw new EncodeException(value, "could not decode a " + serializer.beanClass.getName(), e);
     	}
     }
 

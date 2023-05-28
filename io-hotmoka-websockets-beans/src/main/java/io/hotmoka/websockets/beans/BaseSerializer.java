@@ -34,7 +34,7 @@ public class BaseSerializer<T> implements JsonSerializer<T> {
 	/**
 	 * The class whose objects get serialized.
 	 */
-	private Class<T> beanClass;
+	Class<T> beanClass;
 
 	/**
 	 * The utility used for converting into Json.

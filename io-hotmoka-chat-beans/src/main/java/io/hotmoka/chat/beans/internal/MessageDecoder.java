@@ -16,34 +16,27 @@ limitations under the License.
 
 package io.hotmoka.chat.beans.internal;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 
 import io.hotmoka.chat.beans.api.Message;
-import io.hotmoka.websockets.beans.AbstractDecoder;
-import jakarta.websocket.DecodeException;
+import io.hotmoka.websockets.beans.BaseDecoder;
 
 /**
  * A decoder for {@link io.hotmoka.chat.beans.api.Message}.
  */
-public class MessageDecoder extends AbstractDecoder<Message> {
+public class MessageDecoder extends BaseDecoder<Message> {
 
 	public MessageDecoder() {
 		super(Message.class);
 	}
 
 	@Override
-	public Message decode(String s) throws DecodeException {
-		try {
-			JsonElement element = JsonParser.parseString(s);
-			// any politics able to distinguish full from partial is fine here
-			if (element.getAsJsonObject().has("from"))
-				return gson.fromJson(element, FullMessageImpl.GsonHelper.class).toBean();
-			else
-				return gson.fromJson(element, PartialMessageImpl.GsonHelper.class).toBean();
-		}
-		catch (Exception e) {
-			throw new DecodeException(s, "could not decode a Message", e);
-		}
+	protected Message decode(JsonElement element, Gson gson) {
+		// any politics able to distinguish full from partial is fine here
+		if (element.getAsJsonObject().has("from"))
+			return gson.fromJson(element, FullMessageImpl.GsonHelper.class).toBean();
+		else
+			return gson.fromJson(element, PartialMessageImpl.GsonHelper.class).toBean();
 	}
 }
