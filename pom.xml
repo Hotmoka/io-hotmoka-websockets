@@ -234,6 +234,11 @@ Note: submodules whose artifact must be deployed on Maven Central must activate 
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
         <version>3.5.0</version>
+        <configuration>
+		  <includeScope>
+		    runtime <!-- so that test or provided dependencies are not considered -->
+		  </includeScope>
+		</configuration>
         <executions>
           <execution>
             <id>copy-unnamed-module</id>
@@ -272,20 +277,7 @@ Note: submodules whose artifact must be deployed on Maven Central must activate 
                 <!-- we exclude all modules that go into the automatic folder -->
                 grizzly-framework,
                 grizzly-http,
-                grizzly-http-server,
-                <!-- we exclude all modules that are only used for testing -->
-                apiguardian-api,
-                byte-buddy,
-                byte-buddy-agent,
-                junit-jupiter,
-                junit-jupiter-api,
-                junit-jupiter-engine,
-                junit-jupiter-params,
-                junit-platform-commons,
-                junit-platform-engine,
-                mockito-core,
-                objenesis,
-                opentest4j
+                grizzly-http-server
               </excludeArtifactIds>
             </configuration>
           </execution>
