@@ -34,12 +34,12 @@ public class BaseSerializer<T> implements JsonSerializer<T> {
 	/**
 	 * The class whose objects get serialized.
 	 */
-	Class<T> beanClass;
+	protected final Class<T> beanClass;
 
 	/**
 	 * The utility used for converting into Json.
 	 */
-	final Gson gson;
+	protected final Gson gson;
 
 	/**
 	 * Builds the serializer.
@@ -73,7 +73,8 @@ public class BaseSerializer<T> implements JsonSerializer<T> {
 	}
 
 	@Override
-	public JsonElement serialize(T src, Type typeOfSrc, JsonSerializationContext context) {
+	public final JsonElement serialize(T src, Type typeOfSrc, JsonSerializationContext context) {
+		// TODO: this is never used!
 		return gson.toJsonTree(src);
 	}
 }

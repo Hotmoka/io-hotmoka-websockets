@@ -57,8 +57,8 @@ public class BaseEncoder<T> implements EncoderText<T> {
     		return serializer.gson.toJson(value);
     	}
     	catch (Exception e) {
-    		LOGGER.log(Level.SEVERE, "could not decode a " + serializer.beanClass.getName(), e);
-    		throw new EncodeException(value, "could not decode a " + serializer.beanClass.getName(), e);
+    		LOGGER.log(Level.SEVERE, "could not encode a " + serializer.beanClass.getName(), e);
+    		throw new EncodeException(value, "could not encode a " + serializer.beanClass.getName(), e);
     	}
     }
 
