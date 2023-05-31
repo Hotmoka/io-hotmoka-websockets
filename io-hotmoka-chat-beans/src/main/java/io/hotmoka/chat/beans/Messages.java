@@ -17,10 +17,12 @@ limitations under the License.
 package io.hotmoka.chat.beans;
 
 import io.hotmoka.chat.beans.api.FullMessage;
+import io.hotmoka.chat.beans.api.Message;
 import io.hotmoka.chat.beans.api.PartialMessage;
 import io.hotmoka.chat.beans.internal.FullMessageImpl;
 import io.hotmoka.chat.beans.internal.MessageDecoder;
 import io.hotmoka.chat.beans.internal.MessageEncoder;
+import io.hotmoka.chat.beans.internal.MessageJson;
 import io.hotmoka.chat.beans.internal.PartialMessageImpl;
 
 /**
@@ -58,4 +60,24 @@ public interface Messages {
 	 * The decoder of messages.
 	 */
     static class Decoder extends MessageDecoder {}
+
+    /**
+     * Json representation.
+     */
+    static class Json extends MessageJson {
+
+    	/**
+    	 * Used by Gson.
+    	 */
+    	public Json() {}
+
+    	/**
+    	 * Creates the Json representation for the given message.
+    	 * 
+    	 * @param message the message
+    	 */
+    	public Json(Message message) {
+    		super(message);
+    	}
+    }
 }

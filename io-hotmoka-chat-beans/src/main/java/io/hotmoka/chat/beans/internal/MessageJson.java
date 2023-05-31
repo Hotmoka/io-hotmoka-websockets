@@ -16,24 +16,38 @@ limitations under the License.
 
 package io.hotmoka.chat.beans.internal;
 
+import java.util.function.Supplier;
+
 import io.hotmoka.chat.beans.Messages;
+import io.hotmoka.chat.beans.api.FullMessage;
 import io.hotmoka.chat.beans.api.Message;
-import io.hotmoka.websockets.beans.BaseEncoder;
 
 /**
- * An encoder of messages.
+ * The Json representation of a {@link io.hotmoka.chat.beans.api.Message}.
  */
-public class MessageEncoder extends BaseEncoder<Message> {
+public abstract class MessageJson implements Supplier<Message> {
+	private String from;
+	private String content;
 
 	/**
-	 * Creates the encoder.
+	 * Used by Gson.
 	 */
-	public MessageEncoder() {
-		super(Message.class);
+	protected MessageJson() {}
+
+	/**
+	 * Creates the Json.
+	 * 
+	 * @param message the message whose Json is created
+	 */
+	protected MessageJson(Message message) {
+		this.content = message.getContent();
+
+		if (message instanceof FullMessage)
+			this.from = ((FullMessage) message).getFrom();
 	}
 
 	@Override
-	public Messages.Json map(Message message) {
-		return new Messages.Json(message);
+	public Message get() {
+		return from == null ? Messages.partial(content) : Messages.full(from, content);
 	}
 }

@@ -1,16 +1,15 @@
 package io.hotmoka.websockets.beans;
 
+import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
 import io.hotmoka.websockets.beans.api.DecoderText;
 import jakarta.websocket.DecodeException;
-import jakarta.websocket.EndpointConfig;
 
 /**
  * Base implementation of a decoder from JSON strings into objects.
@@ -19,29 +18,40 @@ import jakarta.websocket.EndpointConfig;
  */
 public abstract class BaseDecoder<T> implements DecoderText<T> {
 
+	/**
+	 * The type of the objects decoded by the decoder.
+	 */
+	private final Class<? extends T> beanClass;
+
+	/**
+	 * The type of the objects actually matched with Gson. If {@code null},
+	 * then {@code beanClass} is used.
+	 */
+	private final Class<? extends Supplier<T>> jsonClass;
+
+	private final static Gson gson = new Gson();
+
 	private final static Logger LOGGER = Logger.getLogger(BaseDecoder.class.getName());
 
 	/**
-	 * The deserializer to use for decoding.
-	 */
-	protected final BaseDeserializer<T> deserializer;
-
-	/**
-	 * Creates a decoder from the given deserializer.
+	 * Creates a decoder for the given class type.
 	 * 
-	 * @param deserializer the deserializer
+	 * @param beanClass the type of the objects decoded by the decoder
 	 */
-	protected BaseDecoder(BaseDeserializer<T> deserializer) {
-		this.deserializer = deserializer;
+	protected BaseDecoder(Class<? extends T> beanClass) {
+		this.beanClass = beanClass;
+		this.jsonClass = null;
 	}
 
 	/**
-	 * Creates a decoder using a default deserializer.
+	 * Creates a decoder for the given class type.
 	 * 
-	 * @param beanClass the type of the objects decoded by this decoder
+	 * @param beanClass the type of the objects decoded by the decoder; this is not used
+	 * @param jsonClass the type of the objects actually matched with Gson
 	 */
-	protected BaseDecoder(Class<T> beanClass) {
-		this(new BaseDeserializer<>(beanClass));
+	protected BaseDecoder(Class<? extends T> beanClass, Class<? extends Supplier<T>> jsonClass) {
+		this.beanClass = null;
+		this.jsonClass = jsonClass;
 	}
 
 	@Override
@@ -52,42 +62,25 @@ public abstract class BaseDecoder<T> implements DecoderText<T> {
 	@Override
 	public final T decode(String s) throws DecodeException {
 		try {
-			return decode(JsonParser.parseString(s), deserializer.gson);
+			return decode(JsonParser.parseString(s), gson);
 		}
 		catch (Exception e) {
-			LOGGER.log(Level.SEVERE, "could not decode a " + deserializer.beanClass.getName(), e);
-			throw new DecodeException(s, "could not decode a " + deserializer.beanClass.getName(), e);
+			LOGGER.log(Level.SEVERE, "could not decode with a " + getClass().getName(), e);
+			throw new DecodeException(s, "could not decode with a " + getClass().getName(), e);
 		}
 	}
 
 	/**
-	 * Template method for actual decoding.
+	 * Decode the given json element by using the given gson utility.
 	 * 
-	 * @param element the json to decode
-	 * @param gson the utility that can be used for deserialization
-	 * @return the decoded object
-	 * @throws Exception if something fails during the decoding
+	 * @param json the element
+	 * @param gson the utility
+	 * @return the decoded value
 	 */
-	protected T decode(JsonElement element, Gson gson) throws Exception {
-		return deserializer.deserialize(element);
+	private T decode(JsonElement json, Gson gson) {
+		if (jsonClass == null)
+			return gson.fromJson(json, beanClass);
+		else
+			return gson.fromJson(json, jsonClass).get();
 	}
-
-	/**
-	 * Register this decoder as a deserializer for the objects decoded by itself.
-	 * 
-	 * @param where the Gson utility where it must be registered
-	 */
-	public final void registerAsTypeDeserializer(GsonBuilder where) {
-		deserializer.registerAsTypeDeserializer(where);
-	}
-
-	@Override
-    public void init(EndpointConfig endpointConfig) {
-        // Custom initialization logic
-    }
-
-    @Override
-    public void destroy() {
-        // Close resources
-    }
 }
