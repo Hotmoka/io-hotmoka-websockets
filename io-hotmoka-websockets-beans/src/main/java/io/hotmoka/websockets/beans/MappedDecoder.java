@@ -1,6 +1,21 @@
+/*
+Copyright 2023 Fausto Spoto
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
 package io.hotmoka.websockets.beans;
 
-import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -18,7 +33,7 @@ import jakarta.websocket.DecodeException;
  * @param <T> the type of the object
  * @param <JSON> the type of the mapped object
  */
-public class MappedDecoder<T, JSON extends Supplier<T>> implements DecoderText<T> {
+public class MappedDecoder<T, JSON extends JsonRepresentation<T>> implements DecoderText<T> {
 
 	/**
 	 * The type of the objects decoded by the decoder.
@@ -46,7 +61,7 @@ public class MappedDecoder<T, JSON extends Supplier<T>> implements DecoderText<T
 	@Override
 	public final T decode(String s) throws DecodeException {
 		try {
-			return gson.fromJson(JsonParser.parseString(s), clazz).get();
+			return gson.fromJson(JsonParser.parseString(s), clazz).unmap();
 		}
 		catch (Exception e) {
 			LOGGER.log(Level.SEVERE, "could not decode a " + clazz.getName(), e);

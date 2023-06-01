@@ -16,16 +16,15 @@ limitations under the License.
 
 package io.hotmoka.chat.beans.internal;
 
-import java.util.function.Supplier;
-
 import io.hotmoka.chat.beans.Messages;
 import io.hotmoka.chat.beans.api.FullMessage;
 import io.hotmoka.chat.beans.api.Message;
+import io.hotmoka.websockets.beans.JsonRepresentation;
 
 /**
- * The Json representation of a {@link io.hotmoka.chat.beans.api.Message}.
+ * The JSON representation of a {@link Message}.
  */
-public abstract class MessageJson implements Supplier<Message> {
+public abstract class MessageJson implements JsonRepresentation<Message> {
 	private String from;
 	private String content;
 
@@ -47,7 +46,7 @@ public abstract class MessageJson implements Supplier<Message> {
 	}
 
 	@Override
-	public Message get() {
+	public Message unmap() {
 		return from == null ? Messages.partial(content) : Messages.full(from, content);
 	}
 }
