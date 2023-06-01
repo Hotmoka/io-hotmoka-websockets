@@ -18,22 +18,17 @@ package io.hotmoka.chat.beans.internal;
 
 import io.hotmoka.chat.beans.Messages;
 import io.hotmoka.chat.beans.api.Message;
-import io.hotmoka.websockets.beans.BaseEncoder;
+import io.hotmoka.websockets.beans.MappedEncoder;
 
 /**
  * An encoder of messages.
  */
-public class MessageEncoder extends BaseEncoder<Message> {
+public class MessageEncoder extends MappedEncoder<Message, Messages.Json> {
 
 	/**
 	 * Creates the encoder.
 	 */
 	public MessageEncoder() {
-		super(Message.class);
-	}
-
-	@Override
-	public Messages.Json map(Message message) {
-		return new Messages.Json(message);
+		super(Messages.Json::new);
 	}
 }

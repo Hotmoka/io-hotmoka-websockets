@@ -18,14 +18,14 @@ package io.hotmoka.chat.beans.internal;
 
 import io.hotmoka.chat.beans.Messages;
 import io.hotmoka.chat.beans.api.Message;
-import io.hotmoka.websockets.beans.BaseDecoder;
+import io.hotmoka.websockets.beans.MappedDecoder;
 
 /**
  * A decoder for {@link io.hotmoka.chat.beans.api.Message}.
  */
-public class MessageDecoder extends BaseDecoder<Message> {
+public class MessageDecoder extends MappedDecoder<Message, Messages.Json> {
 
 	public MessageDecoder() {
-		super(Message.class, Messages.Json.class);
+		super(Messages.Json.class);
 	}
 }
