@@ -26,11 +26,9 @@ import io.hotmoka.chat.beans.Messages;
 import io.hotmoka.chat.beans.api.Message;
 import io.hotmoka.websockets.client.AbstractClientEndpoint;
 import jakarta.websocket.ClientEndpointConfig;
-import jakarta.websocket.CloseReason;
 import jakarta.websocket.DeploymentException;
 import jakarta.websocket.EncodeException;
 import jakarta.websocket.EndpointConfig;
-import jakarta.websocket.MessageHandler;
 import jakarta.websocket.Session;
 
 class ChatClientEndpoint extends AbstractClientEndpoint<ChatClientImpl> {
@@ -50,19 +48,15 @@ class ChatClientEndpoint extends AbstractClientEndpoint<ChatClientImpl> {
 
 	@Override
 	public void onOpen(Session session, EndpointConfig config) {
-		session.addMessageHandler((MessageHandler.Whole<Message>) this::messageHandler);
+		addMessageHandler(session, this::messageHandler);
 
 		try {
 			// the server will fill in the username
-			session.getBasicRemote().sendObject(Messages.partial("hello websocket!"));
+			sendObject(session, Messages.partial("hello websocket!"));
 		}
 		catch (IOException | EncodeException e) {
 			throw new RuntimeException(e);
 		}
-	}
-
-	@Override
-	public void onClose(Session session, CloseReason closeReason) {
 	}
 
 	private void messageHandler(Message message) {
