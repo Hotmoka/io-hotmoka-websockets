@@ -16,9 +16,18 @@ limitations under the License.
 
 package io.hotmoka.websockets.server;
 
+import java.util.concurrent.Future;
+import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import io.hotmoka.websockets.server.api.ServerEndpoint;
 import io.hotmoka.websockets.server.api.WebSocketServer;
 import jakarta.websocket.Endpoint;
+import jakarta.websocket.EndpointConfig;
+import jakarta.websocket.MessageHandler;
+import jakarta.websocket.Session;
+import jakarta.websocket.server.ServerEndpointConfig.Configurator;
 
 /**
  * Partial implementation of a websocket endpoint.
@@ -29,18 +38,19 @@ public abstract class AbstractServerEndpoint<S extends WebSocketServer> extends 
 	private volatile S server;
 
 	/**
+	 * The session serving this endpoint.
+	 */
+	private Session session;
+
+	/**
+	 * A logger, also available for subclasses.
+	 */
+	protected final Logger logger = Logger.getLogger(getClass().getName());
+
+	/**
 	 * Creates the endpoint.
 	 */
 	protected AbstractServerEndpoint() {}
-
-	/**
-	 * Sets the server of this endpoint.
-	 * 
-	 * @param server the server
-	 */
-	protected void setServer(S server) {
-		this.server = server;
-	}
 
 	/**
 	 * Yields the server of this endpoint.
@@ -50,4 +60,75 @@ public abstract class AbstractServerEndpoint<S extends WebSocketServer> extends 
 	protected final S getServer() {
 		return server;
 	}
+
+	/**
+	 * Adds the given handler for incoming messages to the given session.
+	 * 
+	 * @param <M> the type of the messages
+	 * @param handler the handler
+	 */
+	protected <M> void addMessageHandler(Consumer<M> handler) {
+		Session session = this.session;
+		if (session == null)
+			throw new IllegalStateException("no session is open at the moment");
+
+		session.addMessageHandler((MessageHandler.Whole<M>) handler::accept);
+	}
+
+	/**
+	 * Sends the given object, asynchronously, with the currently open session.
+	 * 
+	 * @param object the object to send
+	 * @return the future that can be used to wait for the operation to complete
+	 */
+	protected Future<Void> sendObjectAsync(Object object) {
+		Session session = this.session;
+		if (session == null)
+			throw new IllegalStateException("no session is open at the moment");
+
+		return session.getAsyncRemote().sendObject(object);
+	}
+
+	/**
+	 * Sets the server of this endpoint.
+	 * 
+	 * @param server the server
+	 */
+	void setServer(S server) {
+		this.server = server;
+	}
+
+	@Override
+	public void onOpen(Session session, EndpointConfig config) {
+		this.session = session;
+	}
+
+	@Override
+    public final void onError(Session session, Throwable throwable) {
+		logger.log(Level.SEVERE, "websocket error", throwable);
+    }
+
+	protected static <S extends WebSocketServer> Configurator mkConfigurator(S server) {
+		return new EndpointConfigurator<>(server);
+	}
+
+	private final static class EndpointConfigurator<S extends WebSocketServer> extends Configurator {
+		private S server;
+
+		private EndpointConfigurator(S server) {
+    		this.server = server;
+    	}
+
+		@SuppressWarnings("unchecked")
+		@Override
+    	public <T> T getEndpointInstance(Class<T> endpointClass) throws InstantiationException {
+            T result = super.getEndpointInstance(endpointClass);
+            if (result instanceof AbstractServerEndpoint<?>)
+            	// the following cast might fail if the programmer registers in a server
+            	// some AbstractServerEndpoint for the another server, of another class
+            	((AbstractServerEndpoint<S>) result).setServer(server); // we inject the server
+
+            return result;
+        }
+    }
 }

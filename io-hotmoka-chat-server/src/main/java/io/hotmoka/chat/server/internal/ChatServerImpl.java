@@ -23,7 +23,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import io.hotmoka.chat.server.api.ChatServer;
 import io.hotmoka.websockets.server.AbstractWebSocketServer;
 import jakarta.websocket.DeploymentException;
-import jakarta.websocket.server.ServerEndpointConfig.Configurator;
 
 /**
  * Implementation of a chat server.
@@ -43,9 +42,8 @@ public class ChatServerImpl extends AbstractWebSocketServer implements ChatServe
 	 * @throws IOException if an I/O error occurs
 	 */
     public ChatServerImpl() throws DeploymentException, IOException {
-    	var configurator = new MyConfigurator();
     	var container = getContainer();
-    	container.addEndpoint(ChatServerEndpoint.config(configurator));
+    	container.addEndpoint(ChatServerEndpoint.config(this));
     	container.start("/websockets", 8025);
     }
 
@@ -55,17 +53,5 @@ public class ChatServerImpl extends AbstractWebSocketServer implements ChatServe
 
     void setUsername(String sessionId, String username) {
     	usernames.put(sessionId, username);
-    }
-
-    private class MyConfigurator extends Configurator {
-
-    	@Override
-    	public <T> T getEndpointInstance(Class<T> endpointClass) throws InstantiationException {
-            var result = super.getEndpointInstance(endpointClass);
-            if (result instanceof ChatServerEndpoint)
-            	((ChatServerEndpoint) result).setServer(ChatServerImpl.this); // we inject the server
-
-            return result;
-        }
     }
 }

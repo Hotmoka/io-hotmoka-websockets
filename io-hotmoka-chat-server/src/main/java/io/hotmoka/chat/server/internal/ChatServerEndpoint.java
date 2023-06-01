@@ -17,7 +17,6 @@ limitations under the License.
 package io.hotmoka.chat.server.internal;
 
 import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.util.List;
 
 import io.hotmoka.chat.beans.Messages;
@@ -31,7 +30,6 @@ import jakarta.websocket.MessageHandler;
 import jakarta.websocket.RemoteEndpoint.Basic;
 import jakarta.websocket.Session;
 import jakarta.websocket.server.ServerEndpointConfig;
-import jakarta.websocket.server.ServerEndpointConfig.Configurator;
 
 public class ChatServerEndpoint extends AbstractServerEndpoint<ChatServerImpl> {
 
@@ -53,16 +51,11 @@ public class ChatServerEndpoint extends AbstractServerEndpoint<ChatServerImpl> {
         broadcast(Messages.full(getServer().getUsername(session.getId()), "disconnected!"), session);
     }
 
-	@Override
-    public void onError(Session session, Throwable throwable) {
-    	throwable.printStackTrace();
-    }
-
-	static ServerEndpointConfig config(Configurator configurator) {
+	static ServerEndpointConfig config(ChatServerImpl server) {
 		return ServerEndpointConfig.Builder.create(ChatServerEndpoint.class, "/chat/{username}")
 			.encoders(List.of(Messages.Encoder.class))
 			.decoders(List.of(Messages.Decoder.class))
-			.configurator(configurator)
+			.configurator(mkConfigurator(server))
 			.build();
 	}
 
@@ -74,20 +67,12 @@ public class ChatServerEndpoint extends AbstractServerEndpoint<ChatServerImpl> {
     		.forEach(remote -> send(message, remote));
     }
 
-	@Override
-	protected void setServer(ChatServerImpl server) {
-		super.setServer(server);
-	}
-
 	private static void send(Message message, Basic remote) {
 		try {
 			remote.sendObject(message);
 		}
-		catch (IOException e) {
-			throw new UncheckedIOException(e);
-		}
-		catch (EncodeException e) {
-			throw new RuntimeException(e); // unexpected
+		catch (EncodeException | IOException e) {
+			throw new RuntimeException(e);
 		}
 	}
 }

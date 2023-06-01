@@ -16,9 +16,15 @@ limitations under the License.
 
 package io.hotmoka.websockets.client;
 
+import java.util.concurrent.Future;
+import java.util.function.Consumer;
+
 import io.hotmoka.websockets.client.api.ClientEndpoint;
 import io.hotmoka.websockets.client.api.WebSocketClient;
 import jakarta.websocket.Endpoint;
+import jakarta.websocket.EndpointConfig;
+import jakarta.websocket.MessageHandler;
+import jakarta.websocket.Session;
 
 /**
  * Partial implementation of a websocket client endpoint.
@@ -27,6 +33,11 @@ import jakarta.websocket.Endpoint;
  */
 public abstract class AbstractClientEndpoint<C extends WebSocketClient> extends Endpoint implements ClientEndpoint<C> {
 	private final C client;
+
+	/**
+	 * The session serving this endpoint, if any.
+	 */
+	private Session session;
 
 	/**
 	 * Creates a new client endpoint for the given client.
@@ -44,5 +55,38 @@ public abstract class AbstractClientEndpoint<C extends WebSocketClient> extends 
 	 */
 	protected final C getClient() {
 		return client;
+	}
+
+	@Override
+	public void onOpen(Session session, EndpointConfig config) {
+		this.session = session;
+	}
+
+	/**
+	 * Adds the given handler for incoming messages to the given session.
+	 * 
+	 * @param <M> the type of the messages
+	 * @param handler the handler
+	 */
+	protected <M> void addMessageHandler(Consumer<M> handler) {
+		Session session = this.session;
+		if (session == null)
+			throw new IllegalStateException("no session is open at the moment");
+
+		session.addMessageHandler((MessageHandler.Whole<M>) handler::accept);
+	}
+
+	/**
+	 * Sends the given object, asynchronously, with the currently open session.
+	 * 
+	 * @param object the object to send
+	 * @return the future that can be used to wait for the operation to complete
+	 */
+	protected Future<Void> sendObjectAsync(Object object) {
+		Session session = this.session;
+		if (session == null)
+			throw new IllegalStateException("no session is open at the moment");
+
+		return session.getAsyncRemote().sendObject(object);
 	}
 }
