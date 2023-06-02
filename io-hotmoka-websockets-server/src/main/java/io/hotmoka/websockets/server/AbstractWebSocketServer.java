@@ -16,13 +16,17 @@ limitations under the License.
 
 package io.hotmoka.websockets.server;
 
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.concurrent.Future;
 
 import org.glassfish.tyrus.spi.ServerContainer;
 import org.glassfish.tyrus.spi.ServerContainerFactory;
 
 import io.hotmoka.websockets.server.api.WebSocketServer;
 import jakarta.websocket.DeploymentException;
+import jakarta.websocket.EncodeException;
+import jakarta.websocket.Session;
 
 /**
  * Partial implementation of a websocket server.
@@ -46,6 +50,29 @@ public abstract class AbstractWebSocketServer implements WebSocketServer {
 	 */
 	protected final ServerContainer getContainer() {
 		return container;
+	}
+
+	/**
+	 * Sends the given object, synchronously, with the given session.
+	 * 
+	 * @param session the session
+	 * @param object the object to send
+	 * @throws IOException if an IOException occurs
+	 * @throws EncodeException if there was a problem encoding the message object
+	 */
+	protected void sendObject(Session session, Object object) throws IOException, EncodeException {
+		session.getBasicRemote().sendObject(object);
+	}
+
+	/**
+	 * Sends the given object, asynchronously, with the given session.
+	 * 
+	 * @param session the session
+	 * @param object the object to send
+	 * @return the future that can be used to wait for the operation to complete
+	 */
+	protected Future<Void> sendObjectAsync(Session session, Object object) {
+		return session.getAsyncRemote().sendObject(object);
 	}
 
 	@Override

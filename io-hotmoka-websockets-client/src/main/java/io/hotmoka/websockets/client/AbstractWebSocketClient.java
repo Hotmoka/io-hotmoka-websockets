@@ -16,7 +16,12 @@ limitations under the License.
 
 package io.hotmoka.websockets.client;
 
+import java.io.IOException;
+import java.util.concurrent.Future;
+
 import io.hotmoka.websockets.client.api.WebSocketClient;
+import jakarta.websocket.EncodeException;
+import jakarta.websocket.Session;
 
 /**
  * A partial implementation of a websocket client.
@@ -31,5 +36,28 @@ public abstract class AbstractWebSocketClient implements WebSocketClient {
 
 	@Override
 	public void close() {
+	}
+
+	/**
+	 * Sends the given object, synchronously, with the given session.
+	 * 
+	 * @param session the session
+	 * @param object the object to send
+	 * @throws IOException if an IOException occurs
+	 * @throws EncodeException if there was a problem encoding the message object
+	 */
+	protected void sendObject(Session session, Object object) throws IOException, EncodeException {
+		session.getBasicRemote().sendObject(object);
+	}
+
+	/**
+	 * Sends the given object, asynchronously, with the given session.
+	 * 
+	 * @param session the session
+	 * @param object the object to send
+	 * @return the future that can be used to wait for the operation to complete
+	 */
+	protected Future<Void> sendObjectAsync(Session session, Object object) {
+		return session.getAsyncRemote().sendObject(object);
 	}
 }

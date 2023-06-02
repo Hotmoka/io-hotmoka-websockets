@@ -18,14 +18,10 @@ package io.hotmoka.chat.client.internal;
 
 import java.io.IOException;
 import java.net.URI;
-import java.util.List;
-
-import org.glassfish.tyrus.client.ClientManager;
 
 import io.hotmoka.chat.beans.Messages;
 import io.hotmoka.chat.beans.api.Message;
 import io.hotmoka.websockets.client.AbstractClientEndpoint;
-import jakarta.websocket.ClientEndpointConfig;
 import jakarta.websocket.DeploymentException;
 import jakarta.websocket.EncodeException;
 import jakarta.websocket.EndpointConfig;
@@ -38,28 +34,23 @@ class ChatClientEndpoint extends AbstractClientEndpoint<ChatClientImpl> {
 	}
 
 	Session deployAt(URI uri) throws DeploymentException, IOException {
-		var config = ClientEndpointConfig.Builder.create()
-				.encoders(List.of(Messages.Encoder.class))
-				.decoders(List.of(Messages.Decoder.class))
-				.build();
-
-		return ClientManager.createClient().connectToServer(this, config, uri);
+		return deployAt(uri, Messages.Decoder.class, Messages.Encoder.class);
 	}
 
 	@Override
 	public void onOpen(Session session, EndpointConfig config) {
-		addMessageHandler(session, this::messageHandler);
+		addMessageHandler(session, this::onReceive);
+		var message = Messages.partial("hello websocket!");
 
 		try {
-			// the server will fill in the username
-			sendObject(session, Messages.partial("hello websocket!"));
+			sendObject(session, message);
 		}
 		catch (IOException | EncodeException e) {
-			throw new RuntimeException(e);
+			System.out.println("cannot send " + message + " to session " + session.getId());
 		}
 	}
 
-	private void messageHandler(Message message) {
+	private void onReceive(Message message) {
 		System.out.println("Received " + message);
 	}
 }

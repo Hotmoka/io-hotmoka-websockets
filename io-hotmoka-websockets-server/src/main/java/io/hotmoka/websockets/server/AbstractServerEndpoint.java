@@ -17,6 +17,7 @@ limitations under the License.
 package io.hotmoka.websockets.server;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.Future;
 import java.util.function.Consumer;
 import java.util.logging.Level;
@@ -24,10 +25,13 @@ import java.util.logging.Logger;
 
 import io.hotmoka.websockets.server.api.ServerEndpoint;
 import io.hotmoka.websockets.server.api.WebSocketServer;
+import jakarta.websocket.Decoder;
 import jakarta.websocket.EncodeException;
+import jakarta.websocket.Encoder;
 import jakarta.websocket.Endpoint;
 import jakarta.websocket.MessageHandler;
 import jakarta.websocket.Session;
+import jakarta.websocket.server.ServerEndpointConfig;
 import jakarta.websocket.server.ServerEndpointConfig.Configurator;
 
 /**
@@ -107,6 +111,45 @@ public abstract class AbstractServerEndpoint<S extends WebSocketServer> extends 
 
 	protected static <S extends WebSocketServer> Configurator mkConfigurator(S server) {
 		return new EndpointConfigurator<>(server);
+	}
+
+	/**
+	 * Yields an endpoint configuration with just an input message type and an output message type.
+	 * 
+	 * @param server the server
+	 * @param clazz the class of the endpoint
+	 * @param subpath the subpath where the endpoint must be published 
+	 * @param input the input message type
+	 * @param output the output message type
+	 * @return the configuration
+	 */
+	protected static <S extends WebSocketServer> ServerEndpointConfig simpleConfig(S server, Class<? extends AbstractServerEndpoint<S>> clazz, String subpath, Class<? extends Decoder> input, Class<? extends Encoder> output) {
+		return ServerEndpointConfig.Builder.create(clazz, subpath)
+			.decoders(List.of(input))
+			.encoders(List.of(output))
+			.configurator(mkConfigurator(server))
+			.build();
+	}
+
+	/**
+	 * Yields an endpoint configuration with just an input message type and two output message types.
+	 * This can be useful for endpoints implementing a task that might lead into exceptions, so that
+	 * the exception is the second output message type.
+	 * 
+	 * @param server the server
+	 * @param clazz the class of the endpoint
+	 * @param subpath the subpath where the endpoint must be published 
+	 * @param input the input message type
+	 * @param output1 the first output message type
+	 * @param output2 the second output message type
+	 * @return the configuration
+	 */
+	protected static <S extends WebSocketServer> ServerEndpointConfig simpleConfig(S server, Class<? extends AbstractServerEndpoint<S>> clazz, String subpath, Class<? extends Decoder> input, Class<? extends Encoder> output1, Class<? extends Encoder> output2) {
+		return ServerEndpointConfig.Builder.create(clazz, subpath)
+			.decoders(List.of(input))
+			.encoders(List.of(output1, output2))
+			.configurator(mkConfigurator(server))
+			.build();
 	}
 
 	private final static class EndpointConfigurator<S extends WebSocketServer> extends Configurator {

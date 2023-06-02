@@ -17,7 +17,7 @@ limitations under the License.
 package io.hotmoka.chat.server.internal;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.function.Consumer;
 
 import io.hotmoka.chat.beans.Messages;
 import io.hotmoka.chat.beans.api.Message;
@@ -26,8 +26,6 @@ import io.hotmoka.websockets.server.AbstractServerEndpoint;
 import jakarta.websocket.CloseReason;
 import jakarta.websocket.EncodeException;
 import jakarta.websocket.EndpointConfig;
-import jakarta.websocket.MessageHandler;
-import jakarta.websocket.RemoteEndpoint.Basic;
 import jakarta.websocket.Session;
 import jakarta.websocket.server.ServerEndpointConfig;
 
@@ -38,11 +36,12 @@ public class ChatServerEndpoint extends AbstractServerEndpoint<ChatServerImpl> {
     	String username = session.getPathParameters().get("username");
     	getServer().setUsername(session.getId(), username);
 
-    	session.addMessageHandler((MessageHandler.Whole<PartialMessage>) (message -> {
+    	Consumer<PartialMessage> handler = message -> {
     		System.out.println("Received " + message);
     		broadcast(message.setFrom(username), session); // fill in info about the user
-    	}));
+    	};
 
+    	addMessageHandler(session, handler);
     	broadcast(Messages.full(username, "connected!"), session);
     }
 
@@ -52,27 +51,22 @@ public class ChatServerEndpoint extends AbstractServerEndpoint<ChatServerImpl> {
     }
 
 	static ServerEndpointConfig config(ChatServerImpl server) {
-		return ServerEndpointConfig.Builder.create(ChatServerEndpoint.class, "/chat/{username}")
-			.encoders(List.of(Messages.Encoder.class))
-			.decoders(List.of(Messages.Decoder.class))
-			.configurator(mkConfigurator(server))
-			.build();
+		return simpleConfig(server, ChatServerEndpoint.class, "/chat/{username}", Messages.Decoder.class, Messages.Encoder.class);
 	}
 
-	private static void broadcast(Message message, Session session) {
+	private void broadcast(Message message, Session session) {
     	System.out.println("Broadcasting " + message);
     	session.getOpenSessions().stream()
     		.filter(Session::isOpen)
-    		.map(Session::getBasicRemote)
-    		.forEach(remote -> send(message, remote));
+    		.forEach(_session -> send(message, _session));
     }
 
-	private static void send(Message message, Basic remote) {
+	private void send(Message message, Session session) {
 		try {
-			remote.sendObject(message);
+			sendObject(session, message);
 		}
 		catch (EncodeException | IOException e) {
-			throw new RuntimeException(e);
+			System.out.println("Cannot send " + message + " to session " + session.getId());
 		}
 	}
 }

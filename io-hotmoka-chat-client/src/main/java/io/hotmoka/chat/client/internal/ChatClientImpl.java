@@ -31,8 +31,7 @@ public class ChatClientImpl extends AbstractWebSocketClient implements ChatClien
 	private final Session session;
 
 	public ChatClientImpl(String username) throws DeploymentException, IOException, URISyntaxException {
-		var endpoint = new ChatClientEndpoint(this);
-		this.session = endpoint.deployAt(new URI("ws://localhost:8025/websockets/chat/" + username));
+		this.session = new ChatClientEndpoint(this).deployAt(new URI("ws://localhost:8025/websockets/chat/" + username));
 	}
 
 	@Override
@@ -40,7 +39,7 @@ public class ChatClientImpl extends AbstractWebSocketClient implements ChatClien
 		if (session.isOpen()) {
 			var message = Messages.partial(s); // the server will fill in the username
 			System.out.println("Sending " + message);
-			session.getBasicRemote().sendObject(message);
+			sendObject(session, message);
 		}
 	}
 }

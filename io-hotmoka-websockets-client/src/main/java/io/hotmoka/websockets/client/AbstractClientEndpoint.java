@@ -17,12 +17,20 @@ limitations under the License.
 package io.hotmoka.websockets.client;
 
 import java.io.IOException;
+import java.net.URI;
+import java.util.List;
 import java.util.concurrent.Future;
 import java.util.function.Consumer;
 
+import org.glassfish.tyrus.client.ClientManager;
+
 import io.hotmoka.websockets.client.api.ClientEndpoint;
 import io.hotmoka.websockets.client.api.WebSocketClient;
+import jakarta.websocket.ClientEndpointConfig;
+import jakarta.websocket.Decoder;
+import jakarta.websocket.DeploymentException;
 import jakarta.websocket.EncodeException;
+import jakarta.websocket.Encoder;
 import jakarta.websocket.Endpoint;
 import jakarta.websocket.MessageHandler;
 import jakarta.websocket.Session;
@@ -51,6 +59,26 @@ public abstract class AbstractClientEndpoint<C extends WebSocketClient> extends 
 	 */
 	protected final C getClient() {
 		return client;
+	}
+
+	/**
+	 * Deploys this endpoint at the given URI, with the given input message type and the
+	 * given output message type.
+	 * 
+	 * @param uri the URI
+	 * @param input the input message type
+	 * @param output the output message type
+	 * @return the resulting session
+	 * @throws DeploymentException if the endpoint cannot be deployed
+	 * @throws IOException if an I/O error occurs
+	 */
+	protected Session deployAt(URI uri, Class<? extends Decoder> input, Class<? extends Encoder> output) throws DeploymentException, IOException {
+		var config = ClientEndpointConfig.Builder.create()
+			.decoders(List.of(input))
+			.encoders(List.of(output))
+			.build();
+
+		return ClientManager.createClient().connectToServer(this, config, uri);
 	}
 
 	/**
