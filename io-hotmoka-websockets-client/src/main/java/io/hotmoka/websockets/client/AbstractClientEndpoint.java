@@ -63,6 +63,27 @@ public abstract class AbstractClientEndpoint<C extends WebSocketClient> extends 
 	}
 
 	/**
+	 * Deploys this endpoint at the given URI, with the given input message types and the
+	 * given output message type.
+	 * 
+	 * @param uri the URI
+	 * @param input1 the first input message type
+	 * @param input2 the second input message type
+	 * @param output the output message type
+	 * @return the resulting session
+	 * @throws DeploymentException if the endpoint cannot be deployed
+	 * @throws IOException if an I/O error occurs
+	 */
+	protected Session deployAt(URI uri, Class<? extends Decoder> input1, Class<? extends Decoder> input2, Class<? extends Encoder> output) throws DeploymentException, IOException {
+		var config = ClientEndpointConfig.Builder.create()
+			.decoders(List.of(input1, input2))
+			.encoders(List.of(output))
+			.build();
+
+		return ClientManager.createClient().connectToServer(this, config, uri);
+	}
+
+	/**
 	 * Adds the given handler for incoming messages to the given session.
 	 * 
 	 * @param <M> the type of the messages
