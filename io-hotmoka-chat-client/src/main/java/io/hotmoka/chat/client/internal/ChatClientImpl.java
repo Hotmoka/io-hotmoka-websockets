@@ -21,17 +21,20 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import io.hotmoka.chat.beans.Messages;
+import io.hotmoka.chat.beans.api.Message;
 import io.hotmoka.chat.client.api.ChatClient;
+import io.hotmoka.websockets.client.AbstractClientEndpoint;
 import io.hotmoka.websockets.client.AbstractWebSocketClient;
 import jakarta.websocket.DeploymentException;
 import jakarta.websocket.EncodeException;
+import jakarta.websocket.EndpointConfig;
 import jakarta.websocket.Session;
 
 public class ChatClientImpl extends AbstractWebSocketClient implements ChatClient {
 	private final Session session;
 
 	public ChatClientImpl(String username) throws DeploymentException, IOException, URISyntaxException {
-		this.session = new ChatClientEndpoint(this).deployAt(new URI("ws://localhost:8025/websockets/chat/" + username));
+		this.session = new ChatClientEndpoint().deployAt(new URI("ws://localhost:8025/websockets/chat/" + username));
 	}
 
 	@Override
@@ -40,6 +43,30 @@ public class ChatClientImpl extends AbstractWebSocketClient implements ChatClien
 			var message = Messages.partial(s); // the server will fill in the username
 			System.out.println("Sending " + message);
 			sendObject(session, message);
+		}
+	}
+
+	private class ChatClientEndpoint extends AbstractClientEndpoint<ChatClientImpl> {
+
+		private Session deployAt(URI uri) throws DeploymentException, IOException {
+			return deployAt(uri, Messages.Decoder.class, Messages.Encoder.class);
+		}
+
+		@Override
+		public void onOpen(Session session, EndpointConfig config) {
+			addMessageHandler(session, this::onReceive);
+			var message = Messages.partial("hello websocket!");
+
+			try {
+				sendObject(session, message);
+			}
+			catch (IOException | EncodeException e) {
+				System.out.println("cannot send " + message + " to session " + session.getId());
+			}
+		}
+
+		private void onReceive(Message message) {
+			System.out.println("Received " + message);
 		}
 	}
 }

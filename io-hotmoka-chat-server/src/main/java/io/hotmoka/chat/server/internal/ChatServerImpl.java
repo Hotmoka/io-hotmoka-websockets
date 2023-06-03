@@ -19,10 +19,20 @@ package io.hotmoka.chat.server.internal;
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 
+import io.hotmoka.chat.beans.Messages;
+import io.hotmoka.chat.beans.api.Message;
+import io.hotmoka.chat.beans.api.PartialMessage;
 import io.hotmoka.chat.server.api.ChatServer;
+import io.hotmoka.websockets.server.AbstractServerEndpoint;
 import io.hotmoka.websockets.server.AbstractWebSocketServer;
+import jakarta.websocket.CloseReason;
 import jakarta.websocket.DeploymentException;
+import jakarta.websocket.EncodeException;
+import jakarta.websocket.EndpointConfig;
+import jakarta.websocket.Session;
+import jakarta.websocket.server.ServerEndpointConfig;
 
 /**
  * Implementation of a chat server.
@@ -47,11 +57,53 @@ public class ChatServerImpl extends AbstractWebSocketServer implements ChatServe
     	container.start("/websockets", 8025);
     }
 
-    String getUsername(String sessionId) {
+    private String getUsername(String sessionId) {
     	return usernames.get(sessionId);
     }
 
-    void setUsername(String sessionId, String username) {
+    private void setUsername(String sessionId, String username) {
     	usernames.put(sessionId, username);
+    }
+
+    public static class ChatServerEndpoint extends AbstractServerEndpoint<ChatServerImpl> {
+
+        @Override
+        public void onOpen(Session session, EndpointConfig config) {
+        	String username = session.getPathParameters().get("username");
+        	getServer().setUsername(session.getId(), username);
+
+        	Consumer<PartialMessage> handler = message -> {
+        		System.out.println("Received " + message);
+        		broadcast(message.setFrom(username), session); // fill in info about the user
+        	};
+
+        	addMessageHandler(session, handler);
+        	broadcast(Messages.full(username, "connected!"), session);
+        }
+
+        @Override
+    	public void onClose(Session session, CloseReason closeReason) {
+            broadcast(Messages.full(getServer().getUsername(session.getId()), "disconnected!"), session);
+        }
+
+        private static ServerEndpointConfig config(ChatServerImpl server) {
+    		return simpleConfig(server, ChatServerEndpoint.class, "/chat/{username}", Messages.Decoder.class, Messages.Encoder.class);
+    	}
+
+    	private void broadcast(Message message, Session session) {
+        	System.out.println("Broadcasting " + message);
+        	session.getOpenSessions().stream()
+        		.filter(Session::isOpen)
+        		.forEach(openSession -> send(message, openSession));
+        }
+
+    	private void send(Message message, Session session) {
+    		try {
+    			sendObject(session, message);
+    		}
+    		catch (EncodeException | IOException e) {
+    			System.out.println("Cannot send " + message + " to session " + session.getId());
+    		}
+    	}
     }
 }

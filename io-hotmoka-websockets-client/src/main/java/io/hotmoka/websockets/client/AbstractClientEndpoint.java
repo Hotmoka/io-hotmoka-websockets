@@ -41,25 +41,6 @@ import jakarta.websocket.Session;
  * @param <C> the type of the client this endpoint works for
  */
 public abstract class AbstractClientEndpoint<C extends WebSocketClient> extends Endpoint implements ClientEndpoint<C> {
-	private final C client;
-
-	/**
-	 * Creates a new client endpoint for the given client.
-	 * 
-	 * @param client the client
-	 */
-	protected AbstractClientEndpoint(C client) {
-		this.client = client;
-	}
-
-	/**
-	 * Yields the client of this endpoint.
-	 * 
-	 * @return the client
-	 */
-	protected final C getClient() {
-		return client;
-	}
 
 	/**
 	 * Deploys this endpoint at the given URI, with the given input message type and the
