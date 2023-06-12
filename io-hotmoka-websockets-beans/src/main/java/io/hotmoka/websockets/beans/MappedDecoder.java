@@ -56,6 +56,24 @@ public class MappedDecoder<T, JSON extends JsonRepresentation<T>> implements Dec
 	@Override
 	public boolean willDecode(String s) {
 		return s != null;
+		/*try {
+			if (s != null) {
+				var jsonElement = JsonParser.parseString(s);
+				if (jsonElement.isJsonObject()) {
+					var jsonObject = jsonElement.getAsJsonObject();
+					var type = jsonObject.get("type");
+					if (type != null && type.isJsonPrimitive()) {
+						var primitive = type.getAsJsonPrimitive();
+						return primitive.isString() && "GetBlockResultMessage".equals(primitive.getAsString());
+					}
+				}
+			}
+
+			return false;
+		}
+		catch (JsonParseException e) {
+			return false;
+		}*/
 	}
 
 	@Override
