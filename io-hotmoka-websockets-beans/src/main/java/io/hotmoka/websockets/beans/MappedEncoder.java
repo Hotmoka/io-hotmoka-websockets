@@ -16,11 +16,13 @@ limitations under the License.
 
 package io.hotmoka.websockets.beans;
 
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 
 import io.hotmoka.websockets.beans.api.EncoderText;
 import jakarta.websocket.EncodeException;
@@ -40,7 +42,7 @@ public class MappedEncoder<T, JSON extends JsonRepresentation<T>> implements Enc
 	 */
 	private final static Gson gson = new Gson();
 
-	private final static Logger LOGGER = Logger.getLogger(BaseEncoder.class.getName());
+	private final static Logger LOGGER = Logger.getLogger(MappedEncoder.class.getName());
 
 	/**
 	 * The mapper from the object to their representation, that is actually encoded in JSON.
@@ -48,12 +50,59 @@ public class MappedEncoder<T, JSON extends JsonRepresentation<T>> implements Enc
 	private final Function<T, JSON> mapper;
 
 	/**
-	 * Creates an encoder for the given type.
+	 * The name of the property used to state the type of the object, if required.
+	 */
+	private final String typePropertyName;
+
+	/**
+	 * The value of the type property, if required.
+	 */
+	private final String typePropertyValue;
+
+	/**
+	 * Creates an encoder for the given type mapper.
 	 * 
 	 * @param mapper the mapper from the object to their representation, that is actually encoded in JSON
 	 */
 	public MappedEncoder(Function<T, JSON> mapper) {
+		this(mapper, "type", null);
+	}
+
+	/**
+	 * Creates an encoder for the given type mapper. It adds a property named {@code type} bound
+	 * to the given value.
+	 * 
+	 * @param mapper the mapper from the object to their representation, that is actually encoded in JSON
+	 * @param typePropertyValue the value of the type property
+	 */
+	public MappedEncoder(Function<T, JSON> mapper, String typePropertyValue) {
+		this(mapper, "type", typePropertyValue);
+	}
+
+	/**
+	 * Creates an encoder for the given type mapper. It adds a property named {@code type} bound
+	 * to the fully-qualified name of the given class.
+	 * 
+	 * @param mapper the mapper from the object to their representation, that is actually encoded in JSON
+	 * @param typePropertyClass the class whose fully-qualified name is used as type property value
+	 */
+	public MappedEncoder(Function<T, JSON> mapper, Class<? extends T> typePropertyClass) {
+		this(mapper, "type", typePropertyClass.getName());
+	}
+
+	/**
+	 * Creates an encoder for the given type mapper. It adds a property for the type of the object, bound to the given value.
+	 * 
+	 * @param mapper the mapper from the object to their representation, that is actually encoded in JSON
+	 * @param typePropertyName the name of the property used to state the type of the object
+	 * @param typePropertyValue the value of the type property
+	 */
+	public MappedEncoder(Function<T, JSON> mapper, String typePropertyName, String typePropertyValue) {
+		Objects.requireNonNull(mapper);
+		Objects.requireNonNull(typePropertyName);
 		this.mapper = mapper;
+		this.typePropertyName = typePropertyName;
+		this.typePropertyValue = typePropertyValue;
 	}
 
 	/**
@@ -70,7 +119,11 @@ public class MappedEncoder<T, JSON extends JsonRepresentation<T>> implements Enc
 	@Override
     public final String encode(T value) throws EncodeException {
 		try {
-    		return gson.toJson(map(value));
+			JsonElement jsonTree = gson.toJsonTree(map(value));
+			if (typePropertyValue != null && jsonTree.isJsonObject())
+				jsonTree.getAsJsonObject().addProperty(typePropertyName, typePropertyValue);
+
+			return jsonTree.toString();
     	}
     	catch (RuntimeException e) {
     		String type = value == null ? "null" : ("a " + value.getClass().getName());
