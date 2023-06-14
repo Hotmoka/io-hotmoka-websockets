@@ -21,6 +21,9 @@ import java.net.URI;
 import java.util.List;
 import java.util.concurrent.Future;
 import java.util.function.Consumer;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.glassfish.tyrus.client.ClientManager;
 
@@ -42,42 +45,36 @@ import jakarta.websocket.Session;
  */
 public abstract class AbstractClientEndpoint<C extends WebSocketClient> extends Endpoint implements ClientEndpoint<C> {
 
+	private final static Logger LOGGER = Logger.getLogger(AbstractClientEndpoint.class.getName());
+
 	/**
-	 * Deploys this endpoint at the given URI, with the given input message type and the
-	 * given output message type.
+	 * Deploys this endpoint at the given URI, with the given decoders (inputs) and encoders (outputs).
 	 * 
 	 * @param uri the URI
-	 * @param input the input message type
-	 * @param output the output message type
+	 * @param coders the encoders or decoders
 	 * @return the resulting session
 	 * @throws DeploymentException if the endpoint cannot be deployed
 	 * @throws IOException if an I/O error occurs
 	 */
-	protected Session deployAt(URI uri, Class<? extends Decoder> input, Class<? extends Encoder> output) throws DeploymentException, IOException {
-		var config = ClientEndpointConfig.Builder.create()
-			.decoders(List.of(input))
-			.encoders(List.of(output))
-			.build();
+	@SuppressWarnings("unchecked")
+	protected Session deployAt(URI uri, Class<?>... coders) throws DeploymentException, IOException {
+		List<Class<? extends Decoder>> inputs = Stream.of(coders)
+			.filter(coder -> Decoder.class.isAssignableFrom(coder))
+			.map(coder -> (Class<? extends Decoder>) coder)
+			.collect(Collectors.toList());
 
-		return ClientManager.createClient().connectToServer(this, config, uri);
-	}
+		List<Class<? extends Encoder>> outputs = Stream.of(coders)
+			.filter(coder -> Encoder.class.isAssignableFrom(coder))
+			.map(coder -> (Class<? extends Encoder>) coder)
+			.collect(Collectors.toList());
 
-	/**
-	 * Deploys this endpoint at the given URI, with the given input message types and the
-	 * given output message type.
-	 * 
-	 * @param uri the URI
-	 * @param input1 the first input message type
-	 * @param input2 the second input message type
-	 * @param output the output message type
-	 * @return the resulting session
-	 * @throws DeploymentException if the endpoint cannot be deployed
-	 * @throws IOException if an I/O error occurs
-	 */
-	protected Session deployAt(URI uri, Class<? extends Decoder> input1, Class<? extends Decoder> input2, Class<? extends Encoder> output) throws DeploymentException, IOException {
+		Stream.of(coders)
+			.filter(coder -> !inputs.contains(coder) && !outputs.contains(coder))
+			.forEach(coder -> LOGGER.warning("Unknown coder " + coder + ": only encoders and decoders are allowed"));
+
 		var config = ClientEndpointConfig.Builder.create()
-			.decoders(List.of(input1, input2))
-			.encoders(List.of(output))
+			.decoders(inputs)
+			.encoders(outputs)
 			.build();
 
 		return ClientManager.createClient().connectToServer(this, config, uri);

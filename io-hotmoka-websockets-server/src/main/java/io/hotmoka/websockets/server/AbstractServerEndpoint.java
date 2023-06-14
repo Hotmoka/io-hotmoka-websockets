@@ -22,6 +22,8 @@ import java.util.concurrent.Future;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import io.hotmoka.websockets.server.api.ServerEndpoint;
 import io.hotmoka.websockets.server.api.WebSocketServer;
@@ -42,10 +44,7 @@ import jakarta.websocket.server.ServerEndpointConfig.Configurator;
 public abstract class AbstractServerEndpoint<S extends WebSocketServer> extends Endpoint implements ServerEndpoint<S> {
 	private volatile S server;
 
-	/**
-	 * A logger, also available for subclasses.
-	 */
-	protected final Logger logger = Logger.getLogger(getClass().getName());
+	private final static Logger LOGGER = Logger.getLogger(AbstractServerEndpoint.class.getName());
 
 	/**
 	 * Creates the endpoint.
@@ -106,7 +105,7 @@ public abstract class AbstractServerEndpoint<S extends WebSocketServer> extends 
 
 	@Override
     public final void onError(Session session, Throwable throwable) {
-		logger.log(Level.SEVERE, "websocket error", throwable);
+		LOGGER.log(Level.SEVERE, "websocket [" + getClass().getName() + "] error", throwable);
     }
 
 	protected static <S extends WebSocketServer> Configurator mkConfigurator(S server) {
@@ -114,40 +113,33 @@ public abstract class AbstractServerEndpoint<S extends WebSocketServer> extends 
 	}
 
 	/**
-	 * Yields an endpoint configuration with just an input message type and an output message type.
+	 * Yields an endpoint configuration with the given decoders (inputs) and encoders (outputs).
 	 * 
 	 * @param server the server
 	 * @param clazz the class of the endpoint
 	 * @param subpath the subpath where the endpoint must be published 
-	 * @param input the input message type
-	 * @param output the output message type
+	 * @param coders the coders and encoders
 	 * @return the configuration
 	 */
-	protected static <S extends WebSocketServer> ServerEndpointConfig simpleConfig(S server, Class<? extends AbstractServerEndpoint<S>> clazz, String subpath, Class<? extends Decoder> input, Class<? extends Encoder> output) {
-		return ServerEndpointConfig.Builder.create(clazz, subpath)
-			.decoders(List.of(input))
-			.encoders(List.of(output))
-			.configurator(mkConfigurator(server))
-			.build();
-	}
+	@SuppressWarnings("unchecked")
+	protected static <S extends WebSocketServer> ServerEndpointConfig simpleConfig(S server, Class<? extends AbstractServerEndpoint<S>> clazz, String subpath, Class<?>... coders) {
+		List<Class<? extends Decoder>> inputs = Stream.of(coders)
+			.filter(coder -> Decoder.class.isAssignableFrom(coder))
+			.map(coder -> (Class<? extends Decoder>) coder)
+			.collect(Collectors.toList());
 
-	/**
-	 * Yields an endpoint configuration with just an input message type and two output message types.
-	 * This can be useful for endpoints implementing a task that might lead into exceptions, so that
-	 * the exception is the second output message type.
-	 * 
-	 * @param server the server
-	 * @param clazz the class of the endpoint
-	 * @param subpath the subpath where the endpoint must be published 
-	 * @param input the input message type
-	 * @param output1 the first output message type
-	 * @param output2 the second output message type
-	 * @return the configuration
-	 */
-	protected static <S extends WebSocketServer> ServerEndpointConfig simpleConfig(S server, Class<? extends AbstractServerEndpoint<S>> clazz, String subpath, Class<? extends Decoder> input, Class<? extends Encoder> output1, Class<? extends Encoder> output2) {
+		List<Class<? extends Encoder>> outputs = Stream.of(coders)
+			.filter(coder -> Encoder.class.isAssignableFrom(coder))
+			.map(coder -> (Class<? extends Encoder>) coder)
+			.collect(Collectors.toList());
+
+		Stream.of(coders)
+			.filter(coder -> !inputs.contains(coder) && !outputs.contains(coder))
+			.forEach(coder -> LOGGER.warning("Unknown coder " + coder + ": only encoders and decoders are allowed"));
+
 		return ServerEndpointConfig.Builder.create(clazz, subpath)
-			.decoders(List.of(input))
-			.encoders(List.of(output1, output2))
+			.decoders(inputs)
+			.encoders(outputs)
 			.configurator(mkConfigurator(server))
 			.build();
 	}

@@ -23,4 +23,5 @@ module io.hotmoka.websockets.client {
 	requires transitive io.hotmoka.websockets.client.api;
 	requires transitive jakarta.websocket.client;
 	requires transitive org.glassfish.tyrus.client;
+	requires java.logging;
 }
