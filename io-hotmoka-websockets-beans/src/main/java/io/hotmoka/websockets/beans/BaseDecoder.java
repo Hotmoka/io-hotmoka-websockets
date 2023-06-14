@@ -50,9 +50,46 @@ public class BaseDecoder<T> implements DecoderText<T> {
 		this.clazz = clazz;
 	}
 
+	/**
+	 * Determines if the given string is worth trying to decode with this decoder.
+	 * By default, it just checks that the string is not {@code null} and, if
+	 * the decoded type is an {@link RpcMessage}, that it can be decoded
+	 * into an {@link RpcMessage} having the same {@code type} property as
+	 * that contained in the string {@code s}. Subclasses may want to redefine to
+	 * add more specific checks.
+	 */
 	@Override
 	public boolean willDecode(String s) {
-		return s != null;
+		return s != null && (!AbstractRpcMessage.class.isAssignableFrom(clazz) || willDecodeRpcMessage(s));
+	}
+
+	/**
+	 * Checks if an RPC message can be decoded. This checks if there is a {@code type} property
+	 * in the JSON representation and its value coincides with that expected for the type of message.
+	 * 
+	 * @param s the JSON
+	 * @return true if and only if that condition holds
+	 */
+	private boolean willDecodeRpcMessage(String s) {
+		try {
+			var jsonElement = JsonParser.parseString(s);
+			if (jsonElement.isJsonObject()) {
+				var jsonObject = jsonElement.getAsJsonObject();
+				var type = jsonObject.get("type");
+				if (type != null && type.isJsonPrimitive()) {
+					var primitive = type.getAsJsonPrimitive();
+					if (primitive.isString()) {
+						AbstractRpcMessage bean = (AbstractRpcMessage) gson.fromJson(jsonElement, clazz);
+						return bean.getType().equals(primitive.getAsString());
+					}
+				}
+			}
+		}
+		catch (Exception e) {
+			LOGGER.log(Level.SEVERE, "could not decode a " + clazz.getName(), e);
+		}
+
+		return false;
 	}
 
 	@Override

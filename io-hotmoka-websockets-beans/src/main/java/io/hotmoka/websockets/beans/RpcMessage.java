@@ -14,15 +14,26 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-/**
- * This module defines shared classes for the beans exchanged
- * among websocket clients and servers.
- */
-module io.hotmoka.websockets.beans {
-	exports io.hotmoka.websockets.beans;
-	opens io.hotmoka.websockets.beans to com.google.gson;
+package io.hotmoka.websockets.beans;
 
-	requires transitive io.hotmoka.websockets.beans.api;
-	requires transitive com.google.gson;
-	requires java.logging;
+/**
+ * An RPC message. It specifies its type and its id. This id can be used
+ * to match a reply message with its corresponding request message.
+ */
+public interface RpcMessage {
+
+	/**
+	 * Yields the type of this message. This is anything that can help identify the
+	 * type of the message.
+	 * 
+	 * @return the type
+	 */
+	String getType();
+
+	/**
+	 * Yields the id of the message.
+	 * 
+	 * @return the id
+	 */
+	String getId();
 }
