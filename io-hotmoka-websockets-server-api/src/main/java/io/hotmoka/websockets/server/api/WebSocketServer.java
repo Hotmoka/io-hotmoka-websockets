@@ -20,7 +20,4 @@ package io.hotmoka.websockets.server.api;
  * A websocket server.
  */
 public interface WebSocketServer extends AutoCloseable {
-
-	@Override
-	void close();
 }

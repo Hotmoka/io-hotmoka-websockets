@@ -27,6 +27,7 @@ import io.hotmoka.websockets.server.api.WebSocketServer;
 import jakarta.websocket.DeploymentException;
 import jakarta.websocket.EncodeException;
 import jakarta.websocket.Session;
+import jakarta.websocket.server.ServerEndpointConfig;
 
 /**
  * Partial implementation of a websocket server.
@@ -44,12 +45,27 @@ public abstract class AbstractWebSocketServer implements WebSocketServer {
 	}
 
 	/**
-	 * Yields the container of this server.
+	 * Starts the server container with the given endpoints. This is typically called from
+	 * the constructors of subclasses.
 	 * 
-	 * @return the container
+	 * @param path the path where the endpoints must be deployed
+	 * @param port the port at which the endpoint must be deployed
+	 * @param configs the configurations of the endpoints
+	 * @throws DeploymentException if some endpoint cannot be deployed
+	 * @throws IOException if an I/O error occurs
 	 */
-	protected final ServerContainer getContainer() {
-		return container;
+	protected void startContainer(String path, int port, ServerEndpointConfig... configs) throws DeploymentException, IOException {
+		for (var config: configs)
+			container.addEndpoint(config);
+
+		container.start(path, port);
+	}
+
+	/**
+	 * Stops the container. This is typically called when closing the server.
+	 */
+	protected void stopContainer() {
+		container.stop();
 	}
 
 	/**
@@ -73,10 +89,5 @@ public abstract class AbstractWebSocketServer implements WebSocketServer {
 	 */
 	protected Future<Void> sendObjectAsync(Session session, Object object) {
 		return session.getAsyncRemote().sendObject(object);
-	}
-
-	@Override
-	public void close() {
-		container.stop();
 	}
 }

@@ -22,4 +22,7 @@ import io.hotmoka.websockets.server.api.WebSocketServer;
  * A chat server over websockets.
  */
 public interface ChatServer extends WebSocketServer {
+
+	@Override
+	void close();
 }

@@ -35,7 +35,7 @@ public abstract class AbstractWebSocketClient implements WebSocketClient {
 	}
 
 	@Override
-	public void close() {
+	public void close() throws Exception {
 	}
 
 	/**

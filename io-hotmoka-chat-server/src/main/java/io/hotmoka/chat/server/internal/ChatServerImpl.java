@@ -52,9 +52,12 @@ public class ChatServerImpl extends AbstractWebSocketServer implements ChatServe
 	 * @throws IOException if an I/O error occurs
 	 */
     public ChatServerImpl() throws DeploymentException, IOException {
-    	var container = getContainer();
-    	container.addEndpoint(ChatServerEndpoint.config(this));
-    	container.start("/websockets", 8025);
+    	startContainer("/websockets", 8025, ChatServerEndpoint.config(this));
+    }
+
+    @Override
+    public void close() {
+    	stopContainer();
     }
 
     private String getUsername(String sessionId) {

@@ -34,4 +34,7 @@ public interface ChatClient extends WebSocketClient {
 	 * @throws EncodeException if the message could not be encoded
 	 */
 	void sendMessage(String s) throws IOException, EncodeException;
+
+	@Override
+	void close();
 }
