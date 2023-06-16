@@ -73,24 +73,10 @@ public class BaseDecoder<T> implements DecoderText<T> {
 	 */
 	private boolean willDecodeRpcMessage(String s) {
 		try {
-			var jsonElement = JsonParser.parseString(s);
-			if (jsonElement.isJsonObject()) {
-				var jsonObject = jsonElement.getAsJsonObject();
-				var type = jsonObject.get("type");
-				if (type != null && type.isJsonPrimitive()) {
-					var primitive = type.getAsJsonPrimitive();
-					if (primitive.isString()) {
-						AbstractRpcMessage bean = (AbstractRpcMessage) gson.fromJson(jsonElement, clazz);
-						return bean.getType().equals(primitive.getAsString());
-					}
-				}
-			}
+			return ((AbstractRpcMessage) gson.fromJson(JsonParser.parseString(s), clazz)).isTypeConsistent();
 		}
 		catch (JsonSyntaxException e) {
 			LOGGER.log(Level.SEVERE, "could not decode a " + clazz.getName(), e);
-		}
-		catch (Exception e) {
-			// fine, this method is a test, maybe the JSON is not for clazz but for another type
 		}
 
 		return false;

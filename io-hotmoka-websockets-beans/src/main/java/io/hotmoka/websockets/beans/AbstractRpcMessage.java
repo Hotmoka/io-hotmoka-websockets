@@ -16,6 +16,8 @@ limitations under the License.
 
 package io.hotmoka.websockets.beans;
 
+import java.util.Objects;
+
 /**
  * A message of an RPC message. It includes a {@code type} field specifying the type
  * of the message and an {@code id} field that can be used to match a message with its reply.
@@ -27,11 +29,10 @@ public abstract class AbstractRpcMessage implements RpcMessage {
 	/**
 	 * Creates the RPC message.
 	 * 
-	 * @param type the type of the message
 	 * @param id the identifier of the message
 	 */
-	protected AbstractRpcMessage(String type, String id) {
-		this.type = type;
+	protected AbstractRpcMessage(String id) {
+		this.type = getExpectedType();
 		this.id = id;
 	}
 
@@ -43,5 +44,22 @@ public abstract class AbstractRpcMessage implements RpcMessage {
 	@Override
 	public String getId() {
 		return id;
+	}
+
+	/**
+	 * The type expected for this representation. Normally, this should
+	 * coincide with {@link #getType()}.
+	 * 
+	 * @return the expected type
+	 */
+	protected abstract String getExpectedType();
+
+	/**
+	 * Determines if the type of this message is the expected one.
+	 * 
+	 * @return true if an donly if that condition holds
+	 */
+	boolean isTypeConsistent() {
+		return Objects.equals(getExpectedType(), getType());
 	}
 }

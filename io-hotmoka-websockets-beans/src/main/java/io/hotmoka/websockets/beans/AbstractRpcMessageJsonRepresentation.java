@@ -16,6 +16,8 @@ limitations under the License.
 
 package io.hotmoka.websockets.beans;
 
+import java.util.Objects;
+
 /**
  * The Json representation of an RPC message. It includes a {@code type} property, specifying
  * the type of the message, and an {@code id} property, that can be used to match a message
@@ -37,7 +39,7 @@ public abstract class AbstractRpcMessageJsonRepresentation<M extends RpcMessage>
 	 * 
 	 * @return the type
 	 */
-	protected final String getType() {
+	public final String getType() {
 		return type;
 	}
 
@@ -46,7 +48,24 @@ public abstract class AbstractRpcMessageJsonRepresentation<M extends RpcMessage>
 	 * 
 	 * @return the id
 	 */
-	protected final String getId() {
+	public final String getId() {
 		return id;
+	}
+
+	/**
+	 * The type expected for this representation. Normally, this should
+	 * coincide with {@link #getType()}.
+	 * 
+	 * @return the expected type
+	 */
+	protected abstract String getExpectedType();
+
+	/**
+	 * Determines if the type of this message is the expected one.
+	 * 
+	 * @return true if an donly if that condition holds
+	 */
+	boolean isTypeConsistent() {
+		return Objects.equals(getExpectedType(), getType());
 	}
 }
