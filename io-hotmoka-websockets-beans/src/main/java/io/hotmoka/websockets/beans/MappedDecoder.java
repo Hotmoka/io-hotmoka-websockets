@@ -21,6 +21,7 @@ import java.util.logging.Logger;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
 
 import io.hotmoka.websockets.beans.api.DecoderText;
 import jakarta.websocket.DecodeException;
@@ -88,8 +89,11 @@ public class MappedDecoder<T, JSON extends JsonRepresentation<T>> implements Dec
 				}
 			}
 		}
-		catch (Exception e) {
+		catch (JsonSyntaxException e) {
 			LOGGER.log(Level.SEVERE, "could not decode a " + clazz.getName(), e);
+		}
+		catch (Exception e) {
+			// fine, this method is a test, maybe the JSON is not for clazz but for another type
 		}
 
 		return false;
