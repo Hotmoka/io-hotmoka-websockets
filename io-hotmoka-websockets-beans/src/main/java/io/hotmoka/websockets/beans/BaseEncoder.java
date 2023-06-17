@@ -32,6 +32,12 @@ import jakarta.websocket.EncodeException;
 public class BaseEncoder<T> implements EncoderText<T> {
 
 	/**
+	 * Creates the encoder.
+	 */
+	public BaseEncoder() {
+	}
+
+	/**
 	 * The encoding utility.
 	 */
 	private final static Gson gson = new Gson();

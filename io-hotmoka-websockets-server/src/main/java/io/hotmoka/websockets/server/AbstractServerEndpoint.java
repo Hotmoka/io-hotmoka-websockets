@@ -109,6 +109,20 @@ public abstract class AbstractServerEndpoint<S extends WebSocketServer> extends 
     }
 
 	/**
+	 * Yields an endpoint configuration that injects the reference to the server inside the endpoint.
+	 * This allows endpoints to use the state of the server, without relying on singletons.
+	 * This configurator is automatically used by the {@link #simpleConfig(WebSocketServer, Class, String, Class...)}
+	 * method.
+	 * 
+	 * @param <S> the type of the server
+	 * @param server the injected server
+	 * @return the configurator
+	 */
+	protected static <S extends WebSocketServer> Configurator mkConfigurator(S server) {
+		return new EndpointConfigurator<>(server);
+	}
+
+	/**
 	 * Yields an endpoint configuration with the given decoders (inputs) and encoders (outputs).
 	 * 
 	 * @param <S> the type of the server
@@ -137,7 +151,7 @@ public abstract class AbstractServerEndpoint<S extends WebSocketServer> extends 
 		return ServerEndpointConfig.Builder.create(clazz, subpath)
 			.decoders(inputs)
 			.encoders(outputs)
-			.configurator(new EndpointConfigurator<>(server))
+			.configurator(mkConfigurator(server))
 			.build();
 	}
 
