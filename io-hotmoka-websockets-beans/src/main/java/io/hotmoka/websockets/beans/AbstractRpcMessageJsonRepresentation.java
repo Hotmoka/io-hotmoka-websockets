@@ -29,6 +29,11 @@ public abstract class AbstractRpcMessageJsonRepresentation<M extends RpcMessage>
 	private String type;
 	private String id;
 
+	/**
+	 * Creates the representation.
+	 * 
+	 * @param message the message for which the representation is created.
+	 */
 	protected AbstractRpcMessageJsonRepresentation(M message) {
 		this.type = message.getType();
 		this.id = message.getId();

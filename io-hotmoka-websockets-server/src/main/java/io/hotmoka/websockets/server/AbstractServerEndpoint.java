@@ -108,13 +108,10 @@ public abstract class AbstractServerEndpoint<S extends WebSocketServer> extends 
 		LOGGER.log(Level.SEVERE, "websocket [" + getClass().getName() + "] error", throwable);
     }
 
-	protected static <S extends WebSocketServer> Configurator mkConfigurator(S server) {
-		return new EndpointConfigurator<>(server);
-	}
-
 	/**
 	 * Yields an endpoint configuration with the given decoders (inputs) and encoders (outputs).
 	 * 
+	 * @param <S> the type of the server
 	 * @param server the server
 	 * @param clazz the class of the endpoint
 	 * @param subpath the subpath where the endpoint must be published 
@@ -140,7 +137,7 @@ public abstract class AbstractServerEndpoint<S extends WebSocketServer> extends 
 		return ServerEndpointConfig.Builder.create(clazz, subpath)
 			.decoders(inputs)
 			.encoders(outputs)
-			.configurator(mkConfigurator(server))
+			.configurator(new EndpointConfigurator<>(server))
 			.build();
 	}
 

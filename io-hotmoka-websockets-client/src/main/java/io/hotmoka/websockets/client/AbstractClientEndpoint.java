@@ -48,6 +48,12 @@ public abstract class AbstractClientEndpoint<C extends WebSocketClient> extends 
 	private final static Logger LOGGER = Logger.getLogger(AbstractClientEndpoint.class.getName());
 
 	/**
+	 * Creates the endpoint.
+	 */
+	protected AbstractClientEndpoint() {
+	}
+
+	/**
 	 * Deploys this endpoint at the given URI, with the given decoders (inputs) and encoders (outputs).
 	 * 
 	 * @param uri the URI
