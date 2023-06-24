@@ -39,7 +39,7 @@ public class Main {
 	 * @throws IOException if an I/O error occurs
 	 */
 	public static void main(String[] args) throws DeploymentException, IOException {
-		try (var server = ChatServers.mk(); var reader = new BufferedReader(new InputStreamReader(System.in))) {
+		try (var server = ChatServers.open(); var reader = new BufferedReader(new InputStreamReader(System.in))) {
 			System.out.println("Please press a key to stop the server.");
 			reader.readLine();
 		}

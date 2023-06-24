@@ -25,6 +25,7 @@ import io.hotmoka.chat.beans.api.Message;
 import io.hotmoka.chat.client.api.ChatClient;
 import io.hotmoka.websockets.client.AbstractClientEndpoint;
 import io.hotmoka.websockets.client.AbstractWebSocketClient;
+import jakarta.websocket.CloseReason;
 import jakarta.websocket.DeploymentException;
 import jakarta.websocket.EncodeException;
 import jakarta.websocket.EndpointConfig;
@@ -33,8 +34,8 @@ import jakarta.websocket.Session;
 public class ChatClientImpl extends AbstractWebSocketClient implements ChatClient {
 	private final Session session;
 
-	public ChatClientImpl(String username) throws DeploymentException, IOException, URISyntaxException {
-		this.session = new ChatClientEndpoint().deployAt(new URI("ws://localhost:8025/websockets/chat/" + username));
+	public ChatClientImpl(String username, String url) throws DeploymentException, IOException, URISyntaxException {
+		this.session = new ChatClientEndpoint().deployAt(new URI(url + "/websockets/chat/" + username));
 	}
 
 	@Override
@@ -48,6 +49,8 @@ public class ChatClientImpl extends AbstractWebSocketClient implements ChatClien
 			System.out.println("Sending " + message);
 			sendObject(session, message);
 		}
+		else
+			System.out.println("Not sending message since the session is closed");
 	}
 
 	private class ChatClientEndpoint extends AbstractClientEndpoint<ChatClientImpl> {
@@ -67,6 +70,11 @@ public class ChatClientImpl extends AbstractWebSocketClient implements ChatClien
 			catch (IOException | EncodeException e) {
 				System.out.println("cannot send " + message + " to session " + session.getId());
 			}
+		}
+
+		@Override
+		public void onClose(Session session, CloseReason closeReason) {
+			System.out.println("Session closed!");
 		}
 
 		private void onReceive(Message message) {

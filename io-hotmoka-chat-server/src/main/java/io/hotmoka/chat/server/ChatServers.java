@@ -34,7 +34,7 @@ public interface ChatServers {
 	 * @throws DeploymentException if the server cannot be deployed
 	 * @throws IOException if an I/O error occurs
 	 */
-	static ChatServer mk() throws DeploymentException, IOException {
+	static ChatServer open() throws DeploymentException, IOException {
 		return new ChatServerImpl();
 	}
 }

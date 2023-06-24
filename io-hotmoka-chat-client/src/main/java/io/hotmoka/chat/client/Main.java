@@ -41,12 +41,12 @@ public class Main {
 	 * @throws InterruptedException if the current thread is interrupted while waiting
 	 */
 	public static void main(String[] args) throws DeploymentException, IOException, URISyntaxException, InterruptedException {
-		if (args.length != 1) {
-			System.out.println("You need to specify exactly one username");
+		if (args.length < 1 || args.length > 2) {
+			System.out.println("You need to specify a username and an optional URL");
 			System.exit(-1);
 		}
 
-		try (var client = ChatClients.withUsername(args[0])) {
+		try (var client = args.length ==1 ? ChatClients.open(args[0]) : ChatClients.open(args[0], args[1])) {
 			client.sendMessage("hello (1/3)");
 			Thread.sleep(5000);
 			client.sendMessage("hello (2/3)");

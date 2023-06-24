@@ -30,6 +30,7 @@ public interface ChatClients {
 
 	/**
 	 * Yields a new chat client for a user with the given name.
+	 * It connects to a server at {@code ws://localhost:8025}.
 	 * 
 	 * @param username the name of the user
 	 * @return the chat client
@@ -37,7 +38,22 @@ public interface ChatClients {
 	 * @throws IOException if there was an I/O error
 	 * @throws URISyntaxException if the syntax of the URI contacted by the client is incorrect (this depends on {@code username})
 	 */
-	static ChatClient withUsername(String username) throws DeploymentException, IOException, URISyntaxException {
-		return new ChatClientImpl(username);
+	static ChatClient open(String username) throws DeploymentException, IOException, URISyntaxException {
+		return new ChatClientImpl(username, "ws://localhost:8025");
+	}
+
+	/**
+	 * Yields a new chat client for a user with the given name.
+	 * It connects to a server at the given URL.
+	 * 
+	 * @param username the name of the user
+	 * @param url the url
+	 * @return the chat client
+	 * @throws DeploymentException if the client could no be deployed
+	 * @throws IOException if there was an I/O error
+	 * @throws URISyntaxException if the syntax of the URI contacted by the client is incorrect (this depends on {@code username})
+	 */
+	static ChatClient open(String username, String url) throws DeploymentException, IOException, URISyntaxException {
+		return new ChatClientImpl(username, url);
 	}
 }
