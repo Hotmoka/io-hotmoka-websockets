@@ -19,6 +19,7 @@ package io.hotmoka.websockets.client;
 import java.io.IOException;
 import java.net.URI;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.Future;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
@@ -104,9 +105,21 @@ public abstract class AbstractClientEndpoint<C extends WebSocketClient> extends 
 	 * @param object the object to send
 	 * @throws IOException if an IOException occurs
 	 * @throws EncodeException if there was a problem encoding the message object
+	 * @throws IllegalStateException if the connection has been closed
 	 */
-	protected void sendObject(Session session, Object object) throws IOException, EncodeException {
-		session.getBasicRemote().sendObject(object);
+	protected void sendObject(Session session, Object object) throws IOException, EncodeException, IllegalStateException {
+		Objects.requireNonNull(session);
+		Objects.requireNonNull(object);
+
+		try {
+			session.getBasicRemote().sendObject(object);
+		}
+		catch (IllegalStateException e) {
+			throw e;
+		}
+		catch (RuntimeException e) {
+			throw new IllegalStateException(e.getMessage());
+		}
 	}
 
 	/**
@@ -115,8 +128,20 @@ public abstract class AbstractClientEndpoint<C extends WebSocketClient> extends 
 	 * @param session the session
 	 * @param object the object to send
 	 * @return the future that can be used to wait for the operation to complete
+	 * @throws IllegalStateException if the connection has been closed
 	 */
-	protected Future<Void> sendObjectAsync(Session session, Object object) {
-		return session.getAsyncRemote().sendObject(object);
+	protected Future<Void> sendObjectAsync(Session session, Object object) throws IllegalStateException {
+		Objects.requireNonNull(session);
+		Objects.requireNonNull(object);
+
+		try {
+			return session.getAsyncRemote().sendObject(object);
+		}
+		catch (IllegalStateException e) {
+			throw e;
+		}
+		catch (RuntimeException e) {
+			throw new IllegalStateException(e.getMessage());
+		}
 	}
 }
