@@ -44,9 +44,8 @@ public abstract class AbstractWebSocketClient implements WebSocketClient {
 	 * 
 	 * @param session the session
 	 * @param object the object to send
-	 * @throws IOException if an IOException occurs
+	 * @throws IOException if an IOException occurs, for instance, the connection has been closed
 	 * @throws EncodeException if there was a problem encoding the message object
-	 * @throws IllegalStateException if the connection has been closed
 	 */
 	protected void sendObject(Session session, Object object) throws IOException, EncodeException, IllegalStateException {
 		Objects.requireNonNull(session);
@@ -55,11 +54,8 @@ public abstract class AbstractWebSocketClient implements WebSocketClient {
 		try {
 			session.getBasicRemote().sendObject(object);
 		}
-		catch (IllegalStateException e) {
-			throw e;
-		}
 		catch (RuntimeException e) {
-			throw new IllegalStateException(e.getMessage());
+			throw new IOException(e.getMessage());
 		}
 	}
 
@@ -69,20 +65,17 @@ public abstract class AbstractWebSocketClient implements WebSocketClient {
 	 * @param session the session
 	 * @param object the object to send
 	 * @return the future that can be used to wait for the operation to complete
-	 * @throws IllegalStateException if the connection has been closed
+	 * @throws IOException if an IOException occurs, for instance, the connection has been closed
 	 */
-	protected Future<Void> sendObjectAsync(Session session, Object object) throws IllegalStateException {
+	protected Future<Void> sendObjectAsync(Session session, Object object) throws IOException {
 		Objects.requireNonNull(session);
 		Objects.requireNonNull(object);
 
 		try {
 			return session.getAsyncRemote().sendObject(object);
 		}
-		catch (IllegalStateException e) {
-			throw e;
-		}
 		catch (RuntimeException e) {
-			throw new IllegalStateException(e.getMessage());
+			throw new IOException(e.getMessage());
 		}
 	}
 }
