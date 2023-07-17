@@ -47,7 +47,12 @@ public class ChatClientImpl extends AbstractWebSocketClient implements ChatClien
 		if (session.isOpen()) {
 			var message = Messages.partial(s); // the server will fill in the username
 			System.out.println("Sending " + message);
-			sendObject(session, message);
+			try {
+				sendObject(session, message);
+			}
+			catch (IOException e) {
+				System.out.println("Cannot send " + message + " to session " + session.getId());
+			}
 		}
 		else
 			System.out.println("Not sending message since the session is closed");
@@ -68,7 +73,7 @@ public class ChatClientImpl extends AbstractWebSocketClient implements ChatClien
 				sendObject(session, message);
 			}
 			catch (IOException | EncodeException e) {
-				System.out.println("cannot send " + message + " to session " + session.getId());
+				System.out.println("Cannot send " + message + " to session " + session.getId());
 			}
 		}
 

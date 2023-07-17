@@ -77,7 +77,7 @@ public abstract class AbstractWebSocketServer implements WebSocketServer {
 	 * @throws IOException if an IOException occurs, for instance, the connection has been closed
 	 * @throws EncodeException if there was a problem encoding the message object
 	 */
-	protected void sendObject(Session session, Object object) throws IOException, EncodeException, IllegalStateException {
+	protected void sendObject(Session session, Object object) throws IOException, EncodeException {
 		Objects.requireNonNull(session);
 		Objects.requireNonNull(object);
 
