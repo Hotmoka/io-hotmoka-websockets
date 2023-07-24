@@ -18,6 +18,9 @@ package io.hotmoka.websockets.beans;
 
 import java.util.Objects;
 
+import io.hotmoka.websockets.beans.api.JsonRepresentation;
+import io.hotmoka.websockets.beans.api.RpcMessage;
+
 /**
  * The Json representation of an RPC message. It includes a {@code type} property, specifying
  * the type of the message, and an {@code id} property, that can be used to match a message

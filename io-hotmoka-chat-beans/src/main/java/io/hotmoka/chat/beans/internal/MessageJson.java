@@ -19,7 +19,7 @@ package io.hotmoka.chat.beans.internal;
 import io.hotmoka.chat.beans.Messages;
 import io.hotmoka.chat.beans.api.FullMessage;
 import io.hotmoka.chat.beans.api.Message;
-import io.hotmoka.websockets.beans.JsonRepresentation;
+import io.hotmoka.websockets.beans.api.JsonRepresentation;
 
 /**
  * The JSON representation of a {@link Message}.

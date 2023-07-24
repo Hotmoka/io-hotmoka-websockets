@@ -24,6 +24,7 @@ import java.util.logging.Logger;
 import com.google.gson.Gson;
 
 import io.hotmoka.websockets.beans.api.EncoderText;
+import io.hotmoka.websockets.beans.api.JsonRepresentation;
 import jakarta.websocket.EncodeException;
 
 /**

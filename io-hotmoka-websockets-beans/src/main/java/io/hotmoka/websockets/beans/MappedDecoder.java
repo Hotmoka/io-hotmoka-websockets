@@ -24,6 +24,7 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 
 import io.hotmoka.websockets.beans.api.DecoderText;
+import io.hotmoka.websockets.beans.api.JsonRepresentation;
 import jakarta.websocket.DecodeException;
 
 /**

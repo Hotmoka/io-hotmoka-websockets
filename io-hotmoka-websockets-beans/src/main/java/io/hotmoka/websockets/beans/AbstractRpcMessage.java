@@ -18,6 +18,8 @@ package io.hotmoka.websockets.beans;
 
 import java.util.Objects;
 
+import io.hotmoka.websockets.beans.api.RpcMessage;
+
 /**
  * A message of an RPC message. It includes a {@code type} field specifying the type
  * of the message and an {@code id} field that can be used to match a message with its reply.

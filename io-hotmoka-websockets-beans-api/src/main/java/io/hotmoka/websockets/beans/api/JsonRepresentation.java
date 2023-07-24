@@ -14,26 +14,20 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package io.hotmoka.websockets.beans;
+package io.hotmoka.websockets.beans.api;
 
 /**
- * An RPC message. It specifies its type and its id. This id can be used
- * to match a reply message with its corresponding request message.
+ * A JSON representation of a value.
+ *
+ * @param <T> the type of the represented value
  */
-public interface RpcMessage {
+public interface JsonRepresentation<T> {
 
 	/**
-	 * Yields the type of this message. This is anything that can help identify the
-	 * type of the message.
+	 * Supplies the represented value.
 	 * 
-	 * @return the type
+	 * @return the represented value
+	 * @throws Exception if the represented value cannot be supplied
 	 */
-	String getType();
-
-	/**
-	 * Yields the id of the message.
-	 * 
-	 * @return the id
-	 */
-	String getId();
+	T unmap() throws Exception;
 }
