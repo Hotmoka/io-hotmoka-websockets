@@ -51,7 +51,7 @@ public class BaseEncoder<T> implements EncoderText<T> {
     	}
     	catch (RuntimeException e) {
     		String type = value == null ? "null" : ("a " + value.getClass().getName());
-    		LOGGER.log(Level.SEVERE, "could not encode " + type, e);
+    		LOGGER.log(Level.SEVERE, "could not encode " + type + ": " + e.getMessage());
     		throw new EncodeException(value, "could not encode " + type, e);
     	}
     }

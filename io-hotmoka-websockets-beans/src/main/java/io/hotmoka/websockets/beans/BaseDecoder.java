@@ -77,7 +77,7 @@ public class BaseDecoder<T> implements DecoderText<T> {
 			return ((AbstractRpcMessage) gson.fromJson(JsonParser.parseString(s), clazz)).isTypeConsistent();
 		}
 		catch (JsonSyntaxException e) {
-			LOGGER.log(Level.SEVERE, "could not decode a " + clazz.getName(), e);
+			LOGGER.log(Level.SEVERE, "could not decode a " + clazz.getName() + ": " + e.getMessage());
 		}
 
 		return false;
@@ -89,7 +89,7 @@ public class BaseDecoder<T> implements DecoderText<T> {
 			return gson.fromJson(JsonParser.parseString(s), clazz);
 		}
 		catch (RuntimeException e) {
-			LOGGER.log(Level.SEVERE, "could not decode a " + clazz.getName(), e);
+			LOGGER.log(Level.SEVERE, "could not decode a " + clazz.getName() + ": " + e.getMessage());
 			throw new DecodeException(s, "could not decode a " + clazz.getName(), e);
 		}
 	}

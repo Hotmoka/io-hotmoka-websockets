@@ -80,7 +80,7 @@ public class MappedDecoder<T, JSON extends JsonRepresentation<T>> implements Dec
 			return ((AbstractRpcMessageJsonRepresentation<?>) gson.fromJson(JsonParser.parseString(s), clazz)).isTypeConsistent();
 		}
 		catch (JsonSyntaxException e) {
-			LOGGER.log(Level.SEVERE, "could not decode a " + clazz.getName(), e);
+			LOGGER.log(Level.SEVERE, "could not decode a " + clazz.getName() + ": " + e.getMessage());
 		}
 
 		return false;
@@ -92,7 +92,7 @@ public class MappedDecoder<T, JSON extends JsonRepresentation<T>> implements Dec
 			return gson.fromJson(JsonParser.parseString(s), clazz).unmap();
 		}
 		catch (Exception e) {
-			LOGGER.log(Level.SEVERE, "could not decode a " + clazz.getName(), e);
+			LOGGER.log(Level.SEVERE, "could not decode a " + clazz.getName() + ": " + e.getMessage());
 			throw new DecodeException(s, "could not decode a " + clazz.getName(), e);
 		}
 	}
