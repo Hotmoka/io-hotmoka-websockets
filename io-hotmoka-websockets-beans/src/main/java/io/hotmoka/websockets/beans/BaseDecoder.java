@@ -88,9 +88,9 @@ public class BaseDecoder<T> implements DecoderText<T> {
 		try {
 			return gson.fromJson(JsonParser.parseString(s), clazz);
 		}
-		catch (RuntimeException e) {
+		catch (Throwable e) {
 			LOGGER.log(Level.SEVERE, "could not decode a " + clazz.getName() + ": " + e.getMessage());
-			throw new DecodeException(s, "could not decode a " + clazz.getName(), e);
+			throw new DecodeException(s, "Could not decode a " + clazz.getName(), e);
 		}
 	}
 }

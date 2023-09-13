@@ -34,6 +34,7 @@ public abstract class AbstractRpcMessage implements RpcMessage {
 	 * @param id the identifier of the message
 	 */
 	protected AbstractRpcMessage(String id) {
+		Objects.requireNonNull(id, "id cannot be null");
 		this.type = getExpectedType();
 		this.id = id;
 	}
