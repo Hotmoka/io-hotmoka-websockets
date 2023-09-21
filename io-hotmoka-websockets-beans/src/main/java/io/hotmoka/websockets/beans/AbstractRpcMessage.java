@@ -59,6 +59,11 @@ public abstract class AbstractRpcMessage implements RpcMessage {
 			return false;
 	}
 
+	@Override
+	public int hashCode() {
+		return getId().hashCode();
+	}
+
 	/**
 	 * The type expected for this representation. Normally, this should
 	 * coincide with {@link #getType()}.
