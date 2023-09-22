@@ -21,7 +21,6 @@ import java.util.logging.Logger;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonParser;
-import com.google.gson.JsonSyntaxException;
 
 import io.hotmoka.websockets.beans.api.DecoderText;
 import io.hotmoka.websockets.beans.api.JsonRepresentation;
@@ -79,7 +78,7 @@ public class MappedDecoder<T, JSON extends JsonRepresentation<T>> implements Dec
 		try {
 			return ((AbstractRpcMessageJsonRepresentation<?>) gson.fromJson(JsonParser.parseString(s), clazz)).isTypeConsistent();
 		}
-		catch (JsonSyntaxException e) {
+		catch (Throwable e) {
 			LOGGER.log(Level.SEVERE, "could not decode a " + clazz.getName() + ": " + e.getMessage());
 		}
 
@@ -93,7 +92,7 @@ public class MappedDecoder<T, JSON extends JsonRepresentation<T>> implements Dec
 		}
 		catch (Throwable e) {
 			LOGGER.log(Level.SEVERE, "could not decode a " + clazz.getName() + ": " + e.getMessage());
-			throw new DecodeException(s, "Could not decode a " + clazz.getName(), e);
+			throw new DecodeException(s, "Could not decode a " + clazz.getName() + ": " + e.getMessage());
 		}
 	}
 }
