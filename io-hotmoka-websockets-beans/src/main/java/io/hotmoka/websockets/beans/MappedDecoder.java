@@ -92,7 +92,7 @@ public class MappedDecoder<T, JSON extends JsonRepresentation<T>> implements Dec
 		}
 		catch (Throwable e) {
 			LOGGER.log(Level.SEVERE, "could not decode a " + clazz.getName() + ": " + e.getMessage());
-			throw new DecodeException(s, "Could not decode a " + clazz.getName() + ": " + e.getMessage());
+			throw new DecodeException(s, "Could not decode a " + clazz.getName(), e);
 		}
 	}
 }

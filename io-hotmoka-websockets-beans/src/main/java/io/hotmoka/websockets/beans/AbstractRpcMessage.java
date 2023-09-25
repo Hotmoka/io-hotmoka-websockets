@@ -61,7 +61,7 @@ public abstract class AbstractRpcMessage implements RpcMessage {
 
 	@Override
 	public int hashCode() {
-		return getId().hashCode();
+		return id.hashCode();
 	}
 
 	/**
