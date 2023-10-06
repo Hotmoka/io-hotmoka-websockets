@@ -23,6 +23,6 @@ module io.hotmoka.websockets.beans {
 	opens io.hotmoka.websockets.beans to com.google.gson;
 
 	requires transitive io.hotmoka.websockets.beans.api;
-	requires transitive com.google.gson;
+	requires com.google.gson;
 	requires java.logging;
 }

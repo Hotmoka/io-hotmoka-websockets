@@ -24,7 +24,6 @@ import com.google.gson.JsonParser;
 
 import io.hotmoka.websockets.beans.api.DecoderText;
 import io.hotmoka.websockets.beans.api.JsonRepresentation;
-import jakarta.websocket.DecodeException;
 
 /**
  * Base implementation of a mapped decoder from JSON strings into objects.

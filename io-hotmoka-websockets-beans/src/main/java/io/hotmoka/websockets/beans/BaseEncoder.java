@@ -22,7 +22,6 @@ import java.util.logging.Logger;
 import com.google.gson.Gson;
 
 import io.hotmoka.websockets.beans.api.EncoderText;
-import jakarta.websocket.EncodeException;
 
 /**
  * Base implementation of an encoder from an object into a JSON string.
