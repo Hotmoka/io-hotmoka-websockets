@@ -17,7 +17,6 @@ limitations under the License.
 package io.hotmoka.websockets.beans;
 
 import java.util.Objects;
-import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -25,6 +24,7 @@ import com.google.gson.Gson;
 
 import io.hotmoka.websockets.beans.api.EncoderText;
 import io.hotmoka.websockets.beans.api.JsonRepresentation;
+import io.hotmoka.websockets.beans.api.ToJsonRepresentation;
 
 /**
  * Base implementation of a mapped encoder from an object into a JSON string.
@@ -46,38 +46,27 @@ public class MappedEncoder<T, JSON extends JsonRepresentation<T>> implements Enc
 	/**
 	 * The mapper from the object to their representation, that is actually encoded in JSON.
 	 */
-	private final Function<T, JSON> mapper;
+	private final ToJsonRepresentation<T, JSON> mapper;
 
 	/**
 	 * Creates an encoder for the given type mapper.
 	 * 
-	 * @param mapper the mapper from the object to their representation, that is actually encoded in JSON
+	 * @param mapper the mapper from the object to their representation, that is actually encoded in Json
 	 */
-	public MappedEncoder(Function<T, JSON> mapper) {
+	public MappedEncoder(ToJsonRepresentation<T, JSON> mapper) {
 		Objects.requireNonNull(mapper);
 		this.mapper = mapper;
-	}
-
-	/**
-	 * Yields the actual object that gets transformed into Json.
-	 * 
-	 * @param value the value that must be transformed into Json
-	 * @return the actual object that will get transformed into Json instead of {@code value};
-	 *         it is a supplier since it is able to compute {@code value} back
-	 */
-	public final JSON map(T value) {
-		return mapper.apply(value);
 	}
 
 	@Override
     public final String encode(T value) throws EncodeException {
 		try {
-			return gson.toJsonTree(map(value)).toString();
+			return gson.toJsonTree(mapper.map(value)).toString();
     	}
-    	catch (RuntimeException e) {
+    	catch (Exception e) {
     		String type = value == null ? "null" : ("a " + value.getClass().getName());
     		LOGGER.log(Level.SEVERE, "could not encode " + type + ": " + e.getMessage());
-    		throw new EncodeException(value, "could not encode " + type, e);
+    		throw new EncodeException(value, "Could not encode " + type, e);
     	}
     }
 }

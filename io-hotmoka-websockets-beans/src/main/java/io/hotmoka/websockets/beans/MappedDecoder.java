@@ -77,7 +77,7 @@ public class MappedDecoder<T, JSON extends JsonRepresentation<T>> implements Dec
 		try {
 			return ((AbstractRpcMessageJsonRepresentation<?>) gson.fromJson(JsonParser.parseString(s), clazz)).isTypeConsistent();
 		}
-		catch (Throwable e) {
+		catch (Exception e) {
 			LOGGER.log(Level.SEVERE, "could not decode a " + clazz.getName() + ": " + e.getMessage());
 		}
 
@@ -89,7 +89,7 @@ public class MappedDecoder<T, JSON extends JsonRepresentation<T>> implements Dec
 		try {
 			return gson.fromJson(JsonParser.parseString(s), clazz).unmap();
 		}
-		catch (Throwable e) {
+		catch (Exception e) {
 			LOGGER.log(Level.SEVERE, "could not decode a " + clazz.getName() + ": " + e.getMessage());
 			throw new DecodeException(s, "Could not decode a " + clazz.getName(), e);
 		}
