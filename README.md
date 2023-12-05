@@ -1,4 +1,4 @@
-[![Java-Build Action Status](https://github.com/Hotmoka/websockets/workflows/Java-Build/badge.svg)](https://github.com/Hotmoka/websockets/actions)
+[![Java-Build Action Status](https://github.com/Hotmoka/websockets/actions/workflows/java_build.yml/badge.svg)](https://github.com/Hotmoka/websockets/actions)
 [![Maven Central](https://img.shields.io/maven-central/v/io.hotmoka.websockets/io-hotmoka-websockets-server.svg?label=Maven%20Central)](https://central.sonatype.com/search?smo=true&q=g:io.hotmoka.websockets)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
 
