@@ -54,8 +54,7 @@ public class MappedEncoder<T, JSON extends JsonRepresentation<T>> implements Enc
 	 * @param mapper the mapper from the object to their representation, that is actually encoded in Json
 	 */
 	public MappedEncoder(ToJsonRepresentation<T, JSON> mapper) {
-		Objects.requireNonNull(mapper);
-		this.mapper = mapper;
+		this.mapper = Objects.requireNonNull(mapper, "mapper cannot be null");
 	}
 
 	@Override

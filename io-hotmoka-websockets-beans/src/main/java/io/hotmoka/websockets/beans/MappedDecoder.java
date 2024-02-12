@@ -16,6 +16,7 @@ limitations under the License.
 
 package io.hotmoka.websockets.beans;
 
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -50,7 +51,7 @@ public class MappedDecoder<T, JSON extends JsonRepresentation<T>> implements Dec
 	 * @param clazz the type of the objects decoded by the decoder
 	 */
 	public MappedDecoder(Class<JSON> clazz) {
-		this.clazz = clazz;
+		this.clazz = Objects.requireNonNull(clazz, "clazz cannot be null");
 	}
 
 	/**
