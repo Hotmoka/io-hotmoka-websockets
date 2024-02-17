@@ -16,6 +16,7 @@ limitations under the License.
 
 package io.hotmoka.websockets.beans;
 
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -47,7 +48,7 @@ public class BaseDecoder<T> implements DecoderText<T> {
 	 * @param clazz the type of the objects decoded by the decoder
 	 */
 	public BaseDecoder(Class<? extends T> clazz) {
-		this.clazz = clazz;
+		this.clazz = Objects.requireNonNull(clazz, "clazz cannot be null");
 	}
 
 	/**
