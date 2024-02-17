@@ -36,4 +36,10 @@ public interface RpcMessage {
 	 * @return the id
 	 */
 	String getId();
+
+	@Override
+	boolean equals(Object other);
+
+	@Override
+	int hashCode();
 }
