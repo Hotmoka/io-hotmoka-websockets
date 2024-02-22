@@ -26,6 +26,7 @@ Note: submodules whose artifact must be deployed on Maven Central must activate 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.release>11</maven.compiler.release>
+    <io.hotmoka.version>1.4.0</io.hotmoka.version>
     <io.hotmoka.websockets.version>1.3.1</io.hotmoka.websockets.version>
     <io.hotmoka.chat.version>1.0.3</io.hotmoka.chat.version>
   </properties>
@@ -269,6 +270,7 @@ Note: submodules whose artifact must be deployed on Maven Central must activate 
                 tyrus-core,
                 tyrus-server,
                 tyrus-spi,
+                io-hotmoka-annotations,
                 <!-- we exclude all modules that go into the automatic folder -->
                 grizzly-framework,
                 grizzly-http,
@@ -311,6 +313,7 @@ Note: submodules whose artifact must be deployed on Maven Central must activate 
                 tyrus-core,
                 tyrus-server,
                 tyrus-spi,
+                io-hotmoka-annotations
               </includeArtifactIds>
             </configuration>
           </execution>

@@ -14,11 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package io.hotmoka.websockets.client;
+package io.hotmoka.websockets.client.api;
 
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+import io.hotmoka.annotations.ThreadSafe;
 import io.hotmoka.websockets.beans.api.ExceptionMessage;
 import io.hotmoka.websockets.beans.api.RpcMessage;
 
@@ -26,6 +27,7 @@ import io.hotmoka.websockets.beans.api.RpcMessage;
  * A container of a queue of messages for each message id. When a message for that id arrives,
  * it gets dispatched to the waiting threads for that id.
  */
+@ThreadSafe
 public interface RPCMessageQueuesContainer {
 
 	/**

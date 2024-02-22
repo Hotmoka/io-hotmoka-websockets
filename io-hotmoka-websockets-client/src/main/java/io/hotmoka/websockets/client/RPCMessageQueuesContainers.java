@@ -16,6 +16,7 @@ limitations under the License.
 
 package io.hotmoka.websockets.client;
 
+import io.hotmoka.websockets.client.api.RPCMessageQueuesContainer;
 import io.hotmoka.websockets.client.internal.RPCMessageQueuesContainerImpl;
 
 /**

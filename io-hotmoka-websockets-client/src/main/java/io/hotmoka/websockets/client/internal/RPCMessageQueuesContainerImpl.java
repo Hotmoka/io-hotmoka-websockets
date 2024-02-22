@@ -28,14 +28,16 @@ import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import io.hotmoka.annotations.ThreadSafe;
 import io.hotmoka.websockets.beans.api.ExceptionMessage;
 import io.hotmoka.websockets.beans.api.RpcMessage;
-import io.hotmoka.websockets.client.RPCMessageQueuesContainer;
+import io.hotmoka.websockets.client.api.RPCMessageQueuesContainer;
 
 /**
  * Implementation of a container of a queue of messages for each message id. When a message for that id arrives,
  * it gets dispatched to the waiting threads for that id.
  */
+@ThreadSafe
 public class RPCMessageQueuesContainerImpl implements RPCMessageQueuesContainer {
 	private final long timeout;
 	private final AtomicInteger nextId = new AtomicInteger();
