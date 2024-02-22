@@ -14,16 +14,18 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-/**
- * This module defines shared classes for the beans exchanged
- * among websocket clients and servers.
- */
-module io.hotmoka.websockets.beans {
-	exports io.hotmoka.websockets.beans;
-	opens io.hotmoka.websockets.beans to com.google.gson;
-	opens io.hotmoka.websockets.beans.internal.gson to com.google.gson;
+package io.hotmoka.websockets.beans.internal.gson;
 
-	requires transitive io.hotmoka.websockets.beans.api;
-	requires com.google.gson;
-	requires java.logging;
+import io.hotmoka.websockets.beans.ExceptionMessages;
+import io.hotmoka.websockets.beans.MappedDecoder;
+import io.hotmoka.websockets.beans.api.ExceptionMessage;
+
+/**
+ * A decoder for {@link ExceptionMessage}.
+ */
+public class ExceptionMessageDecoder extends MappedDecoder<ExceptionMessage, ExceptionMessages.Json> {
+
+	public ExceptionMessageDecoder() {
+		super(ExceptionMessages.Json.class);
+	}
 }

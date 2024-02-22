@@ -14,16 +14,24 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-/**
- * This module defines shared classes for the beans exchanged
- * among websocket clients and servers.
- */
-module io.hotmoka.websockets.beans {
-	exports io.hotmoka.websockets.beans;
-	opens io.hotmoka.websockets.beans to com.google.gson;
-	opens io.hotmoka.websockets.beans.internal.gson to com.google.gson;
+package io.hotmoka.websockets.beans.api;
 
-	requires transitive io.hotmoka.websockets.beans.api;
-	requires com.google.gson;
-	requires java.logging;
+/**
+ * A network message corresponding to an exception thrown by a method call.
+ */
+public interface ExceptionMessage extends RpcMessage {
+
+	/**
+	 * Yields the class of the exception.
+	 * 
+	 * @return the class of the exception
+	 */
+	Class<? extends Exception> getExceptionClass();
+
+	/**
+	 * Yields the message of the exception.
+	 * 
+	 * @return the message
+	 */
+	String getMessage();
 }
