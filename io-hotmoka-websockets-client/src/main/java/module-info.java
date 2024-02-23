@@ -21,6 +21,7 @@ module io.hotmoka.websockets.client {
 	exports io.hotmoka.websockets.client;
 
 	requires transitive io.hotmoka.websockets.client.api;
+	requires io.hotmoka.closeables;
 	requires io.hotmoka.annotations;
 	requires org.glassfish.tyrus.client;
 	requires java.logging;

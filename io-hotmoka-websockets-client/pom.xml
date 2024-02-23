@@ -21,6 +21,11 @@
 	  <artifactId>io-hotmoka-websockets-client-api</artifactId>
 	  <version>${io.hotmoka.websockets.version}</version>
 	</dependency>
+	<dependency>
+	  <groupId>io.hotmoka.closeables</groupId>
+	  <artifactId>io-hotmoka-closeables</artifactId>
+	  <version>${io.hotmoka.closeables.version}</version>
+	</dependency>
     <dependency>
       <groupId>org.glassfish.tyrus</groupId>
       <artifactId>tyrus-client</artifactId>
