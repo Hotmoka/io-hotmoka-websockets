@@ -31,19 +31,18 @@ import java.util.logging.Logger;
 import io.hotmoka.annotations.ThreadSafe;
 import io.hotmoka.websockets.beans.api.ExceptionMessage;
 import io.hotmoka.websockets.beans.api.RpcMessage;
-import io.hotmoka.websockets.client.api.RPCMessageQueuesContainer;
 
 /**
  * Implementation of a container of a queue of messages for each message id. When a message for that id arrives,
  * it gets dispatched to the waiting threads for that id.
  */
 @ThreadSafe
-public class RPCMessageQueuesContainerImpl implements RPCMessageQueuesContainer {
+class RPCMessageQueuesContainer {
 	private final long timeout;
 	private final AtomicInteger nextId = new AtomicInteger();
 	private final ConcurrentMap<String, BlockingQueue<RpcMessage>> queues = new ConcurrentHashMap<>();
 
-	private final static Logger LOGGER = Logger.getLogger(RPCMessageQueuesContainerImpl.class.getName());
+	private final static Logger LOGGER = Logger.getLogger(RPCMessageQueuesContainer.class.getName());
 
 	/**
 	 * Creates the container.
@@ -51,23 +50,38 @@ public class RPCMessageQueuesContainerImpl implements RPCMessageQueuesContainer 
 	 * @param timeout the time (in milliseconds) allowed for a call to the network service;
 	 *                beyond that threshold, a timeout exception is thrown
 	 */
-	public RPCMessageQueuesContainerImpl(long timeout) {
+	RPCMessageQueuesContainer(long timeout) {
 		this.timeout = timeout;
 	}
 
-	public final String nextId() {
+	/**
+	 * Yields the identifier for the next message.
+	 * 
+	 * @return the identifier
+	 */
+	final String nextId() {
 		String id = String.valueOf(nextId.getAndIncrement());
 		queues.put(id, new ArrayBlockingQueue<>(10));
 		return id;
 	}
 
-	public final <T> T waitForResult(String id, Function<RpcMessage, T> processSuccess, Predicate<ExceptionMessage> processException) throws Exception {
+	/**
+	 * Waits until a reply arrives for the message with the given identifier.
+	 * 
+	 * @param <T> the type of the replied value
+	 * @param id the identifier
+	 * @param processSuccess a function that defines how to generate the replied value from the RPC message
+	 * @param processException a predicate that determines if an exception message is accepted for the RPC message
+	 * @return the replied value
+	 * @throws Exception if the execution of the message led into this exception
+	 */
+	final <T> T waitForResult(String id, Function<RpcMessage, T> processSuccess, Predicate<ExceptionMessage> processException) throws Exception {
 		final long startTime = System.currentTimeMillis();
 
-		do {
+		while (true) {
 			try {
 				RpcMessage message = queues.get(id).poll(timeout - (System.currentTimeMillis() - startTime), TimeUnit.MILLISECONDS);
-				if (message == null) {
+				if (message == null) { // time-out
 					queues.remove(id);
 					throw new TimeoutException();
 				}
@@ -78,20 +92,18 @@ public class RPCMessageQueuesContainerImpl implements RPCMessageQueuesContainer 
 					return result;
 				}
 
-				if (message instanceof ExceptionMessage) {
-					var em = (ExceptionMessage) message;
-
+				if (message instanceof ExceptionMessage em) {
 					if (processException.test(em)) {
-						queues.remove(id);
 						Exception exc;
 						try {
 							exc = em.getExceptionClass().getConstructor(String.class).newInstance(em.getMessage());
 						}
 						catch (Exception e) {
-							LOGGER.log(Level.SEVERE, "remote: cannot instantiate the exception type", e);
+							LOGGER.warning("remote: cannot instantiate the exception type: " + em.getExceptionClass().getName() + ": " + e.getMessage());
 							continue;
 						}
 
+						queues.remove(id);
 						throw exc;
 					}
 
@@ -105,21 +117,22 @@ public class RPCMessageQueuesContainerImpl implements RPCMessageQueuesContainer 
 				throw e;
 			}
 		}
-		while (System.currentTimeMillis() - startTime < timeout);
-
-		queues.remove(id);
-		throw new TimeoutException();
 	}
 
-	public void notifyResult(RpcMessage message) {
+	/**
+	 * Notifies the given message to the waiting queue for its identifier.
+	 * 
+	 * @param message the message to notify
+	 */
+	void notifyResult(RpcMessage message) {
 		if (message != null) {
 			var queue = queues.get(message.getId());
 			if (queue != null) {
 				if (!queue.offer(message))
-					LOGGER.log(Level.SEVERE, "remote: could not enqueue a message since the queue was full");
+					LOGGER.log(Level.SEVERE, "remote: could not enqueue a message since the queue is full");
 			}
 			else
-				LOGGER.log(Level.SEVERE, "remote: received a message of type " + message.getClass().getName() + " but its id " + message.getId() + " has no corresponding waiting queue");
+				LOGGER.warning("remote: received a message of type " + message.getClass().getName() + " but its id " + message.getId() + " has no corresponding waiting queue");
 		}
 	}
 }

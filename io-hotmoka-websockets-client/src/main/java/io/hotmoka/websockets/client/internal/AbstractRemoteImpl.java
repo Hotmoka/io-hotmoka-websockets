@@ -36,8 +36,6 @@ import io.hotmoka.websockets.beans.api.RpcMessage;
 import io.hotmoka.websockets.client.AbstractClientEndpoint;
 import io.hotmoka.websockets.client.AbstractRemote;
 import io.hotmoka.websockets.client.AbstractWebSocketClient;
-import io.hotmoka.websockets.client.RPCMessageQueuesContainers;
-import io.hotmoka.websockets.client.api.RPCMessageQueuesContainer;
 import io.hotmoka.websockets.client.api.Remote;
 import jakarta.websocket.CloseReason;
 import jakarta.websocket.DeploymentException;
@@ -83,7 +81,7 @@ public abstract class AbstractRemoteImpl<E extends Exception> extends AbstractWe
 	 *                beyond that threshold, a timeout exception is thrown
 	 */
 	protected AbstractRemoteImpl(long timeout) {
-		this.queues = RPCMessageQueuesContainers.of(timeout);
+		this.queues = new RPCMessageQueuesContainer(timeout);
 	}
 
 	@Override
@@ -181,10 +179,6 @@ public abstract class AbstractRemoteImpl<E extends Exception> extends AbstractWe
 			onException(em);
 		else if (message == null) {
 			LOGGER.log(Level.SEVERE, "unexpected null message");
-			return;
-		}
-		else {
-			LOGGER.log(Level.SEVERE, "unexpected message of class " + message.getClass().getName());
 			return;
 		}
 
