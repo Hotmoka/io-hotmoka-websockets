@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -41,6 +42,7 @@ import jakarta.websocket.CloseReason;
 import jakarta.websocket.DeploymentException;
 import jakarta.websocket.EndpointConfig;
 import jakarta.websocket.Session;
+import jakarta.websocket.CloseReason.CloseCodes;
 
 /**
  * A partial implementation of a remote object that presents a programmatic interface
@@ -71,6 +73,16 @@ public abstract class AbstractRemoteImpl<E extends Exception> extends AbstractWe
 	 */
 	private final AtomicBoolean isClosed = new AtomicBoolean();
 
+	/**
+	 * Used to wait until the remote gets closed.
+	 */
+	private final CountDownLatch latch = new CountDownLatch(1);
+
+	/**
+	 * A description of the reason why the service has been disconnected.
+	 */
+	private volatile String closeReason;
+
 	private final static Logger LOGGER = Logger.getLogger(AbstractRemoteImpl.class.getName());
 
 	/**
@@ -85,21 +97,8 @@ public abstract class AbstractRemoteImpl<E extends Exception> extends AbstractWe
 	}
 
 	@Override
-	public void close() throws E, InterruptedException {
-		if (!isClosed.getAndSet(true)) {
-			try {
-				super.close();
-			}
-			catch (InterruptedException e) {
-				throw e;
-			}
-			catch (Exception e) {
-				throw mkException(e);
-			}
-			finally {
-				callOnCloseHandlersAndCloseSessions();
-			}
-		}
+	public final void close() throws E, InterruptedException {
+		close(new CloseReason(CloseCodes.NORMAL_CLOSURE, "Closed normally."));
 	}
 
 	@Override
@@ -110,6 +109,42 @@ public abstract class AbstractRemoteImpl<E extends Exception> extends AbstractWe
 	@Override
 	public final void removeOnCloseHandler(OnCloseHandler what) {
 		manager.removeOnCloseHandler(what);
+	}
+
+	@Override
+	public final String waitUntilClosed() throws InterruptedException {
+		latch.await();
+		return closeReason;
+	}
+
+	/**
+	 * Closes this remote. Subclasses should close their own resources
+	 * and then call this method at the end. This method is never called twice,
+	 * but only the first time the remote gets closed.
+	 * 
+	 * @param reason the reason why the remote is getting closed
+	 * @throws InterruptedException if the closure operation gets interrupted
+	 * @throws E if closure fails with this exception
+	 */
+	protected void closeResources(CloseReason reason) throws E, InterruptedException {
+		try {
+			closeReason = reason.getReasonPhrase();
+			super.close();
+		}
+		catch (InterruptedException e) {
+			throw e;
+		}
+		catch (Exception e) {
+			throw mkException(e);
+		}
+		finally {
+			try {
+				callOnCloseHandlersAndCloseSessions();
+			}
+			finally {
+				latch.countDown();
+			}
+		}
 	}
 
 	/**
@@ -216,12 +251,12 @@ public abstract class AbstractRemoteImpl<E extends Exception> extends AbstractWe
 		}
 
 		@Override
-		public void onClose(Session session, CloseReason closeReason) {
-			super.onClose(session, closeReason);
+		public void onClose(Session session, CloseReason reason) {
+			super.onClose(session, reason);
 
 			try {
 				// we close the remote since it is bound to a service that seems to be getting closed
-				close();
+				close(reason);
 			}
 			catch (InterruptedException e) {
 				Thread.currentThread().interrupt();
@@ -233,6 +268,11 @@ public abstract class AbstractRemoteImpl<E extends Exception> extends AbstractWe
 		}
 
 		protected abstract Session deployAt(URI uri) throws DeploymentException, IOException;
+	}
+
+	private void close(CloseReason reason) throws E, InterruptedException {
+		if (!isClosed.getAndSet(true))
+			closeResources(reason);
 	}
 
 	private void callOnCloseHandlersAndCloseSessions() throws E, InterruptedException {

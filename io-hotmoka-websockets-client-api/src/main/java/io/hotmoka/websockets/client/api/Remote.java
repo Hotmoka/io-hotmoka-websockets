@@ -30,4 +30,12 @@ public interface Remote<E extends Exception> extends AutoCloseable, OnCloseHandl
 
 	@Override
 	void close() throws E, InterruptedException;
+
+	/**
+	 * Waits until this remote gets closed.
+	 * 
+	 * @return a description of why the remote has been closed
+	 * @throws InterruptedException if the current thread gets interrupted while waiting
+	 */
+	String waitUntilClosed() throws InterruptedException;
 }
