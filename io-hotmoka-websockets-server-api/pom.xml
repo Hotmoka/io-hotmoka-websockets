@@ -4,7 +4,7 @@
 
   <parent>
     <groupId>io.hotmoka</groupId>
-    <artifactId>io-hotmoka-websockets</artifactId>
+    <artifactId>io-hotmoka-websockets-parent</artifactId>
     <version>parent</version>
   </parent>
 
