@@ -7,11 +7,6 @@
 This project is a minimal library for simplifying
 the development of applications connected through websockets, in Java.
 
-<p align="center"><img width="100" src="pics/CC_license.png" alt="This documentation is licensed under a Creative Commons Attribution 4.0 Internat
-ional License"></p><p align="center">This document is licensed under a Creative Commons Attribution 4.0 International License.</p>
-
-<p align="center">Copyright 2023 by Fausto Spoto (fausto.spoto@hotmoka.io)</p>
-
 ## Main features
 
 1. Fully modularized
@@ -45,3 +40,8 @@ $ ./run_client.sh Textor
 ```
 
 (replace `Textor` with your name for a more personal feeling.)
+
+<p align="center"><img width="100" src="https://mirrors.creativecommons.org/presskit/buttons/88x31/png/by.png" alt="This documentation is licensed under a Creative Commons Attribution 4.0 Internat
+ional License"></p><p align="center">This document is licensed under a Creative Commons Attribution 4.0 International License.</p>
+
+<p align="center">Copyright 2023 by Fausto Spoto (fausto.spoto@hotmoka.io)</p>
