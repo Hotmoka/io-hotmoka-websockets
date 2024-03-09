@@ -25,6 +25,7 @@ import com.google.gson.Gson;
 import io.hotmoka.websockets.beans.api.EncoderText;
 import io.hotmoka.websockets.beans.api.JsonRepresentation;
 import io.hotmoka.websockets.beans.api.ToJsonRepresentation;
+import jakarta.websocket.EncodeException;
 
 /**
  * Base implementation of a mapped encoder from an object into a JSON string.

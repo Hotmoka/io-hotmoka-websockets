@@ -16,25 +16,10 @@
   <description>This module defines the API of a websocket client</description>
 
   <dependencies>
-    <dependency>
-	  <groupId>io.hotmoka.websockets</groupId>
-	  <artifactId>io-hotmoka-websockets-beans-api</artifactId>
-	  <version>${io.hotmoka.websockets.version}</version>
-	</dependency>
-	<dependency>
-	  <groupId>io.hotmoka.annotations</groupId>
-	  <artifactId>io-hotmoka-annotations</artifactId>
-	  <version>${io.hotmoka.annotations.version}</version>
-	</dependency>
 	<dependency>
 	  <groupId>io.hotmoka.closeables</groupId>
 	  <artifactId>io-hotmoka-closeables-api</artifactId>
 	  <version>${io.hotmoka.closeables.version}</version>
-	</dependency>
-    <dependency>
-      <groupId>jakarta.websocket</groupId>
-	  <artifactId>jakarta.websocket-client-api</artifactId>
-	  <version>2.1.0</version>
 	</dependency>
   </dependencies>
 

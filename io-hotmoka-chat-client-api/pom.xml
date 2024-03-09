@@ -17,14 +17,14 @@
 
   <dependencies>
     <dependency>
-      <groupId>io.hotmoka.chat</groupId>
-      <artifactId>io-hotmoka-chat-beans-api</artifactId>
-      <version>${io.hotmoka.chat.version}</version>
-    </dependency>
-    <dependency>
       <groupId>io.hotmoka.websockets</groupId>
       <artifactId>io-hotmoka-websockets-client-api</artifactId>
       <version>${io.hotmoka.websockets.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.websocket</groupId>
+      <artifactId>jakarta.websocket-client-api</artifactId>
+      <version>2.1.0</version>
     </dependency>
   </dependencies>
 

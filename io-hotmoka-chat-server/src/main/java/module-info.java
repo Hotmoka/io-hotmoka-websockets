@@ -19,7 +19,6 @@ limitations under the License.
  */
 module io.hotmoka.chat.server {
 	exports io.hotmoka.chat.server;
-
 	// needed to allow the endpoint to be created by reflection although it is not exported
 	opens io.hotmoka.chat.server.internal to org.glassfish.tyrus.core;
 

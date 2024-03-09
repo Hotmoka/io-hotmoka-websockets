@@ -16,7 +16,6 @@ limitations under the License.
 
 package io.hotmoka.websockets.client.api;
 
-import io.hotmoka.annotations.ThreadSafe;
 import io.hotmoka.closeables.api.OnCloseHandlersManager;
 
 /**
@@ -25,7 +24,6 @@ import io.hotmoka.closeables.api.OnCloseHandlersManager;
  * 
  * @param <E> the type of the exceptions thrown if the remote behaves incorrectly
  */
-@ThreadSafe
 public interface Remote<E extends Exception> extends AutoCloseable, OnCloseHandlersManager {
 
 	@Override

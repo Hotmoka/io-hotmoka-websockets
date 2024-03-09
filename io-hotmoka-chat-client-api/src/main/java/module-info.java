@@ -20,4 +20,5 @@ limitations under the License.
 module io.hotmoka.chat.client.api {
 	exports io.hotmoka.chat.client.api;
 	requires io.hotmoka.websockets.client.api;
+	requires transitive jakarta.websocket.client;
 }

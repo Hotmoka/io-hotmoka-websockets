@@ -19,7 +19,6 @@ limitations under the License.
  */
 module io.hotmoka.chat.beans {
 	exports io.hotmoka.chat.beans;
-	
 	// beans must be encoded and decoded by reflection through Gson
 	opens io.hotmoka.chat.beans.internal to com.google.gson;
 
