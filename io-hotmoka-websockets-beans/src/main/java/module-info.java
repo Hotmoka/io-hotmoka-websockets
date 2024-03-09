@@ -20,7 +20,6 @@ limitations under the License.
  */
 module io.hotmoka.websockets.beans {
 	exports io.hotmoka.websockets.beans;
-	opens io.hotmoka.websockets.beans to com.google.gson;
 	opens io.hotmoka.websockets.beans.internal.gson to com.google.gson;
 
 	requires transitive io.hotmoka.websockets.beans.api;

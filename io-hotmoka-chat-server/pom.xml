@@ -33,4 +33,79 @@
     </dependency>
   </dependencies>
 
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-clean-plugin</artifactId>
+        <version>3.2.0</version>
+	    <configuration>
+	      <failOnError>false</failOnError>
+	      <filesets>
+	        <fileset>
+	          <directory>${project.basedir}/modules</directory>
+	          <includes>
+	            <include>**/*</include>
+	          </includes>
+	          <followSymlinks>false</followSymlinks>
+            </fileset>
+          </filesets>
+	    </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>3.3.0</version>
+        <configuration>
+          <outputDirectory>${project.basedir}/modules/explicit</outputDirectory>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>3.5.0</version>
+        <configuration>
+		  <includeScope>
+		    runtime <!-- so that test or provided dependencies are not considered -->
+		  </includeScope>
+		</configuration>
+        <executions>
+		  <!-- there are no unnamed modules -->
+          <execution>
+            <?m2e ignore?>
+            <id>copy-automatic-modules</id>
+            <phase>package</phase>
+            <goals>
+              <goal>copy-dependencies</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.basedir}/modules/automatic</outputDirectory>
+              <includeArtifactIds>
+                grizzly-framework,
+                grizzly-http,
+                grizzly-http-server
+              </includeArtifactIds>
+            </configuration>
+          </execution>
+          <execution>
+            <?m2e ignore?>
+            <id>copy-explicit-modules</id>
+            <phase>package</phase>
+            <goals>
+              <goal>copy-dependencies</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.basedir}/modules/explicit</outputDirectory>
+              <excludeArtifactIds>
+                grizzly-framework,
+                grizzly-http,
+                grizzly-http-server
+              </excludeArtifactIds>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
 </project>

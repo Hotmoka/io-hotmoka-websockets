@@ -26,10 +26,10 @@ Note: submodules whose artifact must be deployed on Maven Central must activate 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.release>17</maven.compiler.release>
+    <io.hotmoka.websockets.version>1.4.0-SNAPSHOT</io.hotmoka.websockets.version>
+    <io.hotmoka.chat.version>1.1.0-SHAPSHOT</io.hotmoka.chat.version>
     <io.hotmoka.annotations.version>1.4.1</io.hotmoka.annotations.version>
     <io.hotmoka.closeables.version>1.4.1</io.hotmoka.closeables.version>
-    <io.hotmoka.websockets.version>1.3.4</io.hotmoka.websockets.version>
-    <io.hotmoka.chat.version>1.0.3</io.hotmoka.chat.version>
   </properties>
 
   <groupId>io.hotmoka</groupId>
@@ -118,33 +118,8 @@ Note: submodules whose artifact must be deployed on Maven Central must activate 
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-clean-plugin</artifactId>
-        <version>3.2.0</version>
-	    <configuration>
-	      <failOnError>false</failOnError>
-	      <filesets>
-	        <fileset>
-	          <directory>modules</directory>
-	          <includes>
-	            <include>**/*</include>
-	          </includes>
-	          <followSymlinks>false</followSymlinks>
-            </fileset>
-          </filesets>
-	    </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.11.0</version>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-        <version>3.3.0</version>
-        <configuration>
-          <outputDirectory>../modules/explicit</outputDirectory>
-        </configuration>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -227,60 +202,6 @@ Note: submodules whose artifact must be deployed on Maven Central must activate 
           </execution>
         </executions>
       </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-dependency-plugin</artifactId>
-        <version>3.5.0</version>
-        <configuration>
-		  <includeScope>
-		    runtime <!-- so that test or provided dependencies are not considered -->
-		  </includeScope>
-		</configuration>
-        <executions>
-		  <!-- there are no unnamed modules -->
-          <execution>
-            <id>copy-automatic-modules</id>
-            <phase>package</phase>
-            <goals>
-              <goal>copy-dependencies</goal>
-            </goals>
-            <configuration>
-              <outputDirectory>${project.parent.basedir}/modules/automatic</outputDirectory>
-              <includeArtifactIds>
-                grizzly-framework,
-                grizzly-http,
-                grizzly-http-server
-              </includeArtifactIds>
-            </configuration>
-          </execution>
-          <execution>
-            <id>copy-explicit-modules</id>
-            <phase>package</phase>
-            <goals>
-              <goal>copy-dependencies</goal>
-            </goals>
-            <configuration>
-              <outputDirectory>${project.parent.basedir}/modules/explicit</outputDirectory>
-              <includeArtifactIds>
-                gson,
-                jakarta.activation-api,
-                jakarta.xml.bind-api,
-                jakarta.websocket-api,
-                jakarta.websocket-client-api,
-                tyrus-client,
-                tyrus-container-grizzly-client,
-                tyrus-container-grizzly-server,
-                tyrus-core,
-                tyrus-server,
-                tyrus-spi,
-                io-hotmoka-annotations,
-                io-hotmoka-closeables,
-                io-hotmoka-closeables-api
-              </includeArtifactIds>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
     </plugins>
   </build>
 
@@ -325,6 +246,7 @@ Note: submodules whose artifact must be deployed on Maven Central must activate 
       <activation>
         <activeByDefault>true</activeByDefault>
       </activation>
+      <!-- the default profile processes the chat as well, while the release ignores it -->
       <modules>
         <module>io-hotmoka-chat-beans-api</module>
         <module>io-hotmoka-chat-beans</module>
