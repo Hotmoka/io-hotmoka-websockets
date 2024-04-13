@@ -7,7 +7,7 @@
   <name>io-hotmoka-websockets-beans</name>
   <packaging>jar</packaging>
   <version>${io.hotmoka.websockets.version}</version>
-  <description>This module defines shared classes for the beans exchanged among websocket clients and servers</description>
+  <description>This module defines shared classes for the beans exchanged among websocket clients and servers.</description>
 
   <parent>
     <groupId>io.hotmoka</groupId>

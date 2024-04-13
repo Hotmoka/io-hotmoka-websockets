@@ -16,6 +16,8 @@ limitations under the License.
 
 package io.hotmoka.chat.beans.internal;
 
+import java.util.Objects;
+
 import io.hotmoka.chat.beans.api.FullMessage;
 
 public class FullMessageImpl implements FullMessage {
@@ -23,11 +25,8 @@ public class FullMessageImpl implements FullMessage {
     private final String content;
 
     public FullMessageImpl(String from, String content) {
-    	if (from == null || content == null)
-    		throw new NullPointerException();
-
-    	this.from = from;
-    	this.content = content;
+    	this.from = Objects.requireNonNull(from);
+    	this.content = Objects.requireNonNull(content);
     }
 
     @Override
@@ -43,14 +42,5 @@ public class FullMessageImpl implements FullMessage {
     @Override
     public String toString() {
     	return "FullMessageImpl from " + from + " with content " + content;
-    }
-
-    public static class GsonHelper {
-    	private String from;
-        private String content;
-
-        public FullMessageImpl toBean() {
-        	return new FullMessageImpl(from, content);
-        }
     }
 }

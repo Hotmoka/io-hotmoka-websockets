@@ -41,6 +41,21 @@ $ ./run_client.sh Textor
 
 (replace `Textor` with your name for a more personal feeling.)
 
+## A note about the no-args constructor
+
+This library uses [Gson](https://github.com/google/gson) to translate messages into strings and back. This means
+that such message objects should have a public no-args constructor. See for instance
+the `Json` inner class of [io.hotmoka.chat.beans.Message](https://github.com/Hotmoka/io-hotmoka-websockets/blob/main/io-hotmoka-chat-beans/src/main/java/io/hotmoka/chat/beans/Messages.java).
+If you want to avoid that no-args constructor, then add the following to the
+descriptor of the module that defines your messages:
+
+```java
+requires jdk.unsupported;
+```
+
+In this case, Gson will instantiate the messages through reflection and leave the missing
+fields to their default value.
+
 <p align="center"><img width="100" src="https://mirrors.creativecommons.org/presskit/buttons/88x31/png/by.png" alt="This documentation is licensed under a Creative Commons Attribution 4.0 Internat
 ional License"></p><p align="center">This document is licensed under a Creative Commons Attribution 4.0 International License.</p>
 

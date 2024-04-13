@@ -13,7 +13,7 @@
   <name>io-hotmoka-websockets-server-api</name>
   <version>${io.hotmoka.websockets.version}</version>
   <packaging>jar</packaging>
-  <description>This module defines the API of a websocket server</description>
+  <description>This module defines the API of a websocket server.</description>
 
   <profiles>
 	<profile>

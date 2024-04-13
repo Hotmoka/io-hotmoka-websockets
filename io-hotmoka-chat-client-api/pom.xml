@@ -13,7 +13,7 @@
   <name>io-hotmoka-chat-client-api</name>
   <version>${io.hotmoka.chat.version}</version>
   <packaging>jar</packaging>
-  <description>This modules defines the API of a chat client</description>
+  <description>This modules defines the API of a chat client.</description>
 
   <dependencies>
     <dependency>

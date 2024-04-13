@@ -5,7 +5,7 @@
   <groupId>io.hotmoka.websockets</groupId>
   <artifactId>io-hotmoka-websockets-beans-api</artifactId>
   <name>io-hotmoka-websockets-beans-api</name>
-  <description>This module defines the API of the beans transmitted among websocket servers and clients</description>
+  <description>This module defines the API of the beans transmitted among websocket servers and clients.</description>
   <packaging>jar</packaging>
   <version>${io.hotmoka.websockets.version}</version>
 

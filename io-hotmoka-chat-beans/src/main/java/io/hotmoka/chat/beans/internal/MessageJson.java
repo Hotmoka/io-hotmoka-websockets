@@ -31,7 +31,7 @@ public abstract class MessageJson implements JsonRepresentation<Message> {
 	/**
 	 * Used by Gson.
 	 */
-	protected MessageJson() {}
+	protected MessageJson() {} // see module-info.xml if you want to know how to avoid this constructor
 
 	/**
 	 * Creates the Json.
@@ -41,8 +41,8 @@ public abstract class MessageJson implements JsonRepresentation<Message> {
 	protected MessageJson(Message message) {
 		this.content = message.getContent();
 
-		if (message instanceof FullMessage)
-			this.from = ((FullMessage) message).getFrom();
+		if (message instanceof FullMessage fm)
+			this.from = fm.getFrom();
 	}
 
 	@Override

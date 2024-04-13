@@ -252,18 +252,21 @@ public abstract class AbstractRemoteImpl<E extends Exception> extends AbstractWe
 
 		@Override
 		public void onClose(Session session, CloseReason reason) {
-			super.onClose(session, reason);
-
 			try {
-				// we close the remote since it is bound to a service that seems to be getting closed
-				close(reason);
+				super.onClose(session, reason);
 			}
-			catch (InterruptedException e) {
-				Thread.currentThread().interrupt();
-				LOGGER.warning("remote: interrupted while closing " + getClass().getName() + ": " + e.getMessage());
-			}
-			catch (Exception e) {
-				LOGGER.warning("remote: cannot close " + getClass().getName() + ": " + e.getMessage());
+			finally {
+				try {
+					// we close the remote since it is bound to a service that seems to be getting closed
+					close(reason);
+				}
+				catch (InterruptedException e) {
+					Thread.currentThread().interrupt();
+					LOGGER.warning("remote: interrupted while closing " + getClass().getName() + ": " + e.getMessage());
+				}
+				catch (Exception e) {
+					LOGGER.warning("remote: cannot close " + getClass().getName() + ": " + e.getMessage());
+				}
 			}
 		}
 
@@ -280,7 +283,6 @@ public abstract class AbstractRemoteImpl<E extends Exception> extends AbstractWe
 			manager.close();
 		}
 		catch (InterruptedException e) {
-			Thread.currentThread().interrupt();
 			throw e;
 		}
 		catch (Exception e) {

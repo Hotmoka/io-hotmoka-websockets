@@ -50,12 +50,7 @@ public abstract class AbstractRpcMessage implements RpcMessage {
 
 	@Override
 	public boolean equals(Object other) {
-		if (other instanceof RpcMessage) {
-			var otherRPCM = (RpcMessage) other;
-			return id.equals(otherRPCM.getId()) && type.equals(otherRPCM.getType());
-		}
-		else
-			return false;
+		return other instanceof RpcMessage orm && id.equals(orm.getId()) && type.equals(orm.getType());
 	}
 
 	@Override

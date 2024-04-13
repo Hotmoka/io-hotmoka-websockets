@@ -13,7 +13,7 @@
   <name>io-hotmoka-chat-beans</name>
   <version>${io.hotmoka.chat.version}</version>
   <packaging>jar</packaging>
-  <description>This module implements the beans exchanged among chat clients and servers</description>
+  <description>This module implements the beans exchanged among chat clients and servers.</description>
 
   <dependencies>
     <dependency>

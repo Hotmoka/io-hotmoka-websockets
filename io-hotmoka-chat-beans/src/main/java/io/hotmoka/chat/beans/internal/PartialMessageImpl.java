@@ -16,6 +16,8 @@ limitations under the License.
 
 package io.hotmoka.chat.beans.internal;
 
+import java.util.Objects;
+
 import io.hotmoka.chat.beans.api.FullMessage;
 import io.hotmoka.chat.beans.api.PartialMessage;
 
@@ -23,10 +25,7 @@ public class PartialMessageImpl implements PartialMessage {
     private final String content;
 
     public PartialMessageImpl(String content) {
-    	if (content == null)
-    		throw new NullPointerException();
-
-    	this.content = content;
+    	this.content = Objects.requireNonNull(content);
     }
 
     @Override
@@ -42,13 +41,5 @@ public class PartialMessageImpl implements PartialMessage {
     @Override
     public String toString() {
     	return "PartialMessageImpl with content " + content;
-    }
-
-    public static class GsonHelper {
-        private String content;
-
-        public PartialMessageImpl toBean() {
-        	return new PartialMessageImpl(content);
-        }
     }
 }

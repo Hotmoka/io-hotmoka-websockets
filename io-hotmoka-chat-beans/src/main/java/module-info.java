@@ -24,4 +24,9 @@ module io.hotmoka.chat.beans {
 
 	requires transitive io.hotmoka.chat.beans.api;
 	requires io.hotmoka.websockets.beans;
+
+	// this would make sun.misc.Unsafe accessible, so that Gson can instantiate
+	// classes without the no-args constructor; in this example, we prefer to add
+	// a no-args constructor to the beans instead
+	//requires jdk.unsupported;
 }

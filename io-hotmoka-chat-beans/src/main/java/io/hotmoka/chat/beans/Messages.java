@@ -54,12 +54,24 @@ public interface Messages {
 	/**
 	 * The encoder of messages.
 	 */
-	static class Encoder extends MessageEncoder {}
+	static class Encoder extends MessageEncoder {
+
+		/**
+		 * Creates an encoder.
+		 */
+		public Encoder() {}
+	}
 
 	/**
 	 * The decoder of messages.
 	 */
-    static class Decoder extends MessageDecoder {}
+    static class Decoder extends MessageDecoder {
+
+    	/**
+    	 * Creates a decoder.
+    	 */
+    	public Decoder() {}
+    }
 
     /**
      * Json representation.
