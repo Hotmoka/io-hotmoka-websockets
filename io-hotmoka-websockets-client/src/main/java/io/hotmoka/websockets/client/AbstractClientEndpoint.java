@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.Objects;
+import java.util.OptionalInt;
 import java.util.concurrent.Future;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
@@ -27,6 +28,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.glassfish.tyrus.client.ClientManager;
+import org.glassfish.tyrus.client.ClientProperties;
 
 import io.hotmoka.websockets.client.api.ClientEndpoint;
 import io.hotmoka.websockets.client.api.WebSocketClient;
@@ -46,12 +48,28 @@ import jakarta.websocket.Session;
  */
 public abstract class AbstractClientEndpoint<C extends WebSocketClient> extends Endpoint implements ClientEndpoint<C> {
 
+	/**
+	 * The timeout for the connection to the server, in milliseconds.
+	 * If empty, the default timeout of Tyrus will be used.
+	 */
+	private final OptionalInt timeout;
+
 	private final static Logger LOGGER = Logger.getLogger(AbstractClientEndpoint.class.getName());
 
 	/**
-	 * Creates the endpoint.
+	 * Creates the endpoint, specifying the timeout for the connection to the server.
+	 * 
+	 * @param timeout the timeout for the connection to the server, in milliseconds
+	 */
+	protected AbstractClientEndpoint(long timeout) {
+		this.timeout = OptionalInt.of((int) timeout); // TODO: transform the timeouts from logn to int
+	}
+
+	/**
+	 * Creates the endpoint, using the default timeout for the connection to the server.
 	 */
 	protected AbstractClientEndpoint() {
+		this.timeout = OptionalInt.empty();
 	}
 
 	/**
@@ -84,7 +102,9 @@ public abstract class AbstractClientEndpoint<C extends WebSocketClient> extends 
 			.encoders(outputs)
 			.build();
 
-		return ClientManager.createClient().connectToServer(this, config, uri);
+		ClientManager client = ClientManager.createClient();
+		timeout.ifPresent(threshold -> client.getProperties().put(ClientProperties.HANDSHAKE_TIMEOUT, threshold));
+		return client.connectToServer(this, config, uri);
 	}
 
 	/**

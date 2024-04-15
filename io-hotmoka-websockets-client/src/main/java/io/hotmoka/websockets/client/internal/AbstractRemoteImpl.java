@@ -64,6 +64,12 @@ public abstract class AbstractRemoteImpl<E extends Exception> extends AbstractWe
 	private final OnCloseHandlersManager manager = CloseHandlersManagers.create();
 
 	/**
+	 * The time (in milliseconds) allowed for the connection to the server;
+	 * beyond that threshold, a timeout exception is thrown.
+	 */
+	private final long timeout;
+
+	/**
 	 * Queues of messages received from the external world.
 	 */
 	private final RPCMessageQueuesContainer queues;
@@ -93,6 +99,7 @@ public abstract class AbstractRemoteImpl<E extends Exception> extends AbstractWe
 	 *                beyond that threshold, a timeout exception is thrown
 	 */
 	protected AbstractRemoteImpl(long timeout) {
+		this.timeout = timeout;
 		this.queues = new RPCMessageQueuesContainer(timeout);
 	}
 
@@ -244,6 +251,10 @@ public abstract class AbstractRemoteImpl<E extends Exception> extends AbstractWe
 	}
 
 	protected abstract class Endpoint extends AbstractClientEndpoint<AbstractRemoteImpl<E>> {
+
+		protected Endpoint() {
+			super(timeout);
+		}
 
 		@Override
 		public void onOpen(Session session, EndpointConfig config) {
