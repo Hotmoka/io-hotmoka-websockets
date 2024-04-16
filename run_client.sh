@@ -1,1 +1,0 @@
-java --module-path ./io-hotmoka-chat-client/modules/explicit:./io-hotmoka-chat-client/modules/automatic --add-modules org.glassfish.tyrus.container.grizzly.client --module io.hotmoka.chat.client/io.hotmoka.chat.client.Main "$@"

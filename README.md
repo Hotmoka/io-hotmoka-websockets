@@ -31,12 +31,12 @@ Package the jars, run the server in a shell and the client in another shell:
 
 ```shell
 $ mvn clean install
-$ ./run_server.sh
+$ ./io-hotmoka-chat-server/run.sh
 ```
 Then in another shell:
 
 ```shell
-$ ./run_client.sh Textor
+$ ./io-hotmoka-chat-client/run.sh Textor
 ```
 
 (replace `Textor` with your name for a more personal feeling.)
