@@ -61,8 +61,8 @@ public abstract class AbstractClientEndpoint<C extends WebSocketClient> extends 
 	 * 
 	 * @param timeout the timeout for the connection to the server, in milliseconds
 	 */
-	protected AbstractClientEndpoint(long timeout) {
-		this.timeout = OptionalInt.of((int) timeout); // TODO: transform the timeouts from logn to int
+	protected AbstractClientEndpoint(int timeout) {
+		this.timeout = OptionalInt.of(timeout);
 	}
 
 	/**

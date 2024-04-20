@@ -17,7 +17,6 @@ limitations under the License.
 package io.hotmoka.websockets.beans;
 
 import java.util.Objects;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.google.gson.Gson;
@@ -80,7 +79,7 @@ public class MappedDecoder<T, JSON extends JsonRepresentation<T>> implements Dec
 			return ((AbstractRpcMessageJsonRepresentation<?>) gson.fromJson(JsonParser.parseString(s), clazz)).isTypeConsistent();
 		}
 		catch (Exception e) {
-			LOGGER.log(Level.SEVERE, "could not decode a " + clazz.getName() + ": " + e.getMessage());
+			LOGGER.warning("could not decode a " + clazz.getName() + ": " + e.getMessage());
 		}
 
 		return false;
@@ -92,7 +91,7 @@ public class MappedDecoder<T, JSON extends JsonRepresentation<T>> implements Dec
 			return gson.fromJson(JsonParser.parseString(s), clazz).unmap();
 		}
 		catch (Exception e) {
-			LOGGER.log(Level.SEVERE, "could not decode a " + clazz.getName() + ": " + e.getMessage());
+			LOGGER.warning("could not decode a " + clazz.getName() + ": " + e.getMessage());
 			throw new DecodeException(s, "Could not decode a " + clazz.getName(), e);
 		}
 	}

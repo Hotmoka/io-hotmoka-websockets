@@ -67,7 +67,7 @@ public abstract class AbstractRemoteImpl<E extends Exception> extends AbstractWe
 	 * The time (in milliseconds) allowed for the connection to the server;
 	 * beyond that threshold, a timeout exception is thrown.
 	 */
-	private final long timeout;
+	private final int timeout;
 
 	/**
 	 * Queues of messages received from the external world.
@@ -98,7 +98,7 @@ public abstract class AbstractRemoteImpl<E extends Exception> extends AbstractWe
 	 * @param timeout the time (in milliseconds) allowed for a call to the network service;
 	 *                beyond that threshold, a timeout exception is thrown
 	 */
-	protected AbstractRemoteImpl(long timeout) {
+	protected AbstractRemoteImpl(int timeout) {
 		this.timeout = timeout;
 		this.queues = new RPCMessageQueuesContainer(timeout);
 	}

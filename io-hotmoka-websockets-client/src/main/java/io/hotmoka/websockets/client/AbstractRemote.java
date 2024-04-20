@@ -35,7 +35,7 @@ public abstract class AbstractRemote<E extends Exception> extends AbstractRemote
 	 * @param timeout the time (in milliseconds) allowed for a call to the network service;
 	 *                beyond that threshold, a timeout exception is thrown
 	 */
-	protected AbstractRemote(long timeout) {
+	protected AbstractRemote(int timeout) {
 		super(timeout);
 	}
 

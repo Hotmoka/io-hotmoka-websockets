@@ -16,13 +16,13 @@ limitations under the License.
 
 package io.hotmoka.websockets.client.internal;
 
+import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.logging.Level;
@@ -39,7 +39,6 @@ import io.hotmoka.websockets.beans.api.RpcMessage;
 @ThreadSafe
 class RPCMessageQueuesContainer {
 	private final long timeout;
-	private final AtomicInteger nextId = new AtomicInteger();
 	private final ConcurrentMap<String, BlockingQueue<RpcMessage>> queues = new ConcurrentHashMap<>();
 
 	private final static Logger LOGGER = Logger.getLogger(RPCMessageQueuesContainer.class.getName());
@@ -60,7 +59,7 @@ class RPCMessageQueuesContainer {
 	 * @return the identifier
 	 */
 	final String nextId() {
-		String id = String.valueOf(nextId.getAndIncrement());
+		String id = UUID.randomUUID().toString();
 		queues.put(id, new ArrayBlockingQueue<>(10));
 		return id;
 	}
