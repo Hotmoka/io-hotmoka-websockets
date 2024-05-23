@@ -71,7 +71,7 @@ public abstract class AbstractRpcMessage implements RpcMessage {
 	/**
 	 * Determines if the type of this message is the expected one.
 	 * 
-	 * @return true if an donly if that condition holds
+	 * @return true if and only if that condition holds
 	 */
 	boolean isTypeConsistent() {
 		return Objects.equals(getExpectedType(), getType());

@@ -55,11 +55,6 @@ public class ChatServerImpl extends AbstractWebSocketServer implements ChatServe
     	startContainer("/websockets", 8025, ChatServerEndpoint.config(this));
     }
 
-    @Override
-    public void close() {
-    	stopContainer();
-    }
-
     private String getUsername(String sessionId) {
     	return usernames.get(sessionId);
     }

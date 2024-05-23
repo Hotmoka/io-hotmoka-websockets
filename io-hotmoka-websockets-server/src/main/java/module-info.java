@@ -21,6 +21,7 @@ module io.hotmoka.websockets.server {
 	exports io.hotmoka.websockets.server;
 
 	requires transitive io.hotmoka.websockets.server.api;
+	requires io.hotmoka.websockets.beans.api;
 	requires transitive jakarta.websocket;
 	requires org.glassfish.tyrus.spi;
 	requires org.glassfish.tyrus.core;

@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.glassfish.tyrus.spi.ServerContainer;
 import org.glassfish.tyrus.spi.ServerContainerFactory;
@@ -35,6 +36,11 @@ import jakarta.websocket.server.ServerEndpointConfig;
  */
 public abstract class AbstractWebSocketServer implements WebSocketServer {
 	private final ServerContainer container;
+
+	/**
+	 * True if and only if this service has been closed already.
+	 */
+	private final AtomicBoolean isClosed = new AtomicBoolean();
 
 	/**
 	 * Deploys a new websocket server.
@@ -62,12 +68,22 @@ public abstract class AbstractWebSocketServer implements WebSocketServer {
 		container.start(path, port);
 	}
 
-	/**
-	 * Stops the container. This is typically called when closing the server.
-	 */
-	protected void stopContainer() {
-		container.stop();
+	@Override
+	public final void close() {
+		if (!isClosed.getAndSet(true)) {
+			try {
+				container.stop();
+			}
+			finally {
+				closeResources();
+			}
+		}
 	}
+
+	/**
+	 * Called once, only the first one that {@link #close()} is called.
+	 */
+	protected void closeResources() {}
 
 	/**
 	 * Sends the given object, synchronously, with the given session.
