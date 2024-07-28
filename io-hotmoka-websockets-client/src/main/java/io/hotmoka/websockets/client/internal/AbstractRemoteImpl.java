@@ -313,6 +313,9 @@ public abstract class AbstractRemoteImpl<E extends Exception> extends AbstractWe
 				LOGGER.warning("remote: cannot close session: " + e.getMessage());
 				throw mkException(e);
 			}
+			finally {
+				closeSessions(sessions, pos + 1);
+			}
 		}
 	}
 }
