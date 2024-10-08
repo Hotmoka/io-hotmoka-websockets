@@ -27,7 +27,8 @@ public interface JsonRepresentation<T> {
 	 * Supplies the represented value.
 	 * 
 	 * @return the represented value
-	 * @throws Exception if the represented value cannot be supplied
+	 * @throws InconsistentJsonException if the Json representation is inconsistent
+	 * @throws Exception if the represented value cannot be supplied for a limit of the system
 	 */
-	T unmap() throws Exception;
+	T unmap() throws InconsistentJsonException, Exception;
 }
