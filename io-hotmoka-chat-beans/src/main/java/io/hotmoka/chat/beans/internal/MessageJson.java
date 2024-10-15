@@ -24,7 +24,7 @@ import io.hotmoka.websockets.beans.api.JsonRepresentation;
 /**
  * The JSON representation of a {@link Message}.
  */
-public abstract class MessageJson implements JsonRepresentation<Message> {
+public abstract class MessageJson implements JsonRepresentation<Message, MessageDecoder> {
 	private String from;
 	private String content;
 
@@ -46,7 +46,7 @@ public abstract class MessageJson implements JsonRepresentation<Message> {
 	}
 
 	@Override
-	public Message unmap() {
+	public Message unmap(MessageDecoder decoder) {
 		return from == null ? Messages.partial(content) : Messages.full(from, content);
 	}
 }

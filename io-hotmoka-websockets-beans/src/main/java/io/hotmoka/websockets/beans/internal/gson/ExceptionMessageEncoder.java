@@ -1,5 +1,5 @@
 /*
-Copyright 2023 Fausto Spoto
+Copyright 2024 Fausto Spoto
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import io.hotmoka.websockets.beans.api.ExceptionMessage;
 /**
  * An encoder of {@code ExceptionResultMessage}.
  */
-public class ExceptionMessageEncoder extends MappedEncoder<ExceptionMessage, ExceptionMessages.Json> {
+public class ExceptionMessageEncoder extends MappedEncoder<ExceptionMessage, ExceptionMessageDecoder, ExceptionMessages.Json> {
 
 	public ExceptionMessageEncoder() {
 		super(ExceptionMessages.Json::new);

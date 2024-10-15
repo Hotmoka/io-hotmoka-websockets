@@ -23,9 +23,14 @@ import io.hotmoka.websockets.beans.MappedDecoder;
 /**
  * A decoder for {@link io.hotmoka.chat.beans.api.Message}.
  */
-public class MessageDecoder extends MappedDecoder<Message, Messages.Json> {
+public class MessageDecoder extends MappedDecoder<Message, MessageDecoder, Messages.Json> {
 
 	public MessageDecoder() {
 		super(Messages.Json.class);
+	}
+
+	@Override
+	protected MessageDecoder getThis() {
+		return this;
 	}
 }

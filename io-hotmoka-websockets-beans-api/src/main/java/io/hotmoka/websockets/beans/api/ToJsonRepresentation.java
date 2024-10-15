@@ -20,9 +20,10 @@ package io.hotmoka.websockets.beans.api;
  * A function that transforms a value into its JSON representation.
  *
  * @param <T> the type of the value
- * @param <JSON> the type of the JSON representation ofthe value
+ * @param <D> the type of the decoder of the representation
+ * @param <JSON> the type of the JSON representation of the value
  */
-public interface ToJsonRepresentation<T, JSON extends JsonRepresentation<T>> {
+public interface ToJsonRepresentation<T, D extends DecoderText<T>, JSON extends JsonRepresentation<T, D>> {
 
 	/**
 	 * Maps a value into its JSON representation.

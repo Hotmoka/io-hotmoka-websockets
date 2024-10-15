@@ -1,5 +1,5 @@
 /*
-Copyright 2023 Fausto Spoto
+Copyright 2024 Fausto Spoto
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -20,15 +20,17 @@ package io.hotmoka.websockets.beans.api;
  * A JSON representation of a value.
  *
  * @param <T> the type of the represented value
+ * @param <D> the type of the decoder to use for this representation
  */
-public interface JsonRepresentation<T> {
+public interface JsonRepresentation<T, D extends DecoderText<T>> {
 
 	/**
 	 * Supplies the represented value.
 	 * 
+	 * @param decoder the decoder to use
 	 * @return the represented value
 	 * @throws InconsistentJsonException if the Json representation is inconsistent
 	 * @throws Exception if the represented value cannot be supplied for a limit of the system
 	 */
-	T unmap() throws InconsistentJsonException, Exception;
+	T unmap(D decoder) throws InconsistentJsonException, Exception;
 }

@@ -1,5 +1,5 @@
 /*
-Copyright 2023 Fausto Spoto
+Copyright 2024 Fausto Spoto
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -23,9 +23,14 @@ import io.hotmoka.websockets.beans.api.ExceptionMessage;
 /**
  * A decoder for {@link ExceptionMessage}.
  */
-public class ExceptionMessageDecoder extends MappedDecoder<ExceptionMessage, ExceptionMessages.Json> {
+public class ExceptionMessageDecoder extends MappedDecoder<ExceptionMessage, ExceptionMessageDecoder, ExceptionMessages.Json> {
 
 	public ExceptionMessageDecoder() {
 		super(ExceptionMessages.Json.class);
+	}
+
+	@Override
+	protected ExceptionMessageDecoder getThis() {
+		return this;
 	}
 }

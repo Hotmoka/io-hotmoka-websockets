@@ -18,6 +18,7 @@ package io.hotmoka.websockets.beans;
 
 import java.util.Objects;
 
+import io.hotmoka.websockets.beans.api.DecoderText;
 import io.hotmoka.websockets.beans.api.JsonRepresentation;
 import io.hotmoka.websockets.beans.api.RpcMessage;
 
@@ -27,8 +28,9 @@ import io.hotmoka.websockets.beans.api.RpcMessage;
  * to its result message.
  *
  * @param <M> the type of the represented RPC message
+ * @param <D> the type of the decoder to use for this representation
  */
-public abstract class AbstractRpcMessageJsonRepresentation<M extends RpcMessage> implements JsonRepresentation<M> {
+public abstract class AbstractRpcMessageJsonRepresentation<M extends RpcMessage, D extends DecoderText<M>> implements JsonRepresentation<M, D> {
 	private String type;
 	private String id;
 

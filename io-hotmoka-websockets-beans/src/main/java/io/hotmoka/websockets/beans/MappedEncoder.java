@@ -35,7 +35,7 @@ import jakarta.websocket.EncodeException;
  * @param <T> the type of the object
  * @param <JSON> the type of the mapped object
  */
-public class MappedEncoder<T, JSON extends JsonRepresentation<T>> implements EncoderText<T> {
+public class MappedEncoder<T, D extends MappedDecoder<T, D, JSON>, JSON extends JsonRepresentation<T, D>> implements EncoderText<T> {
 
 	/**
 	 * The encoding utility.
@@ -47,14 +47,14 @@ public class MappedEncoder<T, JSON extends JsonRepresentation<T>> implements Enc
 	/**
 	 * The mapper from the object to their representation, that is actually encoded in JSON.
 	 */
-	private final ToJsonRepresentation<T, JSON> mapper;
+	private final ToJsonRepresentation<T, D, JSON> mapper;
 
 	/**
 	 * Creates an encoder for the given type mapper.
 	 * 
 	 * @param mapper the mapper from the object to their representation, that is actually encoded in Json
 	 */
-	public MappedEncoder(ToJsonRepresentation<T, JSON> mapper) {
+	public MappedEncoder(ToJsonRepresentation<T, D, JSON> mapper) {
 		this.mapper = Objects.requireNonNull(mapper, "mapper cannot be null");
 	}
 

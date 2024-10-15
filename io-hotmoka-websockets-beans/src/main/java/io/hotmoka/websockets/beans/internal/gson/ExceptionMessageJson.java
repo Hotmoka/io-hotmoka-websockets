@@ -1,5 +1,5 @@
 /*
-Copyright 2023 Fausto Spoto
+Copyright 2024 Fausto Spoto
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import io.hotmoka.websockets.beans.api.ExceptionMessage;
 /**
  * The JSON representation of an {@link ExceptionMessage}.
  */
-public abstract class ExceptionMessageJson extends AbstractRpcMessageJsonRepresentation<ExceptionMessage> {
+public abstract class ExceptionMessageJson extends AbstractRpcMessageJsonRepresentation<ExceptionMessage, ExceptionMessageDecoder> {
 	private final String clazz;
 	private final String message;
 
@@ -36,7 +36,7 @@ public abstract class ExceptionMessageJson extends AbstractRpcMessageJsonReprese
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public ExceptionMessage unmap() throws ClassNotFoundException, ClassCastException {
+	public ExceptionMessage unmap(ExceptionMessageDecoder decoder) throws ClassNotFoundException, ClassCastException {
 		var exceptionClass = Class.forName(clazz);
 		if (!Exception.class.isAssignableFrom(exceptionClass))
 			throw new ClassCastException(clazz + " is not an Exception");

@@ -186,7 +186,7 @@ public abstract class AbstractServerEndpoint<S extends WebSocketServer> extends 
             T result = super.getEndpointInstance(endpointClass);
             if (result instanceof AbstractServerEndpoint<?>)
             	// the following cast might fail if the programmer registers in a server
-            	// some AbstractServerEndpoint for the another server, of another class
+            	// some AbstractServerEndpoint for another server, of another class
             	((AbstractServerEndpoint<S>) result).setServer(server); // we inject the server
 
             return result;

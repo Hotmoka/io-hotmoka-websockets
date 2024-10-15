@@ -23,7 +23,7 @@ import io.hotmoka.websockets.beans.MappedEncoder;
 /**
  * An encoder of messages.
  */
-public class MessageEncoder extends MappedEncoder<Message, Messages.Json> {
+public class MessageEncoder extends MappedEncoder<Message, MessageDecoder, Messages.Json> {
 
 	/**
 	 * Creates the encoder.

@@ -34,7 +34,7 @@ import jakarta.websocket.DecodeException;
  * @param <T> the type of the object
  * @param <JSON> the type of the mapped object
  */
-public class MappedDecoder<T, JSON extends JsonRepresentation<T>> implements DecoderText<T> {
+public abstract class MappedDecoder<T, D extends MappedDecoder<T, D, JSON>, JSON extends JsonRepresentation<T, D>> implements DecoderText<T> {
 
 	/**
 	 * The type of the objects decoded by the decoder.
@@ -53,6 +53,9 @@ public class MappedDecoder<T, JSON extends JsonRepresentation<T>> implements Dec
 	public MappedDecoder(Class<JSON> clazz) {
 		this.clazz = Objects.requireNonNull(clazz, "clazz cannot be null");
 	}
+
+	
+	protected abstract D getThis();
 
 	/**
 	 * Determines if the given string is worth trying to decode with this decoder.
@@ -76,7 +79,7 @@ public class MappedDecoder<T, JSON extends JsonRepresentation<T>> implements Dec
 	 */
 	private boolean willDecodeRpcMessage(String s) {
 		try {
-			return ((AbstractRpcMessageJsonRepresentation<?>) gson.fromJson(JsonParser.parseString(s), clazz)).isTypeConsistent();
+			return ((AbstractRpcMessageJsonRepresentation<?,?>) gson.fromJson(JsonParser.parseString(s), clazz)).isTypeConsistent();
 		}
 		catch (Exception e) {
 			LOGGER.warning("could not decode a " + clazz.getName() + ": " + e.getMessage());
@@ -88,7 +91,7 @@ public class MappedDecoder<T, JSON extends JsonRepresentation<T>> implements Dec
 	@Override
 	public final T decode(String s) throws DecodeException {
 		try {
-			return gson.fromJson(JsonParser.parseString(s), clazz).unmap();
+			return gson.fromJson(JsonParser.parseString(s), clazz).unmap(getThis());
 		}
 		catch (Exception e) {
 			LOGGER.warning("could not decode a " + clazz.getName() + ": " + e.getMessage());
