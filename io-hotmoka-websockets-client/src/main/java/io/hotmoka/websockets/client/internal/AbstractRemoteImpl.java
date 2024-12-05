@@ -29,7 +29,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import io.hotmoka.annotations.ThreadSafe;
-import io.hotmoka.closeables.CloseHandlersManagers;
+import io.hotmoka.closeables.OnCloseHandlersManagers;
 import io.hotmoka.closeables.api.OnCloseHandler;
 import io.hotmoka.closeables.api.OnCloseHandlersManager;
 import io.hotmoka.websockets.beans.api.ExceptionMessage;
@@ -61,7 +61,7 @@ public abstract class AbstractRemoteImpl<E extends Exception> extends AbstractWe
 	/**
 	 * The manager of the close handlers.
 	 */
-	private final OnCloseHandlersManager manager = CloseHandlersManagers.create();
+	private final OnCloseHandlersManager manager = OnCloseHandlersManagers.create();
 
 	/**
 	 * The time (in milliseconds) allowed for the connection to the server;
@@ -104,7 +104,7 @@ public abstract class AbstractRemoteImpl<E extends Exception> extends AbstractWe
 	}
 
 	@Override
-	public final void close() throws E, InterruptedException {
+	public final void close() throws E {
 		close(new CloseReason(CloseCodes.NORMAL_CLOSURE, "Closed normally."));
 	}
 
@@ -130,27 +130,16 @@ public abstract class AbstractRemoteImpl<E extends Exception> extends AbstractWe
 	 * but only the first time the remote gets closed.
 	 * 
 	 * @param reason the reason why the remote is getting closed
-	 * @throws InterruptedException if the closure operation gets interrupted
 	 * @throws E if closure fails with this exception
 	 */
-	protected void closeResources(CloseReason reason) throws E, InterruptedException {
+	protected void closeResources(CloseReason reason) throws E {
+		closeReason = reason.getReasonPhrase();
+
 		try {
-			closeReason = reason.getReasonPhrase();
-			super.close();
-		}
-		catch (InterruptedException e) {
-			throw e;
-		}
-		catch (Exception e) {
-			throw mkException(e);
+			closeSessionsAndCallOnCloseHandlers();
 		}
 		finally {
-			try {
-				callOnCloseHandlersAndCloseSessions();
-			}
-			finally {
-				latch.countDown();
-			}
+			latch.countDown();
 		}
 	}
 
@@ -271,10 +260,6 @@ public abstract class AbstractRemoteImpl<E extends Exception> extends AbstractWe
 					// we close the remote since it is bound to a service that seems to be getting closed
 					close(reason);
 				}
-				catch (InterruptedException e) {
-					Thread.currentThread().interrupt();
-					LOGGER.warning("remote: interrupted while closing " + getClass().getName() + ": " + e.getMessage());
-				}
 				catch (Exception e) {
 					LOGGER.warning("remote: cannot close " + getClass().getName() + ": " + e.getMessage());
 				}
@@ -284,38 +269,31 @@ public abstract class AbstractRemoteImpl<E extends Exception> extends AbstractWe
 		protected abstract Session deployAt(URI uri) throws DeploymentException, IOException;
 	}
 
-	private void close(CloseReason reason) throws E, InterruptedException {
+	private void close(CloseReason reason) throws E {
 		if (!isClosed.getAndSet(true))
 			closeResources(reason);
 	}
 
-	private void callOnCloseHandlersAndCloseSessions() throws E, InterruptedException {
+	private void closeSessionsAndCallOnCloseHandlers() throws E {
 		try {
-			manager.close();
-		}
-		catch (InterruptedException e) {
-			throw e;
-		}
-		catch (Exception e) {
-			throw mkException(e);
+			E exception = null;
+
+			for (var session: sessions.values()) {
+				try {
+					session.close();
+				}
+				catch (IOException e) {
+					LOGGER.warning("remote: cannot close session: " + e.getMessage());
+					if (exception != null)
+						exception = mkException(e);
+				}
+			}
+
+			if (exception != null)
+				throw exception;
 		}
 		finally {
-			closeSessions(sessions.values().toArray(Session[]::new), 0);
-		}
-	}
-
-	private void closeSessions(Session[] sessions, int pos) throws E {
-		if (pos < sessions.length) {
-			try {
-				sessions[pos].close();
-			}
-			catch (IOException e) {
-				LOGGER.warning("remote: cannot close session: " + e.getMessage());
-				throw mkException(e);
-			}
-			finally {
-				closeSessions(sessions, pos + 1);
-			}
+			manager.callCloseHandlers();
 		}
 	}
 }

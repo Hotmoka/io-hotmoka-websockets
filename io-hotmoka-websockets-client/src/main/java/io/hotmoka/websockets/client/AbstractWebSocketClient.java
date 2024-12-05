@@ -35,10 +35,6 @@ public abstract class AbstractWebSocketClient implements WebSocketClient {
 	protected AbstractWebSocketClient() {
 	}
 
-	@Override
-	public void close() throws Exception {
-	}
-
 	/**
 	 * Sends the given object, synchronously, with the given session.
 	 * 

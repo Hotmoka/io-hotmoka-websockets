@@ -16,7 +16,7 @@ limitations under the License.
 
 package io.hotmoka.websockets.client.api;
 
-import io.hotmoka.closeables.api.OnCloseHandlersManager;
+import io.hotmoka.closeables.api.OnCloseHandlersContainer;
 
 /**
  * A remote object that presents a programmatic interface
@@ -24,10 +24,7 @@ import io.hotmoka.closeables.api.OnCloseHandlersManager;
  * 
  * @param <E> the type of the exceptions thrown if the remote behaves incorrectly
  */
-public interface Remote<E extends Exception> extends AutoCloseable, OnCloseHandlersManager {
-
-	@Override
-	void close() throws E, InterruptedException;
+public interface Remote<E extends Exception> extends AutoCloseable, OnCloseHandlersContainer {
 
 	/**
 	 * Waits until this remote gets closed.
