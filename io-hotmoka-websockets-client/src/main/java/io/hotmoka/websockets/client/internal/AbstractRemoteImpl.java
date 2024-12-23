@@ -21,6 +21,7 @@ import java.net.URI;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -39,10 +40,10 @@ import io.hotmoka.websockets.client.AbstractRemote;
 import io.hotmoka.websockets.client.AbstractWebSocketClient;
 import io.hotmoka.websockets.client.api.Remote;
 import jakarta.websocket.CloseReason;
+import jakarta.websocket.CloseReason.CloseCodes;
 import jakarta.websocket.DeploymentException;
 import jakarta.websocket.EndpointConfig;
 import jakarta.websocket.Session;
-import jakarta.websocket.CloseReason.CloseCodes;
 
 /**
  * A partial implementation of a remote object that presents a programmatic interface
@@ -237,6 +238,124 @@ public abstract class AbstractRemoteImpl<E extends Exception> extends AbstractWe
 	 */
 	protected final <T> T waitForResult(String id, Function<RpcMessage, T> processSuccess, Predicate<ExceptionMessage> processException) throws Exception {
 		return queues.waitForResult(id, processSuccess, processException);
+	}
+
+	/**
+	 * Waits until a reply arrives for the message with the given identifier.
+	 * 
+	 * @param <T> the type of the replied value
+	 * @param <E1> the exception type that could be received
+	 * @param id the identifier
+	 * @param processSuccess a function that defines how to generate the replied value from the RPC message
+	 * @param exception1 the class tag of {@code E1}
+	 * @return the replied value
+	 * @throws E1 if the received message is an exception of this type
+	 * @throws InterruptedException if the current thread gets interrupted
+	 * @throws TimeoutException if no message arrives before timeout
+	 */
+	protected final <T, E1 extends Exception> T waitForResult(String id, Function<RpcMessage, T> processSuccess, Class<E1> exception1) throws InterruptedException, TimeoutException, E1 {
+		return queues.waitForResult(id, processSuccess, exception1);
+	}
+
+	/**
+	 * Waits until a reply arrives for the message with the given identifier.
+	 * 
+	 * @param <T> the type of the replied value
+	 * @param <E1> a first exception type that could be received
+	 * @param <E2> a second exception type that could be received
+	 * @param id the identifier
+	 * @param processSuccess a function that defines how to generate the replied value from the RPC message
+	 * @param exception1 the class tag of {@code E1}
+	 * @param exception2 the class tag of {@code E2}
+	 * @return the replied value
+	 * @throws E1 if the received message is an exception of this type
+	 * @throws E2 if the received message is an exception of this type
+	 * @throws InterruptedException if the current thread gets interrupted
+	 * @throws TimeoutException if no message arrives before timeout
+	 */
+	protected final <T, E1 extends Exception, E2 extends Exception> T waitForResult(String id, Function<RpcMessage, T> processSuccess, Class<E1> exception1, Class<E2> exception2) throws InterruptedException, TimeoutException, E1, E2 {
+		return queues.waitForResult(id, processSuccess, exception1, exception2);
+	}
+
+	/**
+	 * Waits until a reply arrives for the message with the given identifier.
+	 * 
+	 * @param <T> the type of the replied value
+	 * @param <M> the type of the expected message
+	 * @param <E1> a first exception type that could be received
+	 * @param <E2> a second exception type that could be received
+	 * @param <E3> a third exception type that could be received
+	 * @param id the identifier
+	 * @param resultSupplier a supplier that defines how to generate the replied value from the RPC message
+	 * @param exception1 the class tag of {@code E1}
+	 * @param exception2 the class tag of {@code E2}
+	 * @param exception3 the class tag of {@code E3}
+	 * @return the replied value
+	 * @throws E1 if the received message is an exception of this type
+	 * @throws E2 if the received message is an exception of this type
+	 * @throws E3 if the received message is an exception of this type
+	 * @throws InterruptedException if the current thread gets interrupted
+	 * @throws TimeoutException if no message arrives before timeout
+	 */
+	protected final <T, M extends Supplier<T>, E1 extends Exception, E2 extends Exception, E3 extends Exception> T waitForResult(String id, Class<M> resultSupplier, Class<E1> exception1, Class<E2> exception2, Class<E3> exception3) throws InterruptedException, TimeoutException, E1, E2, E3 {
+		return queues.waitForResult(id, resultSupplier, exception1, exception2, exception3);
+	}
+
+	/**
+	 * Waits until a reply arrives for the message with the given identifier.
+	 * 
+	 * @param <T> the type of the replied value
+	 * @param <M> the type of the expected message
+	 * @param <E1> a first exception type that could be received
+	 * @param <E2> a second exception type that could be received
+	 * @param <E3> a third exception type that could be received
+	 * @param <E4> a fourth exception type that could be received
+	 * @param id the identifier
+	 * @param resultSupplier a supplier that defines how to generate the replied value from the RPC message
+	 * @param exception1 the class tag of {@code E1}
+	 * @param exception2 the class tag of {@code E2}
+	 * @param exception3 the class tag of {@code E3}
+	 * @param exception4 the class tag of {@code E4}
+	 * @return the replied value
+	 * @throws E1 if the received message is an exception of this type
+	 * @throws E2 if the received message is an exception of this type
+	 * @throws E3 if the received message is an exception of this type
+	 * @throws E4 if the received message is an exception of this type
+	 * @throws InterruptedException if the current thread gets interrupted
+	 * @throws TimeoutException if no message arrives before timeout
+	 */
+	protected final <T, M extends Supplier<T>, E1 extends Exception, E2 extends Exception, E3 extends Exception, E4 extends Exception> T waitForResult(String id, Class<M> resultSupplier, Class<E1> exception1, Class<E2> exception2, Class<E3> exception3, Class<E4> exception4) throws InterruptedException, TimeoutException, E1, E2, E3, E4 {
+		return queues.waitForResult(id, resultSupplier, exception1, exception2, exception3, exception4);
+	}
+
+	/**
+	 * Waits until a reply arrives for the message with the given identifier.
+	 * 
+	 * @param <T> the type of the replied value
+	 * @param <E1> a first exception type that could be received
+	 * @param <E2> a second exception type that could be received
+	 * @param <E3> a third exception type that could be received
+	 * @param <E4> a fourth exception type that could be received
+	 * @param <E5> a fifth exception type that could be received
+	 * @param id the identifier
+	 * @param processSuccess a function that defines how to generate the replied value from the RPC message
+	 * @param exception1 the class tag of {@code E1}
+	 * @param exception2 the class tag of {@code E2}
+	 * @param exception3 the class tag of {@code E3}
+	 * @param exception4 the class tag of {@code E4}
+	 * @param exception5 the class tag of {@code E5}
+	 * @return the replied value
+	 * @throws E1 if the received message is an exception of this type
+	 * @throws E2 if the received message is an exception of this type
+	 * @throws E3 if the received message is an exception of this type
+	 * @throws E4 if the received message is an exception of this type
+	 * @throws E5 if the received message is an exception of this type
+	 * @throws InterruptedException if the current thread gets interrupted
+	 * @throws TimeoutException if no message arrives before timeout
+	 */
+	protected final <T, E1 extends Exception, E2 extends Exception, E3 extends Exception, E4 extends Exception, E5 extends Exception> T waitForResult
+			(String id, Function<RpcMessage, T> processSuccess, Class<E1> exception1, Class<E2> exception2, Class<E3> exception3, Class<E4> exception4, Class<E5> exception5) throws InterruptedException, TimeoutException, E1, E2, E3, E4, E5 {
+		return queues.waitForResult(id, processSuccess, exception1, exception2, exception3, exception4, exception5);
 	}
 
 	protected abstract class Endpoint extends AbstractClientEndpoint<AbstractRemoteImpl<E>> {
