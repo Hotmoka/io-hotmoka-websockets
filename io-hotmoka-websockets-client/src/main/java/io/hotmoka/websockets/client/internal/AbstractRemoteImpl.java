@@ -23,8 +23,6 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -225,20 +223,6 @@ public abstract class AbstractRemoteImpl<E extends Exception> extends AbstractWe
 	 */
 	protected final String nextId() {
 		return queues.nextId();
-	}
-
-	/**
-	 * Waits until a reply arrives for the message with the given identifier.
-	 * 
-	 * @param <T> the type of the replied value
-	 * @param id the identifier
-	 * @param processSuccess a function that defines how to generate the replied value from the RPC message
-	 * @param processException a predicate that determines if an exception message is accepted for the RPC message
-	 * @return the replied value
-	 * @throws Exception if the execution of the message led into this exception
-	 */
-	protected final <T> T waitForResult(String id, Function<RpcMessage, T> processSuccess, Predicate<ExceptionMessage> processException) throws Exception {
-		return queues.waitForResult(id, processSuccess, processException);
 	}
 
 	/**
