@@ -16,6 +16,8 @@ limitations under the License.
 
 package io.hotmoka.websockets.beans;
 
+import java.util.Optional;
+
 import io.hotmoka.websockets.beans.api.ExceptionMessage;
 import io.hotmoka.websockets.beans.internal.ExceptionMessageImpl;
 import io.hotmoka.websockets.beans.internal.gson.ExceptionMessageDecoder;
@@ -33,11 +35,11 @@ public final class ExceptionMessages {
 	 * Yields an {@link ExceptionMessage}.
 	 * 
 	 * @param clazz the class of the exception
-	 * @param message the message of the exception
+	 * @param message the message of the exception, if any
 	 * @param id the identifier of the message
 	 * @return the message
 	 */
-	public static ExceptionMessage of(Class<? extends Exception> clazz, String message, String id) {
+	public static ExceptionMessage of(Class<? extends Exception> clazz, Optional<String> message, String id) {
 		return new ExceptionMessageImpl(clazz, message, id);
 	}
 
@@ -49,7 +51,7 @@ public final class ExceptionMessages {
 	 * @return the message
 	 */
 	public static ExceptionMessage of(Exception exception, String id) {
-		return new ExceptionMessageImpl(exception.getClass(), exception.getMessage(), id);
+		return new ExceptionMessageImpl(exception.getClass(), Optional.ofNullable(exception.getMessage()), id);
 	}
 
 	/**

@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.Objects;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Function;
 
 import org.glassfish.tyrus.spi.ServerContainer;
 import org.glassfish.tyrus.spi.ServerContainerFactory;
@@ -44,10 +45,8 @@ public abstract class AbstractWebSocketServer implements WebSocketServer {
 
 	/**
 	 * Deploys a new websocket server.
-	 * 
-	 * @throws DeploymentException if the websocket server could not be deployed
 	 */
-	protected AbstractWebSocketServer() throws DeploymentException {
+	protected AbstractWebSocketServer() {
 		container = ServerContainerFactory.createServerContainer(new HashMap<>());
 	}
 
@@ -106,6 +105,28 @@ public abstract class AbstractWebSocketServer implements WebSocketServer {
 	}
 
 	/**
+	 * Sends the given object, synchronously, with the given session.
+	 * 
+	 * @param <E> the class of exception to throw if the message cannot be sent
+	 * @param session the session
+	 * @param object the object to send
+	 * @param exceptionSupplier a supplier of the exception to throw if the message cannot be sent
+	 * @throws EncodeException if there was a problem encoding the message object
+	 * @throws E if the message cannot be sent
+	 */
+	protected <E extends Exception> void sendObject(Session session, Object object, Function<String, E> exceptionSupplier) throws E, EncodeException {
+		Objects.requireNonNull(session);
+		Objects.requireNonNull(object);
+
+		try {
+			session.getBasicRemote().sendObject(object);
+		}
+		catch (RuntimeException | IOException e) {
+			throw exceptionSupplier.apply(e.getMessage());
+		}
+	}
+
+	/**
 	 * Sends the given object, asynchronously, with the given session.
 	 * 
 	 * @param session the session
@@ -122,6 +143,27 @@ public abstract class AbstractWebSocketServer implements WebSocketServer {
 		}
 		catch (RuntimeException e) {
 			throw new IOException(e.getMessage());
+		}
+	}
+
+	/**
+	 * Sends the given object, asynchronously, with the given session.
+	 * 
+	 * @param <E> the class of exception to throw if the message cannot be sent
+	 * @param session the session
+	 * @param object the object to send
+	 * @param exceptionSupplier a supplier of the exception to throw if the message cannot be sent
+	 * @throws E if the message cannot be sent
+	 */
+	protected <E extends Exception> Future<Void> sendObjectAsync(Session session, Object object, Function<String, E> exceptionSupplier) throws E {
+		Objects.requireNonNull(session);
+		Objects.requireNonNull(object);
+
+		try {
+			return session.getAsyncRemote().sendObject(object);
+		}
+		catch (RuntimeException e) {
+			throw exceptionSupplier.apply(e.getMessage());
 		}
 	}
 }

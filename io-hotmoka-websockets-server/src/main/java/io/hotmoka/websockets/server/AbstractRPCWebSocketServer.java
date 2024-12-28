@@ -26,7 +26,6 @@ import java.util.logging.Logger;
 import java.util.stream.IntStream;
 
 import io.hotmoka.websockets.beans.api.RpcMessage;
-import jakarta.websocket.DeploymentException;
 import jakarta.websocket.Session;
 
 /**
@@ -62,10 +61,8 @@ public abstract class AbstractRPCWebSocketServer extends AbstractWebSocketServer
 
 	/**
 	 * Creates the server.
-	 * 
-	 * @throws DeploymentException if the server cannot be deployed
 	 */
-	protected AbstractRPCWebSocketServer() throws DeploymentException {
+	protected AbstractRPCWebSocketServer() {
 		int nThreads = Runtime.getRuntime().availableProcessors() * 3;
 		this.executors = Executors.newFixedThreadPool(nThreads);
     	IntStream.range(0, nThreads).forEach(__ -> executors.execute(this::processNextTask));

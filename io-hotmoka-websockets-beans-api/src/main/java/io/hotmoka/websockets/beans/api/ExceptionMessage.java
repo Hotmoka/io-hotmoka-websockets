@@ -16,6 +16,8 @@ limitations under the License.
 
 package io.hotmoka.websockets.beans.api;
 
+import java.util.Optional;
+
 /**
  * A network message corresponding to an exception thrown by a method call.
  */
@@ -31,7 +33,7 @@ public interface ExceptionMessage extends RpcMessage {
 	/**
 	 * Yields the message of the exception.
 	 * 
-	 * @return the message
+	 * @return the message, if any
 	 */
-	String getMessage();
+	Optional<String> getMessage();
 }

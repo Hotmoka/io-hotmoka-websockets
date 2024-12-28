@@ -16,32 +16,38 @@ limitations under the License.
 
 package io.hotmoka.websockets.beans.internal.gson;
 
+import java.util.Optional;
+
 import io.hotmoka.websockets.beans.AbstractRpcMessageJsonRepresentation;
-import io.hotmoka.websockets.beans.ExceptionMessages;
 import io.hotmoka.websockets.beans.api.ExceptionMessage;
+import io.hotmoka.websockets.beans.api.InconsistentJsonException;
+import io.hotmoka.websockets.beans.internal.ExceptionMessageImpl;
 
 /**
  * The JSON representation of an {@link ExceptionMessage}.
  */
 public abstract class ExceptionMessageJson extends AbstractRpcMessageJsonRepresentation<ExceptionMessage> {
-	private final String clazz;
+	private final String className;
 	private final String message;
 
 	protected ExceptionMessageJson(ExceptionMessage message) {
 		super(message);
 
-		this.clazz = message.getExceptionClass().getName();
-		this.message = message.getMessage();
+		this.className = message.getExceptionClass().getName();
+		this.message = message.getMessage().orElse(null);
 	}
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public ExceptionMessage unmap() throws ClassNotFoundException, ClassCastException {
-		var exceptionClass = Class.forName(clazz);
-		if (!Exception.class.isAssignableFrom(exceptionClass))
-			throw new ClassCastException(clazz + " is not an Exception");
+	public String getClassName() {
+		return className;
+	}
 
-		return ExceptionMessages.of((Class<? extends Exception>) exceptionClass, message, getId());
+	public Optional<String> getMessage() {
+		return Optional.ofNullable(message);
+	}
+
+	@Override
+	public ExceptionMessage unmap() throws ClassNotFoundException, ClassCastException, InconsistentJsonException {
+		return new ExceptionMessageImpl(this);
 	}
 
 	@Override

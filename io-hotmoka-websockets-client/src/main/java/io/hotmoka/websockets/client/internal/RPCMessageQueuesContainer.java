@@ -343,7 +343,7 @@ class RPCMessageQueuesContainer {
 			queues.remove(id);
 
 			try {
-				throw exception.getConstructor(String.class).newInstance(em.getMessage());
+				throw exception.getConstructor(String.class).newInstance(em.getMessage().orElse(null));
 			}
 			catch (ReflectiveOperationException e) {
 				LOGGER.log(Level.SEVERE, "remote: cannot instantiate the exception type: " + exception.getName(), e);
