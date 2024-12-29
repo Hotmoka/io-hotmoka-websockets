@@ -122,8 +122,9 @@ public abstract class AbstractServerEndpoint<S extends WebSocketServer> extends 
 	}
 
 	@Override
-    public final void onError(Session session, Throwable throwable) {
-		LOGGER.log(Level.SEVERE, "websocket [" + getClass().getName() + "] error", throwable);
+    public void onError(Session session, Throwable throwable) {
+		LOGGER.log(Level.SEVERE, "websocket endpoint " + getClass().getName(), throwable);
+		super.onError(session, throwable);
     }
 
 	/**

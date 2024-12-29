@@ -28,7 +28,7 @@ import jakarta.websocket.DecodeException;
 
 /**
  * Base implementation of a mapped decoder from JSON strings into objects.
- * This decoder first maps back to object to decode into another object, that is actually
+ * This decoder first maps back the object to decode into another object, that is actually
  * used for decoding.
  *
  * @param <T> the type of the object

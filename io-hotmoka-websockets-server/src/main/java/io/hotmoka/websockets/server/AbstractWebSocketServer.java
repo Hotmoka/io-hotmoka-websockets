@@ -64,7 +64,13 @@ public abstract class AbstractWebSocketServer implements WebSocketServer {
 		for (var config: configs)
 			container.addEndpoint(config);
 
-		container.start(path, port);
+		try {
+			container.start(path, port);
+		}
+		catch (IllegalArgumentException e) {
+			// this occurs, for instance, if the port number is illegal
+			throw new DeploymentException(e.getMessage());
+		}
 	}
 
 	@Override
