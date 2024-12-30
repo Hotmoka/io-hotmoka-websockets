@@ -159,6 +159,7 @@ public abstract class AbstractWebSocketServer implements WebSocketServer {
 	 * @param session the session
 	 * @param object the object to send
 	 * @param exceptionSupplier a supplier of the exception to throw if the message cannot be sent
+	 * @return the future that can be used to wait for the operation to complete
 	 * @throws E if the message cannot be sent
 	 */
 	protected <E extends Exception> Future<Void> sendObjectAsync(Session session, Object object, Function<String, E> exceptionSupplier) throws E {
