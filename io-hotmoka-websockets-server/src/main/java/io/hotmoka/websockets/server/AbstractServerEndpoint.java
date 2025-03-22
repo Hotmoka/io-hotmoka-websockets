@@ -26,8 +26,10 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import io.hotmoka.websockets.beans.api.InconsistentJsonException;
 import io.hotmoka.websockets.server.api.ServerEndpoint;
 import io.hotmoka.websockets.server.api.WebSocketServer;
+import jakarta.websocket.DecodeException;
 import jakarta.websocket.Decoder;
 import jakarta.websocket.EncodeException;
 import jakarta.websocket.Encoder;
@@ -123,7 +125,11 @@ public abstract class AbstractServerEndpoint<S extends WebSocketServer> extends 
 
 	@Override
     public void onError(Session session, Throwable throwable) {
-		LOGGER.log(Level.SEVERE, "websocket endpoint " + getClass().getName(), throwable);
+		if (throwable instanceof DecodeException e && e.getCause() instanceof InconsistentJsonException ee)
+			LOGGER.log(Level.WARNING, e.getMessage() + ": " + ee.getMessage());
+		else
+			LOGGER.log(Level.SEVERE, "websocket endpoint " + getClass().getName(), throwable);
+
 		super.onError(session, throwable);
     }
 
