@@ -86,7 +86,7 @@ public abstract class AbstractWebSocketServer implements WebSocketServer {
 	}
 
 	/**
-	 * Called once, only the first one that {@link #close()} is called.
+	 * Called once, only the first time that {@link #close()} is called.
 	 */
 	protected void closeResources() {}
 
