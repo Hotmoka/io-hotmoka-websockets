@@ -289,7 +289,7 @@ class RPCMessageQueuesContainer {
 					LOGGER.warning("remote: could not enqueue a message since the queue is full");
 			}
 			else
-				LOGGER.warning("remote: received a message of type " + message.getClass().getName() + " but its id " + message.getId() + " has no corresponding waiting queue");
+				LOGGER.warning("remote: received a message of type " + message.getClass().getName() + " but its id \"" + message.getId() + "\" has no corresponding waiting queue");
 		}
 	}
 
