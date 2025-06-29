@@ -1,5 +1,5 @@
 /*
-Copyright 2023 Fausto Spoto
+Copyright 2025 Fausto Spoto
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,10 +15,8 @@ limitations under the License.
 */
 
 /**
- * This module defines the API of a websocket server.
+ * This module defines the shared API between websocket clients and servers.
  */
-module io.hotmoka.websockets.server.api {
-	exports io.hotmoka.websockets.server.api;
-
-	requires transitive io.hotmoka.websockets.api;
+module io.hotmoka.websockets.api {
+	exports io.hotmoka.websockets.api;
 }

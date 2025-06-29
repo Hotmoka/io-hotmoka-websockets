@@ -9,23 +9,13 @@
   </parent>
 
   <groupId>io.hotmoka.websockets</groupId>
-  <artifactId>io-hotmoka-websockets-client-api</artifactId>
-  <name>io-hotmoka-websockets-client-api</name>
+  <artifactId>io-hotmoka-websockets-api</artifactId>
+  <name>io-hotmoka-websockets-api</name>
   <version>${io.hotmoka.websockets.version}</version>
   <packaging>jar</packaging>
-  <description>This module defines the API of a websocket client.</description>
+  <description>This module defines the shared API between websocket clients and servers.</description>
 
   <dependencies>
-    <dependency>
-	  <groupId>io.hotmoka.websockets</groupId>
-	  <artifactId>io-hotmoka-websockets-api</artifactId>
-	  <version>${io.hotmoka.websockets.version}</version>
-	</dependency>
-	<dependency>
-	  <groupId>io.hotmoka.closeables</groupId>
-	  <artifactId>io-hotmoka-closeables-api</artifactId>
-	  <version>${io.hotmoka.closeables.version}</version>
-	</dependency>
   </dependencies>
 
   <profiles>

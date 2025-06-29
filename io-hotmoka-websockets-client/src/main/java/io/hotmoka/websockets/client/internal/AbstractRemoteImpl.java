@@ -48,10 +48,10 @@ import jakarta.websocket.Session;
  * A partial implementation of a remote object that presents a programmatic interface
  * to a service for the API of another object with the same interface,
  * 
- * @param <E> the type of the exceptions thrown if the remote behaves incorrectly
+ * @param <E> the type of the exceptions thrown if the remote gets used after being closed
  */
 @ThreadSafe
-public abstract class AbstractRemoteImpl<E extends Exception> extends AbstractWebSocketClient implements Remote<E> {
+public abstract class AbstractRemoteImpl<E extends Exception> extends AbstractWebSocketClient implements Remote {
 
 	/**
 	 * A map from path into the session listening to that path.
@@ -104,7 +104,7 @@ public abstract class AbstractRemoteImpl<E extends Exception> extends AbstractWe
 	}
 
 	@Override
-	public final void close() throws E {
+	public final void close() {
 		close(new CloseReason(CloseCodes.NORMAL_CLOSURE, "Closed normally."));
 	}
 
@@ -130,9 +130,8 @@ public abstract class AbstractRemoteImpl<E extends Exception> extends AbstractWe
 	 * but only the first time the remote gets closed.
 	 * 
 	 * @param reason the reason why the remote is getting closed
-	 * @throws E if closure fails with this exception
 	 */
-	protected void closeResources(CloseReason reason) throws E {
+	protected void closeResources(CloseReason reason) {
 		closeReason = reason.getReasonPhrase();
 
 		try {
@@ -150,14 +149,6 @@ public abstract class AbstractRemoteImpl<E extends Exception> extends AbstractWe
 	 * @return the exception
 	 */
 	protected abstract E mkExceptionIfClosed();
-
-	/**
-	 * Yields an exception to throw if the remote behaves incorrectly for the given cause.
-	 * 
-	 * @param cause the cause
-	 * @return the exception
-	 */
-	protected abstract E mkException(Exception cause);
 
 	/**
 	 * Hook called when an exception is received as result for an RPC.
@@ -193,7 +184,7 @@ public abstract class AbstractRemoteImpl<E extends Exception> extends AbstractWe
 	/**
 	 * Ensures that this node is currently open.
 	 * 
-	 * @throws E if this application is already closed
+	 * @throws E if this remote is already closed
 	 */
 	protected final void ensureIsOpen() throws E {
 		if (isClosed.get())
@@ -498,28 +489,21 @@ public abstract class AbstractRemoteImpl<E extends Exception> extends AbstractWe
 		protected abstract Session deployAt(URI uri) throws DeploymentException, IOException;
 	}
 
-	private void close(CloseReason reason) throws E {
+	private void close(CloseReason reason) {
 		if (!isClosed.getAndSet(true))
 			closeResources(reason);
 	}
 
-	private void closeSessionsAndCallOnCloseHandlers() throws E {
+	private void closeSessionsAndCallOnCloseHandlers() {
 		try {
-			E exception = null;
-
 			for (var session: sessions.values()) {
 				try {
 					session.close();
 				}
 				catch (IOException e) {
 					LOGGER.warning("remote: cannot close session: " + e.getMessage());
-					if (exception != null)
-						exception = mkException(e);
 				}
 			}
-
-			if (exception != null)
-				throw exception;
 		}
 		finally {
 			manager.callCloseHandlers();

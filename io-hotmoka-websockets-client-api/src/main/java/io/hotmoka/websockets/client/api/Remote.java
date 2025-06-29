@@ -21,10 +21,8 @@ import io.hotmoka.closeables.api.OnCloseHandlersContainer;
 /**
  * A remote object that presents a programmatic interface
  * to a service for the API of another object of the same class.
- * 
- * @param <E> the type of the exceptions thrown if the remote behaves incorrectly
  */
-public interface Remote<E extends Exception> extends AutoCloseable, OnCloseHandlersContainer {
+public interface Remote extends AutoCloseable, OnCloseHandlersContainer {
 
 	/**
 	 * Waits until this remote gets closed.
@@ -33,4 +31,7 @@ public interface Remote<E extends Exception> extends AutoCloseable, OnCloseHandl
 	 * @throws InterruptedException if the current thread gets interrupted while waiting
 	 */
 	String waitUntilClosed() throws InterruptedException;
+
+	@Override
+	void close();
 }

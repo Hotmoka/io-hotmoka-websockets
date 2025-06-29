@@ -15,6 +15,14 @@
   <packaging>jar</packaging>
   <description>This module defines the API of a websocket server.</description>
 
+<dependencies>
+    <dependency>
+	  <groupId>io.hotmoka.websockets</groupId>
+	  <artifactId>io-hotmoka-websockets-api</artifactId>
+	  <version>${io.hotmoka.websockets.version}</version>
+	</dependency>
+  </dependencies>
+
   <profiles>
 	<profile>
 	  <id>release</id>
