@@ -30,6 +30,7 @@ Note: submodules whose artifact must be deployed on Maven Central must activate 
     <io.hotmoka.chat.version>1.1.1</io.hotmoka.chat.version>
     <io.hotmoka.annotations.version>1.4.1</io.hotmoka.annotations.version>
     <io.hotmoka.closeables.version>1.5.0</io.hotmoka.closeables.version>
+    <io.hotmoka.exceptions.version>1.6.0</io.hotmoka.exceptions.version>
   </properties>
 
   <groupId>io.hotmoka</groupId>

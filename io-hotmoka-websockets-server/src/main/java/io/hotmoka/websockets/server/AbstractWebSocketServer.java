@@ -26,6 +26,7 @@ import java.util.function.Function;
 import org.glassfish.tyrus.spi.ServerContainer;
 import org.glassfish.tyrus.spi.ServerContainerFactory;
 
+import io.hotmoka.exceptions.ExceptionSupplier;
 import io.hotmoka.websockets.server.api.WebSocketServer;
 import jakarta.websocket.DeploymentException;
 import jakarta.websocket.EncodeException;
@@ -83,6 +84,18 @@ public abstract class AbstractWebSocketServer implements WebSocketServer {
 				closeResources();
 			}
 		}
+	}
+
+	/**
+	 * Ensures that this server is open. If it is closed, it throws an exception.
+	 * 
+	 * @param <E> the type of the exception thrown if this server is closed
+	 * @param onClosed the supplier of the exception
+	 * @throws E if this server is closed
+	 */
+	protected <E extends Exception> void ensureIsOpen(ExceptionSupplier<E> onClosed) throws E {
+		if (isClosed.get())
+			throw onClosed.get();
 	}
 
 	/**

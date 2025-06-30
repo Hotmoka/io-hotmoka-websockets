@@ -111,7 +111,7 @@ public abstract class AbstractRPCWebSocketServer extends AbstractWebSocketServer
 					processRequest(next.session, next.message);
 				}
 				catch (IOException e) {
-					LOGGER.log(Level.SEVERE, "cannot send to session (is it closed?): " + e.getMessage());
+					LOGGER.warning("cannot send to session (is it closed?): " + e.getMessage());
 				}
 				catch (RuntimeException e) {
 					LOGGER.log(Level.SEVERE, "failed processing a " + next.message.getClass().getName(), e);

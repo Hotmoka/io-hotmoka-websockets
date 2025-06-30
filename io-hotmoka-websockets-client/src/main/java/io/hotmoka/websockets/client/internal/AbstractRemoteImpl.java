@@ -31,6 +31,7 @@ import io.hotmoka.annotations.ThreadSafe;
 import io.hotmoka.closeables.OnCloseHandlersManagers;
 import io.hotmoka.closeables.api.OnCloseHandler;
 import io.hotmoka.closeables.api.OnCloseHandlersManager;
+import io.hotmoka.exceptions.ExceptionSupplier;
 import io.hotmoka.websockets.beans.api.ExceptionMessage;
 import io.hotmoka.websockets.beans.api.ResultMessage;
 import io.hotmoka.websockets.beans.api.RpcMessage;
@@ -47,11 +48,9 @@ import jakarta.websocket.Session;
 /**
  * A partial implementation of a remote object that presents a programmatic interface
  * to a service for the API of another object with the same interface,
- * 
- * @param <E> the type of the exceptions thrown if the remote gets used after being closed
  */
 @ThreadSafe
-public abstract class AbstractRemoteImpl<E extends Exception> extends AbstractWebSocketClient implements Remote {
+public abstract class AbstractRemoteImpl extends AbstractWebSocketClient implements Remote {
 
 	/**
 	 * A map from path into the session listening to that path.
@@ -143,14 +142,6 @@ public abstract class AbstractRemoteImpl<E extends Exception> extends AbstractWe
 	}
 
 	/**
-	 * Yields an exception to throw if {@link #ensureIsOpen()} is called
-	 * and the remote was already closed.
-	 * 
-	 * @return the exception
-	 */
-	protected abstract E mkExceptionIfClosed();
-
-	/**
 	 * Hook called when an exception is received as result for an RPC.
 	 * 
 	 * @param message the RPC message containing the exception
@@ -167,7 +158,7 @@ public abstract class AbstractRemoteImpl<E extends Exception> extends AbstractWe
 	 * @throws DeploymentException if the session cannot be deployed
 	 * @throws IOException if an I/O error occurs
 	 */
-	protected final void addSession(String path, URI uri, Supplier<AbstractRemote<?>.Endpoint> endpoint) throws DeploymentException, IOException {
+	protected final void addSession(String path, URI uri, Supplier<AbstractRemote.Endpoint> endpoint) throws DeploymentException, IOException {
 		sessions.put(path, endpoint.get().deployAt(uri.resolve(path)));
 	}
 
@@ -182,13 +173,16 @@ public abstract class AbstractRemoteImpl<E extends Exception> extends AbstractWe
 	}
 
 	/**
-	 * Ensures that this node is currently open.
+	 * Ensures that this server is open. If it is closed, it throws an exception.
 	 * 
-	 * @throws E if this remote is already closed
+	 * @param <E> the type of the exception thrown if this server is closed
+	 * @param onClosed the supplier of the exception
+	 * @param message the message to use for the exception
+	 * @throws E if this server is closed
 	 */
-	protected final void ensureIsOpen() throws E {
+	protected <E extends Exception> void ensureIsOpen(ExceptionSupplier<E> onClosed) throws E {
 		if (isClosed.get())
-			throw mkExceptionIfClosed();
+			throw onClosed.get();
 	}
 
 	/**
@@ -459,7 +453,7 @@ public abstract class AbstractRemoteImpl<E extends Exception> extends AbstractWe
 		return queues.waitForResult(id, messageClass, exceptionClass1, exceptionClass2, exceptionClass3, exceptionClass4, exceptionClass5, exceptionClass6, exceptionClass7, exceptionClass8);
 	}
 
-	protected abstract class Endpoint extends AbstractClientEndpoint<AbstractRemoteImpl<E>> {
+	protected abstract class Endpoint extends AbstractClientEndpoint<AbstractRemoteImpl> {
 
 		protected Endpoint() {
 			super(timeout);

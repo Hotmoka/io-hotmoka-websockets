@@ -22,11 +22,9 @@ import io.hotmoka.websockets.client.internal.AbstractRemoteImpl;
 /**
  * A partial implementation of a remote object that presents a programmatic interface
  * to a service for the API of another object of the same class.
- * 
- * @param <E> the type of the exceptions thrown if the remote behaves incorrectly
  */
 @ThreadSafe
-public abstract class AbstractRemote<E extends Exception> extends AbstractRemoteImpl<E> {
+public abstract class AbstractRemote extends AbstractRemoteImpl {
 
 	/**
 	 * Creates and opens a new remote application for the API of another application
@@ -42,7 +40,7 @@ public abstract class AbstractRemote<E extends Exception> extends AbstractRemote
 	/**
 	 * The endpoint class that can be extended to implement the remote call for each API method.
 	 */
-	public abstract class Endpoint extends AbstractRemoteImpl<?>.Endpoint {
+	public abstract class Endpoint extends AbstractRemoteImpl.Endpoint {
 
 		/**
 		 * Creates the endpoint.
