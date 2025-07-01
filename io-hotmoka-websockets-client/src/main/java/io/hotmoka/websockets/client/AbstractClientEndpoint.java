@@ -30,6 +30,7 @@ import java.util.stream.Stream;
 import org.glassfish.tyrus.client.ClientManager;
 import org.glassfish.tyrus.client.ClientProperties;
 
+import io.hotmoka.websockets.api.FailedDeploymentException;
 import io.hotmoka.websockets.client.api.ClientEndpoint;
 import io.hotmoka.websockets.client.api.WebSocketClient;
 import jakarta.websocket.ClientEndpointConfig;
@@ -84,11 +85,10 @@ public abstract class AbstractClientEndpoint<C extends WebSocketClient> extends 
 	 * @param uri the URI
 	 * @param coders the encoders or decoders
 	 * @return the resulting session
-	 * @throws DeploymentException if the endpoint cannot be deployed
-	 * @throws IOException if an I/O error occurs
+	 * @throws FailedDeploymentException if the endpoint cannot be deployed
 	 */
 	@SuppressWarnings("unchecked")
-	protected Session deployAt(URI uri, Class<?>... coders) throws DeploymentException, IOException {
+	protected Session deployAt(URI uri, Class<?>... coders) throws FailedDeploymentException {
 		List<Class<? extends Decoder>> inputs = Stream.of(coders)
 			.filter(coder -> Decoder.class.isAssignableFrom(coder))
 			.map(coder -> (Class<? extends Decoder>) coder)
@@ -110,7 +110,13 @@ public abstract class AbstractClientEndpoint<C extends WebSocketClient> extends 
 
 		ClientManager client = ClientManager.createClient();
 		timeout.ifPresent(threshold -> client.getProperties().put(ClientProperties.HANDSHAKE_TIMEOUT, threshold));
-		return client.connectToServer(this, config, uri);
+
+		try {
+			return client.connectToServer(this, config, uri);
+		}
+		catch (DeploymentException | IOException e) {
+			throw new FailedDeploymentException(e);
+		}
 	}
 
 	/**

@@ -23,10 +23,10 @@ import java.net.URISyntaxException;
 import io.hotmoka.chat.beans.Messages;
 import io.hotmoka.chat.beans.api.Message;
 import io.hotmoka.chat.client.api.ChatClient;
+import io.hotmoka.websockets.api.FailedDeploymentException;
 import io.hotmoka.websockets.client.AbstractClientEndpoint;
 import io.hotmoka.websockets.client.AbstractWebSocketClient;
 import jakarta.websocket.CloseReason;
-import jakarta.websocket.DeploymentException;
 import jakarta.websocket.EncodeException;
 import jakarta.websocket.EndpointConfig;
 import jakarta.websocket.Session;
@@ -34,8 +34,13 @@ import jakarta.websocket.Session;
 public class ChatClientImpl extends AbstractWebSocketClient implements ChatClient {
 	private final Session session;
 
-	public ChatClientImpl(String username, String url) throws DeploymentException, IOException, URISyntaxException {
-		this.session = new ChatClientEndpoint().deployAt(new URI(url + "/websockets/chat/" + username));
+	public ChatClientImpl(String username, String url) throws FailedDeploymentException {
+		try {
+			this.session = new ChatClientEndpoint().deployAt(new URI(url + "/websockets/chat/" + username));
+		}
+		catch (URISyntaxException e) {
+			throw new FailedDeploymentException(e);
+		}
 	}
 
 	@Override
@@ -60,7 +65,7 @@ public class ChatClientImpl extends AbstractWebSocketClient implements ChatClien
 
 	private class ChatClientEndpoint extends AbstractClientEndpoint<ChatClientImpl> {
 
-		private Session deployAt(URI uri) throws DeploymentException, IOException {
+		private Session deployAt(URI uri) throws FailedDeploymentException {
 			return deployAt(uri, Messages.Decoder.class, Messages.Encoder.class);
 		}
 

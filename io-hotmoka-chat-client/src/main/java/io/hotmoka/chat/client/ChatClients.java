@@ -16,12 +16,9 @@ limitations under the License.
 
 package io.hotmoka.chat.client;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-
 import io.hotmoka.chat.client.api.ChatClient;
 import io.hotmoka.chat.client.internal.ChatClientImpl;
-import jakarta.websocket.DeploymentException;
+import io.hotmoka.websockets.api.FailedDeploymentException;
 
 /**
  * Suppliers of chat clients.
@@ -34,11 +31,9 @@ public interface ChatClients {
 	 * 
 	 * @param username the name of the user
 	 * @return the chat client
-	 * @throws DeploymentException if the client could no be deployed
-	 * @throws IOException if there was an I/O error
-	 * @throws URISyntaxException if the syntax of the URI contacted by the client is incorrect (this depends on {@code username})
+	 * @throws FailedDeploymentException if the client could no be deployed
 	 */
-	static ChatClient open(String username) throws DeploymentException, IOException, URISyntaxException {
+	static ChatClient open(String username) throws FailedDeploymentException {
 		return new ChatClientImpl(username, "ws://localhost:8025");
 	}
 
@@ -49,11 +44,9 @@ public interface ChatClients {
 	 * @param username the name of the user
 	 * @param url the url
 	 * @return the chat client
-	 * @throws DeploymentException if the client could no be deployed
-	 * @throws IOException if there was an I/O error
-	 * @throws URISyntaxException if the syntax of the URI contacted by the client is incorrect (this depends on {@code username})
+	 * @throws FailedDeploymentException if the client could no be deployed
 	 */
-	static ChatClient open(String username, String url) throws DeploymentException, IOException, URISyntaxException {
+	static ChatClient open(String username, String url) throws FailedDeploymentException {
 		return new ChatClientImpl(username, url);
 	}
 }

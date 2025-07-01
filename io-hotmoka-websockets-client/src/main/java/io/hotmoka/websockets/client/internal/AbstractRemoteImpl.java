@@ -32,6 +32,7 @@ import io.hotmoka.closeables.OnCloseHandlersManagers;
 import io.hotmoka.closeables.api.OnCloseHandler;
 import io.hotmoka.closeables.api.OnCloseHandlersManager;
 import io.hotmoka.exceptions.ExceptionSupplier;
+import io.hotmoka.websockets.api.FailedDeploymentException;
 import io.hotmoka.websockets.beans.api.ExceptionMessage;
 import io.hotmoka.websockets.beans.api.ResultMessage;
 import io.hotmoka.websockets.beans.api.RpcMessage;
@@ -41,7 +42,6 @@ import io.hotmoka.websockets.client.AbstractWebSocketClient;
 import io.hotmoka.websockets.client.api.Remote;
 import jakarta.websocket.CloseReason;
 import jakarta.websocket.CloseReason.CloseCodes;
-import jakarta.websocket.DeploymentException;
 import jakarta.websocket.EndpointConfig;
 import jakarta.websocket.Session;
 
@@ -155,10 +155,9 @@ public abstract class AbstractRemoteImpl extends AbstractWebSocketClient impleme
 	 * @param path the path
 	 * @param uri the URI
 	 * @param endpoint the supplier of the endpoint
-	 * @throws DeploymentException if the session cannot be deployed
-	 * @throws IOException if an I/O error occurs
+	 * @throws FailedDeploymentException if the session cannot be deployed
 	 */
-	protected final void addSession(String path, URI uri, Supplier<AbstractRemote.Endpoint> endpoint) throws DeploymentException, IOException {
+	protected final void addSession(String path, URI uri, Supplier<AbstractRemote.Endpoint> endpoint) throws FailedDeploymentException {
 		sessions.put(path, endpoint.get().deployAt(uri.resolve(path)));
 	}
 
@@ -480,7 +479,7 @@ public abstract class AbstractRemoteImpl extends AbstractWebSocketClient impleme
 			}
 		}
 
-		protected abstract Session deployAt(URI uri) throws DeploymentException, IOException;
+		protected abstract Session deployAt(URI uri) throws FailedDeploymentException;
 	}
 
 	private void close(CloseReason reason) {
