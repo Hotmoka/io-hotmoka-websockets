@@ -21,12 +21,12 @@ import java.util.HashMap;
 import java.util.Objects;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.Function;
 
 import org.glassfish.tyrus.spi.ServerContainer;
 import org.glassfish.tyrus.spi.ServerContainerFactory;
 
 import io.hotmoka.exceptions.ExceptionSupplier;
+import io.hotmoka.exceptions.ExceptionSupplierFromMessage;
 import io.hotmoka.websockets.server.api.WebSocketServer;
 import jakarta.websocket.DeploymentException;
 import jakarta.websocket.EncodeException;
@@ -133,7 +133,7 @@ public abstract class AbstractWebSocketServer implements WebSocketServer {
 	 * @throws EncodeException if there was a problem encoding the message object
 	 * @throws E if the message cannot be sent
 	 */
-	protected <E extends Exception> void sendObject(Session session, Object object, Function<String, E> exceptionSupplier) throws E, EncodeException {
+	protected <E extends Exception> void sendObject(Session session, Object object, ExceptionSupplierFromMessage<E> exceptionSupplier) throws E, EncodeException {
 		Objects.requireNonNull(session);
 		Objects.requireNonNull(object);
 
@@ -154,15 +154,7 @@ public abstract class AbstractWebSocketServer implements WebSocketServer {
 	 * @throws IOException if an IOException occurs, for instance, the connection has been closed
 	 */
 	protected Future<Void> sendObjectAsync(Session session, Object object) throws IOException {
-		Objects.requireNonNull(session);
-		Objects.requireNonNull(object);
-
-		try {
-			return session.getAsyncRemote().sendObject(object);
-		}
-		catch (RuntimeException e) {
-			throw new IOException(e.getMessage());
-		}
+		return sendObjectAsync(session, object, IOException::new);
 	}
 
 	/**
@@ -175,7 +167,7 @@ public abstract class AbstractWebSocketServer implements WebSocketServer {
 	 * @return the future that can be used to wait for the operation to complete
 	 * @throws E if the message cannot be sent
 	 */
-	protected <E extends Exception> Future<Void> sendObjectAsync(Session session, Object object, Function<String, E> exceptionSupplier) throws E {
+	protected <E extends Exception> Future<Void> sendObjectAsync(Session session, Object object, ExceptionSupplierFromMessage<E> exceptionSupplier) throws E {
 		Objects.requireNonNull(session);
 		Objects.requireNonNull(object);
 

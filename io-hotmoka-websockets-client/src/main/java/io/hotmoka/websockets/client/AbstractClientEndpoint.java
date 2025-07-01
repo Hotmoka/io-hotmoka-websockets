@@ -23,7 +23,6 @@ import java.util.Objects;
 import java.util.OptionalInt;
 import java.util.concurrent.Future;
 import java.util.function.Consumer;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -75,7 +74,7 @@ public abstract class AbstractClientEndpoint<C extends WebSocketClient> extends 
 
 	@Override
 	public void onError(Session session, Throwable throwable) {
-		LOGGER.log(Level.SEVERE, "websocket endpoint " + getClass().getName(), throwable);
+		LOGGER.warning("websocket endpoint " + getClass().getName() + ": " + throwable.getMessage());
 		super.onError(session, throwable);
 	}
 
