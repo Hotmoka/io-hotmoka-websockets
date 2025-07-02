@@ -16,11 +16,9 @@ limitations under the License.
 
 package io.hotmoka.chat.server;
 
-import java.io.IOException;
-
 import io.hotmoka.chat.server.api.ChatServer;
 import io.hotmoka.chat.server.internal.ChatServerImpl;
-import jakarta.websocket.DeploymentException;
+import io.hotmoka.websockets.api.FailedDeploymentException;
 
 /**
  * Providers of chat servers.
@@ -31,10 +29,9 @@ public interface ChatServers {
 	 * Yields a new chat server.
 	 * 
 	 * @return the chat server
-	 * @throws DeploymentException if the server cannot be deployed
-	 * @throws IOException if an I/O error occurs
+	 * @throws FailedDeploymentException if the server cannot be deployed
 	 */
-	static ChatServer open() throws DeploymentException, IOException {
+	static ChatServer open() throws FailedDeploymentException {
 		return new ChatServerImpl();
 	}
 }

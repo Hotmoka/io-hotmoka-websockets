@@ -27,6 +27,7 @@ import org.glassfish.tyrus.spi.ServerContainerFactory;
 
 import io.hotmoka.exceptions.ExceptionSupplier;
 import io.hotmoka.exceptions.ExceptionSupplierFromMessage;
+import io.hotmoka.websockets.api.FailedDeploymentException;
 import io.hotmoka.websockets.server.api.WebSocketServer;
 import jakarta.websocket.DeploymentException;
 import jakarta.websocket.EncodeException;
@@ -58,19 +59,18 @@ public abstract class AbstractWebSocketServer implements WebSocketServer {
 	 * @param path the path where the endpoints must be deployed
 	 * @param port the port at which the endpoint must be deployed
 	 * @param configs the configurations of the endpoints
-	 * @throws DeploymentException if some endpoint cannot be deployed
-	 * @throws IOException if an I/O error occurs
+	 * @throws FailedDeploymentException if the server cannot be deployed
 	 */
-	protected void startContainer(String path, int port, ServerEndpointConfig... configs) throws DeploymentException, IOException {
-		for (var config: configs)
-			container.addEndpoint(config);
-
+	protected void startContainer(String path, int port, ServerEndpointConfig... configs) throws FailedDeploymentException {
 		try {
+			for (var config: configs)
+				container.addEndpoint(config);
+
 			container.start(path, port);
 		}
-		catch (IllegalArgumentException e) {
+		catch (IllegalArgumentException | IOException | DeploymentException e) {
 			// this occurs, for instance, if the port number is illegal
-			throw new DeploymentException(e.getMessage());
+			throw new FailedDeploymentException(e.getMessage());
 		}
 	}
 

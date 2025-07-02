@@ -22,7 +22,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.logging.LogManager;
 
-import jakarta.websocket.DeploymentException;
+import io.hotmoka.websockets.api.FailedDeploymentException;
 
 /**
  * Start class of a chat server.
@@ -35,10 +35,10 @@ public class Main {
 	 * Entry point of a chat server.
 	 * 
 	 * @param args the command-line arguments (ignored)
-	 * @throws DeploymentException if the server cannot be deployed
+	 * @throws FailedDeploymentException if the server cannot be deployed
 	 * @throws IOException if an I/O error occurs
 	 */
-	public static void main(String[] args) throws DeploymentException, IOException {
+	public static void main(String[] args) throws FailedDeploymentException, IOException {
 		try (var server = ChatServers.open(); var reader = new BufferedReader(new InputStreamReader(System.in))) {
 			System.out.println("Please press a key to stop the server.");
 			reader.readLine();

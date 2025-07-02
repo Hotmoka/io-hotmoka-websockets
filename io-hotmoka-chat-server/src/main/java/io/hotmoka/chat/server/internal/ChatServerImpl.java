@@ -25,10 +25,10 @@ import io.hotmoka.chat.beans.Messages;
 import io.hotmoka.chat.beans.api.Message;
 import io.hotmoka.chat.beans.api.PartialMessage;
 import io.hotmoka.chat.server.api.ChatServer;
+import io.hotmoka.websockets.api.FailedDeploymentException;
 import io.hotmoka.websockets.server.AbstractServerEndpoint;
 import io.hotmoka.websockets.server.AbstractWebSocketServer;
 import jakarta.websocket.CloseReason;
-import jakarta.websocket.DeploymentException;
 import jakarta.websocket.EncodeException;
 import jakarta.websocket.EndpointConfig;
 import jakarta.websocket.Session;
@@ -48,10 +48,9 @@ public class ChatServerImpl extends AbstractWebSocketServer implements ChatServe
 	/**
 	 * Creates a new chat server.
 	 * 
-	 * @throws DeploymentException if the server cannot be deployed
-	 * @throws IOException if an I/O error occurs
+	 * @throws FailedDeploymentException if the server cannot be deployed
 	 */
-    public ChatServerImpl() throws DeploymentException, IOException {
+    public ChatServerImpl() throws FailedDeploymentException {
     	startContainer("/websockets", 8025, ChatServerEndpoint.config(this));
     }
 
