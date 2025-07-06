@@ -21,6 +21,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.IntStream;
@@ -96,8 +97,10 @@ public abstract class AbstractRPCWebSocketServer extends AbstractWebSocketServer
 	 * @param session the session to use to send back the result of the execution of the request
 	 * @param message the message of the request
 	 * @throws IOException if the session is not able to send the result of the execution
+	 * @throws InterruptedException if the current thread gets interrupted
+	 * @throws TimeoutException if the execution times out
 	 */
-    protected abstract void processRequest(Session session, RpcMessage message) throws IOException;
+    protected abstract void processRequest(Session session, RpcMessage message) throws IOException, InterruptedException, TimeoutException;
 
 	/**
 	 * An infinite loop that polls the queue looking for requests to execute.
@@ -111,14 +114,18 @@ public abstract class AbstractRPCWebSocketServer extends AbstractWebSocketServer
 					processRequest(next.session, next.message);
 				}
 				catch (IOException e) {
-					LOGGER.warning("cannot send to session (is it closed?): " + e.getMessage());
+					LOGGER.log(Level.WARNING, "request processing cannot send to session (is it closed?)", e);
+				}
+				catch (TimeoutException e) {
+					LOGGER.log(Level.WARNING, "request processing timed out", e);
 				}
 				catch (RuntimeException e) {
-					LOGGER.log(Level.SEVERE, "failed processing a " + next.message.getClass().getName(), e);
+					LOGGER.log(Level.SEVERE, "request processing failed to process a " + next.message.getClass().getName(), e);
 				}
 			}
 		}
 		catch (InterruptedException e) {
+			LOGGER.log(Level.WARNING, "request processing has been interrupted", e);
 			Thread.currentThread().interrupt();
 		}
 	}
