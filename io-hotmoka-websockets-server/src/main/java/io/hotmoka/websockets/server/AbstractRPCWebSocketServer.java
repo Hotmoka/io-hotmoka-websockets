@@ -125,7 +125,7 @@ public abstract class AbstractRPCWebSocketServer extends AbstractWebSocketServer
 			}
 		}
 		catch (InterruptedException e) {
-			LOGGER.log(Level.WARNING, "request processing has been interrupted", e);
+			LOGGER.warning("request processing has been interrupted");
 			Thread.currentThread().interrupt();
 		}
 	}
