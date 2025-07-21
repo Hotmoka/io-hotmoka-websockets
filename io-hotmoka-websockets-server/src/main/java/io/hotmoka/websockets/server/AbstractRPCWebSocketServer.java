@@ -53,7 +53,7 @@ public abstract class AbstractRPCWebSocketServer extends AbstractWebSocketServer
 	/**
 	 * The queue of requests to execute.
 	 */
-	private final BlockingQueue<Task> tasks = new ArrayBlockingQueue<>(1000);
+	protected final BlockingQueue<Task> tasks;
 
 	/**
 	 * The executor of the {@link #tasks}.
@@ -61,10 +61,21 @@ public abstract class AbstractRPCWebSocketServer extends AbstractWebSocketServer
 	private final ExecutorService executors;
 
 	/**
-	 * Creates the server.
+	 * Creates the server. It uses a tasks queue of maximal length 1000
+	 * and a number of working threads equal to three times the number of available cores.
 	 */
 	protected AbstractRPCWebSocketServer() {
-		int nThreads = Runtime.getRuntime().availableProcessors() * 3;
+		this(1000, Runtime.getRuntime().availableProcessors() * 3);
+	}
+
+	/**
+	 * Creates the server.
+	 * 
+	 * @param queueSize the maximal length of the tasks queue
+	 * @param nThreads the number of working threads
+	 */
+	protected AbstractRPCWebSocketServer(int queueSize, int nThreads) {
+		this.tasks = new ArrayBlockingQueue<>(queueSize);
 		this.executors = Executors.newFixedThreadPool(nThreads);
     	IntStream.range(0, nThreads).forEach(__ -> executors.execute(this::processNextTask));
 	}
