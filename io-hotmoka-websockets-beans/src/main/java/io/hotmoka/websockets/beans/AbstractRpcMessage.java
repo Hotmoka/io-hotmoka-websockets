@@ -16,8 +16,9 @@ limitations under the License.
 
 package io.hotmoka.websockets.beans;
 
-import java.util.Objects;
 
+import io.hotmoka.exceptions.ExceptionSupplierFromMessage;
+import io.hotmoka.exceptions.Objects;
 import io.hotmoka.websockets.beans.api.RpcMessage;
 
 /**
@@ -34,7 +35,19 @@ public abstract class AbstractRpcMessage implements RpcMessage {
 	 * @param id the identifier of the message
 	 */
 	protected AbstractRpcMessage(String id) {
-		this.id = Objects.requireNonNull(id, "id cannot be null");
+		this(id, NullPointerException::new);
+	}
+
+	/**
+	 * Creates the RPC message.
+	 * 
+	 * @param <E> the exception to throw if {@code id} is illegal
+	 * @param id the identifier of the message
+	 * @param onIllegalArgs the provider of the exception to throw if {@code id} is illegal
+	 * @throws E if {@code id} is illegal
+	 */
+	protected <E extends Exception> AbstractRpcMessage(String id, ExceptionSupplierFromMessage<? extends E> onIllegalArgs) throws E {
+		this.id = Objects.requireNonNull(id, "id cannot be null", onIllegalArgs);
 		this.type = getExpectedType();
 	}
 
@@ -74,6 +87,6 @@ public abstract class AbstractRpcMessage implements RpcMessage {
 	 * @return true if and only if that condition holds
 	 */
 	boolean isTypeConsistent() {
-		return Objects.equals(getExpectedType(), getType());
+		return java.util.Objects.equals(getExpectedType(), getType());
 	}
 }

@@ -16,13 +16,14 @@ limitations under the License.
 
 package io.hotmoka.websockets.beans.internal;
 
-import java.util.Objects;
 import java.util.Optional;
 
+import io.hotmoka.exceptions.ExceptionSupplierFromMessage;
+import io.hotmoka.exceptions.Objects;
 import io.hotmoka.websockets.beans.AbstractRpcMessage;
 import io.hotmoka.websockets.beans.api.ExceptionMessage;
 import io.hotmoka.websockets.beans.api.InconsistentJsonException;
-import io.hotmoka.websockets.beans.internal.gson.ExceptionMessageJson;
+import io.hotmoka.websockets.beans.internal.json.ExceptionMessageJson;
 
 /**
  * Implementation of the network message corresponding to an exception thrown by a method call.
@@ -47,10 +48,7 @@ public class ExceptionMessageImpl extends AbstractRpcMessage implements Exceptio
 	 * @param id the identifier of the message
 	 */
 	public ExceptionMessageImpl(Class<? extends Exception> clazz, Optional<String> message, String id) {
-		super(id);
-
-		this.clazz = Objects.requireNonNull(clazz, "clazz cannot be null");;
-		this.message = Objects.requireNonNull(message, "message cannot be null");
+		this(clazz, message, id, IllegalArgumentException::new);
 	}
 
 	/**
@@ -59,17 +57,40 @@ public class ExceptionMessageImpl extends AbstractRpcMessage implements Exceptio
 	 * @param json the json
 	 * @throws InconsistentJsonException if {@code json} is inconsistent
 	 * @throws ClassNotFoundException if {@code json} refers to an unknown exception class
-	 * @throws ClassCastException if {@code json} refers to an exception class that is not subclass of {@code java.lang.Exception}
 	 */
-	public ExceptionMessageImpl(ExceptionMessageJson json) throws InconsistentJsonException, ClassNotFoundException, ClassCastException {
-		super(json.getId());
+	public ExceptionMessageImpl(ExceptionMessageJson json) throws InconsistentJsonException, ClassNotFoundException {
+		this(
+			mkClass(json.getClassName()),
+			json.getMessage(),
+			json.getId(),
+			InconsistentJsonException::new
+		);
+	}
 
-		var className = json.getClassName();
-		if (className == null)
-			throw new InconsistentJsonException("className cannot be null");
+	private static Class<? extends Exception> mkClass(String className) throws InconsistentJsonException, ClassNotFoundException {
+		try {
+			return Class.forName(Objects.requireNonNull(className, "className cannot be null", InconsistentJsonException::new)).asSubclass(Exception.class);
+		}
+		catch (ClassCastException e) {
+			throw new InconsistentJsonException(e);
+		}
+	}
 
-		this.clazz = Class.forName(className).asSubclass(Exception.class);
-		this.message = json.getMessage();
+	/**
+	 * Creates a message from the given JSON representation.
+	 * 
+	 * @param <E> the exception to throw if some argument is illegal
+	 * @param clazz the class of the exception
+	 * @param message the message of the exception, if any
+	 * @param id the identifier of the message
+	 * @param onIllegalArgs the provider of the exception to throw if some argument is illegal
+	 * @throws E if some argument is illegal
+	 */
+	private <E extends Exception> ExceptionMessageImpl(Class<? extends Exception> clazz, Optional<String> message, String id, ExceptionSupplierFromMessage<? extends E> onIllegalArgs) throws E {
+		super(id, onIllegalArgs);
+
+		this.clazz = Objects.requireNonNull(clazz, "clazz cannot be null", onIllegalArgs);
+		this.message = Objects.requireNonNull(message, "message cannot be null", onIllegalArgs);
 	}
 
 	@Override

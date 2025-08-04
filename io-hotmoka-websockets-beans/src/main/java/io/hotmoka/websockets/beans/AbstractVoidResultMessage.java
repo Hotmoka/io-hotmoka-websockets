@@ -16,6 +16,7 @@ limitations under the License.
 
 package io.hotmoka.websockets.beans;
 
+import io.hotmoka.exceptions.ExceptionSupplierFromMessage;
 import io.hotmoka.websockets.beans.api.VoidResultMessage;
 
 /**
@@ -30,6 +31,18 @@ public abstract class AbstractVoidResultMessage extends AbstractRpcMessage imple
 	 */
 	protected AbstractVoidResultMessage(String id) {
 		super(id);
+	}
+
+	/**
+	 * Creates the RPC message.
+	 * 
+	 * @param <E> the exception to throw if {@code id} is illegal
+	 * @param id the identifier of the message
+	 * @param onIllegalArgs the provider of the exception to throw if {@code id} is illegal
+	 * @throws E if {@code id} is illegal
+	 */
+	protected <E extends Exception> AbstractVoidResultMessage(String id, ExceptionSupplierFromMessage<? extends E> onIllegalArgs) throws E {
+		super(id, onIllegalArgs);
 	}
 
 	@Override

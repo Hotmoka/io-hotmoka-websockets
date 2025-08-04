@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package io.hotmoka.websockets.beans.internal.gson;
+package io.hotmoka.websockets.beans.internal.json;
 
 import java.util.Optional;
 
@@ -46,7 +46,7 @@ public abstract class ExceptionMessageJson extends AbstractRpcMessageJsonReprese
 	}
 
 	@Override
-	public ExceptionMessage unmap() throws ClassNotFoundException, ClassCastException, InconsistentJsonException {
+	public ExceptionMessage unmap() throws ClassNotFoundException, InconsistentJsonException {
 		return new ExceptionMessageImpl(this);
 	}
 

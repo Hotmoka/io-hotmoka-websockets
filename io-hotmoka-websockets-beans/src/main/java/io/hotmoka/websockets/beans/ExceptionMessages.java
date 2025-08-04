@@ -20,9 +20,7 @@ import java.util.Optional;
 
 import io.hotmoka.websockets.beans.api.ExceptionMessage;
 import io.hotmoka.websockets.beans.internal.ExceptionMessageImpl;
-import io.hotmoka.websockets.beans.internal.gson.ExceptionMessageDecoder;
-import io.hotmoka.websockets.beans.internal.gson.ExceptionMessageEncoder;
-import io.hotmoka.websockets.beans.internal.gson.ExceptionMessageJson;
+import io.hotmoka.websockets.beans.internal.json.ExceptionMessageJson;
 
 /**
  * A provider of {@link ExceptionMessage}.
@@ -57,23 +55,27 @@ public final class ExceptionMessages {
 	/**
 	 * Gson encoder.
 	 */
-	public static class Encoder extends ExceptionMessageEncoder {
+	public static class Encoder extends MappedEncoder<ExceptionMessage, Json> {
 
 		/**
 		 * Creates a new encoder.
 		 */
-		public Encoder() {}
+		public Encoder() {
+			super(Json::new);
+		}
 	}
 
 	/**
 	 * Gson decoder.
 	 */
-	public static class Decoder extends ExceptionMessageDecoder {
+	public static class Decoder extends MappedDecoder<ExceptionMessage, Json> {
 
 		/**
 		 * Creates a new decoder.
 		 */
-		public Decoder() {}
+		public Decoder() {
+			super(Json.class);
+		}
 	}
 
 	/**

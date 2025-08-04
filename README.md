@@ -30,13 +30,13 @@ to implement a chat: messages are exchanged between a client and a server.
 Package the jars, run the server in a shell and the client in another shell:
 
 ```shell
-$ mvn clean install
-$ ./io-hotmoka-chat-server/run.sh
+mvn clean install
+./io-hotmoka-chat-server/run.sh
 ```
 Then in another shell:
 
 ```shell
-$ ./io-hotmoka-chat-client/run.sh Textor
+./io-hotmoka-chat-client/run.sh Textor
 ```
 
 (replace `Textor` with your name for a more personal feeling.)
