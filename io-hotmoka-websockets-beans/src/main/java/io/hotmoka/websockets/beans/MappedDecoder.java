@@ -91,7 +91,7 @@ public class MappedDecoder<T, JSON extends JsonRepresentation<T>> implements Dec
 			return gson.fromJson(JsonParser.parseString(s), clazz).unmap();
 		}
 		catch (Exception e) {
-			throw new DecodeException(s, "Could not decode a " + clazz.getName(), e);
+			throw new DecodeException(s, "Could not decode a " + clazz.getName() + ": " + e.getMessage(), e);
 		}
 	}
 }

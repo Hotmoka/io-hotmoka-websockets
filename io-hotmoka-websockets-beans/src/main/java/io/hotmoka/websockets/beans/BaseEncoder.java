@@ -16,9 +16,6 @@ limitations under the License.
 
 package io.hotmoka.websockets.beans;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import com.google.gson.Gson;
 
 import io.hotmoka.websockets.beans.api.EncoderText;
@@ -42,8 +39,6 @@ public class BaseEncoder<T> implements EncoderText<T> {
 	 */
 	private final static Gson gson = new Gson();
 
-	private final static Logger LOGGER = Logger.getLogger(BaseEncoder.class.getName());
-
 	@Override
     public final String encode(T value) throws EncodeException {
 		try {
@@ -51,8 +46,7 @@ public class BaseEncoder<T> implements EncoderText<T> {
     	}
     	catch (RuntimeException e) {
     		String type = value == null ? "null" : ("a " + value.getClass().getName());
-    		LOGGER.log(Level.SEVERE, "could not encode " + type + ": " + e.getMessage());
-    		throw new EncodeException(value, "could not encode " + type, e);
+    		throw new EncodeException(value, "could not encode " + type + ": " + e.getMessage(), e);
     	}
     }
 }

@@ -17,8 +17,6 @@ limitations under the License.
 package io.hotmoka.websockets.beans;
 
 import java.util.Objects;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import com.google.gson.Gson;
 
@@ -42,8 +40,6 @@ public class MappedEncoder<T, JSON extends JsonRepresentation<T>> implements Enc
 	 */
 	private final static Gson gson = new Gson();
 
-	private final static Logger LOGGER = Logger.getLogger(MappedEncoder.class.getName());
-
 	/**
 	 * The mapper from the object to their representation, that is actually encoded in JSON.
 	 */
@@ -65,8 +61,7 @@ public class MappedEncoder<T, JSON extends JsonRepresentation<T>> implements Enc
     	}
     	catch (Exception e) {
     		String type = value == null ? "null" : ("a " + value.getClass().getName());
-    		LOGGER.log(Level.SEVERE, "could not encode " + type + ": " + e.getMessage());
-    		throw new EncodeException(value, "Could not encode " + type, e);
+    		throw new EncodeException(value, "Could not encode " + type + ": " + e.getMessage(), e);
     	}
     }
 }
