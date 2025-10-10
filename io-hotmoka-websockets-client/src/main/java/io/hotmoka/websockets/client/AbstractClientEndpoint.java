@@ -23,6 +23,7 @@ import java.util.Objects;
 import java.util.OptionalInt;
 import java.util.concurrent.Future;
 import java.util.function.Consumer;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -31,9 +32,11 @@ import org.glassfish.tyrus.client.ClientManager;
 import org.glassfish.tyrus.client.ClientProperties;
 
 import io.hotmoka.websockets.api.FailedDeploymentException;
+import io.hotmoka.websockets.beans.api.InconsistentJsonException;
 import io.hotmoka.websockets.client.api.ClientEndpoint;
 import io.hotmoka.websockets.client.api.WebSocketClient;
 import jakarta.websocket.ClientEndpointConfig;
+import jakarta.websocket.DecodeException;
 import jakarta.websocket.Decoder;
 import jakarta.websocket.DeploymentException;
 import jakarta.websocket.EncodeException;
@@ -75,7 +78,11 @@ public abstract class AbstractClientEndpoint<C extends WebSocketClient> extends 
 
 	@Override
 	public void onError(Session session, Throwable throwable) {
-		LOGGER.warning("websocket endpoint " + getClass().getName() + ": " + throwable.getMessage());
+		if (throwable instanceof DecodeException e && e.getCause() instanceof InconsistentJsonException ee)
+			LOGGER.log(Level.WARNING, e.getMessage() + ": " + ee.getMessage());
+		else
+			LOGGER.log(Level.SEVERE, "websocket endpoint " + getClass().getName(), throwable);
+
 		super.onError(session, throwable);
 	}
 
