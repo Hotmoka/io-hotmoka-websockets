@@ -121,6 +121,7 @@ public abstract class AbstractClientEndpoint<C extends WebSocketClient> extends 
 		try {
 			return client.connectToServer(this, config, uri);
 		}
+		// TODO: catch the situation when DeploymentException has InterruptedException as cause and throw it explicitly
 		catch (DeploymentException | IOException e) {
 			throw new FailedDeploymentException(e);
 		}
