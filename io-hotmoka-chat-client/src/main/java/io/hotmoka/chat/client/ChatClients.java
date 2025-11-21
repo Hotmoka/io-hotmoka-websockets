@@ -32,8 +32,9 @@ public interface ChatClients {
 	 * @param username the name of the user
 	 * @return the chat client
 	 * @throws FailedDeploymentException if the client could no be deployed
+	 * @throws InterruptedException if the connection attempt has been interrupted
 	 */
-	static ChatClient open(String username) throws FailedDeploymentException {
+	static ChatClient open(String username) throws FailedDeploymentException, InterruptedException {
 		return new ChatClientImpl(username, "ws://localhost:8025");
 	}
 
@@ -45,8 +46,9 @@ public interface ChatClients {
 	 * @param url the url
 	 * @return the chat client
 	 * @throws FailedDeploymentException if the client could no be deployed
+	 * @throws InterruptedException if the connection attempt has been interrupted
 	 */
-	static ChatClient open(String username, String url) throws FailedDeploymentException {
+	static ChatClient open(String username, String url) throws FailedDeploymentException, InterruptedException {
 		return new ChatClientImpl(username, url);
 	}
 }

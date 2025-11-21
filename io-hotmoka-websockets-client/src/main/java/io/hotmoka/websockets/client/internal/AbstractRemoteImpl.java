@@ -156,8 +156,9 @@ public abstract class AbstractRemoteImpl extends AbstractWebSocketClient impleme
 	 * @param uri the URI
 	 * @param endpoint the supplier of the endpoint
 	 * @throws FailedDeploymentException if the session cannot be deployed
+	 * @throws InterruptedException if the connection attempt has been interrupted
 	 */
-	protected final void addSession(String path, URI uri, Supplier<AbstractRemote.Endpoint> endpoint) throws FailedDeploymentException {
+	protected final void addSession(String path, URI uri, Supplier<AbstractRemote.Endpoint> endpoint) throws FailedDeploymentException, InterruptedException {
 		sessions.put(path, endpoint.get().deployAt(uri.resolve(path)));
 	}
 
@@ -479,7 +480,7 @@ public abstract class AbstractRemoteImpl extends AbstractWebSocketClient impleme
 			}
 		}
 
-		protected abstract Session deployAt(URI uri) throws FailedDeploymentException;
+		protected abstract Session deployAt(URI uri) throws FailedDeploymentException, InterruptedException;
 	}
 
 	private void close(CloseReason reason) {

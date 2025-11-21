@@ -34,7 +34,7 @@ import jakarta.websocket.Session;
 public class ChatClientImpl extends AbstractWebSocketClient implements ChatClient {
 	private final Session session;
 
-	public ChatClientImpl(String username, String url) throws FailedDeploymentException {
+	public ChatClientImpl(String username, String url) throws FailedDeploymentException, InterruptedException {
 		try {
 			this.session = new ChatClientEndpoint().deployAt(new URI(url + "/websockets/chat/" + username));
 		}
@@ -65,7 +65,7 @@ public class ChatClientImpl extends AbstractWebSocketClient implements ChatClien
 
 	private class ChatClientEndpoint extends AbstractClientEndpoint<ChatClientImpl> {
 
-		private Session deployAt(URI uri) throws FailedDeploymentException {
+		private Session deployAt(URI uri) throws FailedDeploymentException, InterruptedException {
 			return deployAt(uri, Messages.Decoder.class, Messages.Encoder.class);
 		}
 

@@ -93,9 +93,10 @@ public abstract class AbstractClientEndpoint<C extends WebSocketClient> extends 
 	 * @param coders the encoders or decoders
 	 * @return the resulting session
 	 * @throws FailedDeploymentException if the endpoint cannot be deployed
+	 * @throws InterruptedException if the deployment has been interrupted
 	 */
 	@SuppressWarnings("unchecked")
-	protected Session deployAt(URI uri, Class<?>... coders) throws FailedDeploymentException {
+	protected Session deployAt(URI uri, Class<?>... coders) throws FailedDeploymentException, InterruptedException {
 		List<Class<? extends Decoder>> inputs = Stream.of(coders)
 			.filter(coder -> Decoder.class.isAssignableFrom(coder))
 			.map(coder -> (Class<? extends Decoder>) coder)
@@ -121,8 +122,16 @@ public abstract class AbstractClientEndpoint<C extends WebSocketClient> extends 
 		try {
 			return client.connectToServer(this, config, uri);
 		}
+		catch (DeploymentException e) {
+			// we catch the situation when DeploymentException has InterruptedException as cause and we throw it explicitly
+			var cause = e.getCause();
+			if (cause instanceof InterruptedException ie)
+				throw ie;
+			else
+				throw new FailedDeploymentException(e);
+		}
 		// TODO: catch the situation when DeploymentException has InterruptedException as cause and throw it explicitly
-		catch (DeploymentException | IOException e) {
+		catch (IOException e) {
 			throw new FailedDeploymentException(e);
 		}
 	}
