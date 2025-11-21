@@ -125,10 +125,10 @@ public abstract class AbstractRPCWebSocketServer extends AbstractWebSocketServer
 					processRequest(next.session, next.message);
 				}
 				catch (IOException e) {
-					LOGGER.log(Level.WARNING, "request processing cannot send to session (is it closed?)", e);
+					LOGGER.warning("request processing cannot send to session (is it closed?): " + e.getMessage());
 				}
 				catch (TimeoutException e) {
-					LOGGER.log(Level.WARNING, "request processing timed out", e);
+					LOGGER.warning("request processing timed out: " + e.getMessage());
 				}
 				catch (RuntimeException e) {
 					LOGGER.log(Level.SEVERE, "request processing failed to process a " + next.message.getClass().getName(), e);
@@ -136,7 +136,7 @@ public abstract class AbstractRPCWebSocketServer extends AbstractWebSocketServer
 			}
 		}
 		catch (InterruptedException e) {
-			LOGGER.warning("request processing has been interrupted");
+			LOGGER.fine("request processing has been interrupted");
 			Thread.currentThread().interrupt();
 		}
 	}
