@@ -130,7 +130,6 @@ public abstract class AbstractClientEndpoint<C extends WebSocketClient> extends 
 			else
 				throw new FailedDeploymentException(e);
 		}
-		// TODO: catch the situation when DeploymentException has InterruptedException as cause and throw it explicitly
 		catch (IOException e) {
 			throw new FailedDeploymentException(e);
 		}
