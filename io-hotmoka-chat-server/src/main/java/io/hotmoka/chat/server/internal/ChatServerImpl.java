@@ -48,10 +48,11 @@ public class ChatServerImpl extends AbstractWebSocketServer implements ChatServe
 	/**
 	 * Creates a new chat server.
 	 * 
+	 * @param port the port where the server will be published
 	 * @throws FailedDeploymentException if the server cannot be deployed
 	 */
-    public ChatServerImpl() throws FailedDeploymentException {
-    	startContainer("/websockets", 8025, ChatServerEndpoint.config(this));
+    public ChatServerImpl(int port) throws FailedDeploymentException {
+    	startContainer("/websockets", port, ChatServerEndpoint.config(this));
     }
 
     private String getUsername(String sessionId) {

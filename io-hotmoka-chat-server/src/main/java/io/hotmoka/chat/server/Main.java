@@ -39,7 +39,8 @@ public class Main {
 	 * @throws IOException if an I/O error occurs
 	 */
 	public static void main(String[] args) throws FailedDeploymentException, IOException {
-		try (var server = ChatServers.open(); var reader = new BufferedReader(new InputStreamReader(System.in))) {
+		int port = args.length > 0 ? Integer.parseInt(args[0]) : 8025;
+		try (var server = ChatServers.open(port); var reader = new BufferedReader(new InputStreamReader(System.in))) {
 			System.out.println("Please press a key to stop the server.");
 			reader.readLine();
 		}

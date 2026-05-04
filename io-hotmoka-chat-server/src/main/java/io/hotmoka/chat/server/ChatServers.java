@@ -28,10 +28,11 @@ public interface ChatServers {
 	/**
 	 * Yields a new chat server.
 	 * 
+	 * @param port the port where the server will be published
 	 * @return the chat server
 	 * @throws FailedDeploymentException if the server cannot be deployed
 	 */
-	static ChatServer open() throws FailedDeploymentException {
-		return new ChatServerImpl();
+	static ChatServer open(int port) throws FailedDeploymentException {
+		return new ChatServerImpl(port);
 	}
 }

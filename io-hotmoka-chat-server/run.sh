@@ -13,4 +13,4 @@ while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symli
 done
 DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
 
-java --module-path $DIR/modules/explicit:$DIR/modules/automatic --add-modules org.glassfish.tyrus.container.grizzly.server --module io.hotmoka.chat.server/io.hotmoka.chat.server.Main
+java --module-path $DIR/modules/explicit:$DIR/modules/automatic --add-modules org.glassfish.tyrus.container.grizzly.server --module io.hotmoka.chat.server/io.hotmoka.chat.server.Main "$@"
