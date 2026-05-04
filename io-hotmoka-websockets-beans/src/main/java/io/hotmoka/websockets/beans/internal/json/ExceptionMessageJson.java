@@ -37,10 +37,20 @@ public abstract class ExceptionMessageJson extends AbstractRpcMessageJsonReprese
 		this.message = message.getMessage().orElse(null);
 	}
 
+	/**
+	 * Yields the class name of the exception.
+	 * 
+	 * @return the class name of the exception
+	 */
 	public String getClassName() {
 		return className;
 	}
 
+	/**
+	 * Yields the message of the exception.
+	 * 
+	 * @return the message of the exception
+	 */
 	public Optional<String> getMessage() {
 		return Optional.ofNullable(message);
 	}
