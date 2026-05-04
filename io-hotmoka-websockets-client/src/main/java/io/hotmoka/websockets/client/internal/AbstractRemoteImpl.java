@@ -177,7 +177,6 @@ public abstract class AbstractRemoteImpl extends AbstractWebSocketClient impleme
 	 * 
 	 * @param <E> the type of the exception thrown if this server is closed
 	 * @param onClosed the supplier of the exception
-	 * @param message the message to use for the exception
 	 * @throws E if this server is closed
 	 */
 	protected <E extends Exception> void ensureIsOpen(ExceptionSupplier<E> onClosed) throws E {
@@ -214,7 +213,6 @@ public abstract class AbstractRemoteImpl extends AbstractWebSocketClient impleme
 	 * Waits until a reply arrives for the message with the given identifier.
 	 * 
 	 * @param <T> the type of the replied value
-	 * @param <M> the type of the expected message
 	 * @param id the identifier
 	 * @param messageClass the class of the expected message
 	 * @return the replied value
@@ -480,6 +478,14 @@ public abstract class AbstractRemoteImpl extends AbstractWebSocketClient impleme
 			}
 		}
 
+		/**
+		 * Deploys this endpoint at the given URI,
+		 * 
+		 * @param uri the URI
+		 * @return the resulting session
+		 * @throws FailedDeploymentException if deployment fails
+		 * @throws InterruptedException if the operation gets interrupted
+		 */
 		protected abstract Session deployAt(URI uri) throws FailedDeploymentException, InterruptedException;
 	}
 
