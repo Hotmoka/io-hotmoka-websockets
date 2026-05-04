@@ -46,5 +46,12 @@ public abstract class AbstractRemote extends AbstractRemoteImpl {
 		 * Creates the endpoint.
 		 */
 		protected Endpoint() {}
+
+		/**
+		 * Yields the last segment of the path where the endpoint must be deployed.
+		 * 
+		 * @return the last segment
+		 */
+		public abstract String segment();
 	}
 }

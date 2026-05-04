@@ -18,9 +18,13 @@ package io.hotmoka.websockets.client.internal;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
@@ -160,6 +164,50 @@ public abstract class AbstractRemoteImpl extends AbstractWebSocketClient impleme
 	 */
 	protected final void addSession(String path, URI uri, Supplier<AbstractRemote.Endpoint> endpoint) throws FailedDeploymentException, InterruptedException {
 		sessions.put(path, endpoint.get().deployAt(uri.resolve(path)));
+	}
+
+	/**
+	 * Adds sessions for the endpoints supplied by the given suppliers.
+	 * This is much faster than adding each single session individually, since it works in parallel.
+	 * 
+	 * @param uri the base URI where the endpoints will get published
+	 * @param endpoints the suppliers of the endpoints
+	 * @throws FailedDeploymentException if some session cannot be deployed
+	 * @throws InterruptedException if some connection attempt has been interrupted
+	 */
+	@SafeVarargs
+	protected final void addSessions(URI uri, Supplier<AbstractRemote.Endpoint>... endpoints) throws FailedDeploymentException, InterruptedException {
+		var callables = new ArrayList<Callable<Void>>();
+		var service = Executors.newCachedThreadPool();
+
+		try {
+			for (var supplier: endpoints) {
+				Callable<Void> callable = () -> {
+					var endpoint = supplier.get();
+					String segment = endpoint.segment();
+					sessions.put(segment, endpoint.deployAt(uri.resolve(segment)));
+					return null;
+				};
+
+				callables.add(callable);
+			}
+
+			for (var futureSession: service.invokeAll(callables)) {
+				try {
+					futureSession.get();
+				}
+				catch (ExecutionException e) {
+					var cause = e.getCause();
+					if (cause instanceof FailedDeploymentException fde)
+						throw fde;
+					else
+						throw new FailedDeploymentException(cause);
+				}
+			}
+		}
+		finally {
+			service.shutdown();
+		}
 	}
 
 	/**
