@@ -21,6 +21,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.Objects;
 import java.util.OptionalInt;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.function.Consumer;
 import java.util.logging.Level;
@@ -95,8 +96,34 @@ public abstract class AbstractClientEndpoint<C extends WebSocketClient> extends 
 	 * @throws FailedDeploymentException if the endpoint cannot be deployed
 	 * @throws InterruptedException if the deployment has been interrupted
 	 */
-	@SuppressWarnings("unchecked")
 	protected Session deployAt(URI uri, Class<?>... coders) throws FailedDeploymentException, InterruptedException {
+		try {
+			return asyncDeployAt(uri, coders).get();
+		}
+		catch (ExecutionException e) {
+			var cause = e.getCause();
+
+			if (cause instanceof DeploymentException de) {
+				// we catch the situation when DeploymentException has InterruptedException as cause and we throw it explicitly
+				if (de.getCause() instanceof InterruptedException ie)
+					throw ie;
+			}
+
+			throw new FailedDeploymentException(cause);
+		}
+	}
+
+	/**
+	 * Deploys this endpoint at the given URI, with the given decoders (inputs) and encoders (outputs).
+	 * 
+	 * @param uri the URI
+	 * @param coders the encoders or decoders
+	 * @return the resulting session
+	 * @throws FailedDeploymentException if the endpoint cannot be deployed
+	 * @throws InterruptedException if the deployment has been interrupted
+	 */
+	@SuppressWarnings("unchecked")
+	protected Future<Session> asyncDeployAt(URI uri, Class<?>... coders) throws FailedDeploymentException, InterruptedException {
 		List<Class<? extends Decoder>> inputs = Stream.of(coders)
 			.filter(coder -> Decoder.class.isAssignableFrom(coder))
 			.map(coder -> (Class<? extends Decoder>) coder)
@@ -120,7 +147,7 @@ public abstract class AbstractClientEndpoint<C extends WebSocketClient> extends 
 		timeout.ifPresent(threshold -> client.getProperties().put(ClientProperties.HANDSHAKE_TIMEOUT, threshold));
 
 		try {
-			return client.connectToServer(this, config, uri);
+			return client.asyncConnectToServer(this, config, uri);
 		}
 		catch (DeploymentException e) {
 			// we catch the situation when DeploymentException has InterruptedException as cause and we throw it explicitly
@@ -129,9 +156,6 @@ public abstract class AbstractClientEndpoint<C extends WebSocketClient> extends 
 				throw ie;
 			else
 				throw new FailedDeploymentException(e);
-		}
-		catch (IOException e) {
-			throw new FailedDeploymentException(e);
 		}
 	}
 
