@@ -18,13 +18,12 @@ package io.hotmoka.websockets.client.internal;
 
 import java.io.IOException;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.concurrent.Callable;
+import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
@@ -177,36 +176,25 @@ public abstract class AbstractRemoteImpl extends AbstractWebSocketClient impleme
 	 */
 	@SafeVarargs
 	protected final void addSessions(URI uri, Supplier<AbstractRemote.Endpoint>... endpoints) throws FailedDeploymentException, InterruptedException {
-		var callables = new ArrayList<Callable<Void>>();
-		var service = Executors.newCachedThreadPool();
+		var futures = new HashMap<String, Future<Session>>();
 
-		try {
-			for (var supplier: endpoints) {
-				Callable<Void> callable = () -> {
-					var endpoint = supplier.get();
-					String segment = endpoint.segment();
-					sessions.put(segment, endpoint.deployAt(uri.resolve(segment)));
-					return null;
-				};
-
-				callables.add(callable);
-			}
-
-			for (var futureSession: service.invokeAll(callables)) {
-				try {
-					futureSession.get();
-				}
-				catch (ExecutionException e) {
-					var cause = e.getCause();
-					if (cause instanceof FailedDeploymentException fde)
-						throw fde;
-					else
-						throw new FailedDeploymentException(cause);
-				}
-			}
+		for (var supplier: endpoints) {
+			var endpoint = supplier.get();
+			String segment = endpoint.segment();
+			futures.put(segment, endpoint.asyncDeployAt(uri.resolve(segment)));
 		}
-		finally {
-			service.shutdown();
+
+		for (var entry: futures.entrySet()) {
+			try {
+				sessions.put(entry.getKey(), entry.getValue().get());
+			}
+			catch (ExecutionException e) {
+				var cause = e.getCause();
+				if (cause instanceof FailedDeploymentException fde)
+					throw fde;
+				else
+					throw new FailedDeploymentException(cause);
+			}
 		}
 	}
 
@@ -527,14 +515,35 @@ public abstract class AbstractRemoteImpl extends AbstractWebSocketClient impleme
 		}
 
 		/**
-		 * Deploys this endpoint at the given URI,
+		 * Asynchronously deploys this endpoint at the given URI,
 		 * 
 		 * @param uri the URI
-		 * @return the resulting session
+		 * @return the future of the resulting session
 		 * @throws FailedDeploymentException if deployment fails
 		 * @throws InterruptedException if the operation gets interrupted
 		 */
-		protected abstract Session deployAt(URI uri) throws FailedDeploymentException, InterruptedException;
+		protected final Session deployAt(URI uri) throws FailedDeploymentException, InterruptedException {
+			try {
+				return asyncDeployAt(uri).get();
+			}
+			catch (ExecutionException e) {
+				var cause = e.getCause();
+				if (cause instanceof FailedDeploymentException fde)
+					throw fde;
+				else
+					throw new FailedDeploymentException(cause);
+			}
+		}
+
+		/**
+		 * Asynchronously deploys this endpoint at the given URI,
+		 * 
+		 * @param uri the URI
+		 * @return the future of the resulting session
+		 * @throws FailedDeploymentException if deployment fails
+		 * @throws InterruptedException if the operation gets interrupted
+		 */
+		protected abstract Future<Session> asyncDeployAt(URI uri) throws FailedDeploymentException, InterruptedException;
 	}
 
 	private void close(CloseReason reason) {

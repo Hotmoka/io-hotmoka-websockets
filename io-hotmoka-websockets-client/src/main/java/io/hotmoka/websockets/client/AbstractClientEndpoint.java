@@ -96,7 +96,7 @@ public abstract class AbstractClientEndpoint<C extends WebSocketClient> extends 
 	 * @throws FailedDeploymentException if the endpoint cannot be deployed
 	 * @throws InterruptedException if the deployment has been interrupted
 	 */
-	protected Session deployAt(URI uri, Class<?>... coders) throws FailedDeploymentException, InterruptedException {
+	protected final Session deployAt(URI uri, Class<?>... coders) throws FailedDeploymentException, InterruptedException {
 		try {
 			return asyncDeployAt(uri, coders).get();
 		}
@@ -123,7 +123,7 @@ public abstract class AbstractClientEndpoint<C extends WebSocketClient> extends 
 	 * @throws InterruptedException if the deployment has been interrupted
 	 */
 	@SuppressWarnings("unchecked")
-	protected Future<Session> asyncDeployAt(URI uri, Class<?>... coders) throws FailedDeploymentException, InterruptedException {
+	protected final Future<Session> asyncDeployAt(URI uri, Class<?>... coders) throws FailedDeploymentException, InterruptedException {
 		List<Class<? extends Decoder>> inputs = Stream.of(coders)
 			.filter(coder -> Decoder.class.isAssignableFrom(coder))
 			.map(coder -> (Class<? extends Decoder>) coder)
